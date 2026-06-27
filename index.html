@@ -794,8 +794,6 @@ function getFrame(mode){
 
 function setDistrict(d){
   _currentDistrict = d;
-  // İlçe değişince Overpass önbelleğini sıfırla
-  _ovpResults = []; _ovpDistrictKey = ''; _ovpState = 'idle';
 
   if(d === 'il'){
     // Tüm il görünümü — kilitlemeden zoom
@@ -1794,142 +1792,138 @@ function shareSelection(){
 }
 
 /* ══════════════════════════════════════════════════════════════
-   İşletme Konum Seçici — OSM/Overpass tabanlı
-   "Konumum" butonuna basınca açılır. Seçili ilçenin OSM verisini
-   çeker, kullanıcı kendi işletmesini arar ve seçer.
+   İşletme Konum Seçici — Mapbox Geocoding tabanlı
+   "Konumum" butonuna basınca açılır. Kullanıcı işletme adını
+   yazar → Mapbox POI araması (seçili ilçe bbox'ı) → seçilince
+   "Buradasınız" pini oraya taşınır.
 ══════════════════════════════════════════════════════════════ */
 
-/* ── Overpass durumu ── */
-let _ovpResults = [];       // [{name,lat,lon,cat,color,fa,dist,sub}]
-let _ovpDistrictKey = '';   // hangi ilçe için yüklendi
-let _ovpState = 'idle';     // 'idle'|'loading'|'done'|'error'
+let _locSearchTimer = null;   // debounce zamanlayıcısı
+let _locSearchAbort = null;   // uçuşta istek iptali
 
-const _OVP_EPS = [
-  "https://overpass-api.de/api/interpreter",
-  "https://overpass.private.coffee/api/interpreter",
-  "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
-  "https://overpass.openstreetmap.ru/api/interpreter",
-];
-
-async function _fetchOvp(query){
-  for(const ep of _OVP_EPS){
-    try{
-      const r=await fetch(ep,{method:'POST',
-        body:'data='+encodeURIComponent(query),
-        signal:AbortSignal.timeout(20000)});
-      if(r.ok) return await r.json();
-    }catch(_){}
-  }
-  return null;
+/* Mapbox maki/category → FA ikonu + renk + etiket */
+function _makiToStyle(maki, category){
+  const m=(maki||'').toLowerCase();
+  const c=(category||'').toLowerCase();
+  const has=(...words)=>words.some(w=>m===w||c.includes(w));
+  if(has('lodging','hotel','motel'))
+    return {fa:'fa-bed',         color:'#7C5CBF', sub:'Konaklama'};
+  if(has('restaurant','cafe','bar','fast-food','bakery','ice-cream','food','pub','tea'))
+    return {fa:'fa-utensils',    color:'#FE5000', sub:'Yeme-İçme'};
+  if(has('pharmacy','drugstore'))
+    return {fa:'fa-pills',       color:'#0085CA', sub:'Eczane'};
+  if(has('bank','atm','finance'))
+    return {fa:'fa-building-columns', color:'#0085CA', sub:'Banka / ATM'};
+  if(has('grocery','supermarket','convenience','shop','clothing','furniture','hardware'))
+    return {fa:'fa-bag-shopping', color:'#808080', sub:'Mağaza'};
+  if(has('museum','art-gallery','monument'))
+    return {fa:'fa-building-columns', color:'#5D4037', sub:'Müze / Galeri'};
+  if(has('campsite','camping'))
+    return {fa:'fa-campground',  color:'#84BD00', sub:'Kamp Alanı'};
+  if(has('beach','swimming','marina'))
+    return {fa:'fa-umbrella-beach', color:'#1A7A6A', sub:'Plaj / Deniz'};
+  if(has('fitness','sport','gym'))
+    return {fa:'fa-dumbbell',    color:'#84BD00', sub:'Spor'};
+  if(has('dive','scuba'))
+    return {fa:'fa-person-swimming', color:'#0085CA', sub:'Dalış Merkezi'};
+  return     {fa:'fa-store',     color:'#808080', sub:'İşletme'};
 }
 
-async function _loadDistrictBiz(dk){
-  const frame=_DISTRICT_FRAMES[dk==='il'?'gokceada':dk];
-  if(!frame){ _ovpState='error'; _renderLocState(); return; }
+function _setLocListHtml(html){
+  const c=document.getElementById('loc-list'); if(c) c.innerHTML=html;
+}
+
+const _LOC_HINT=`<div style="padding:32px;text-align:center;color:#ccc;font-size:13px">
+  <i class="fas fa-magnifying-glass" style="font-size:24px;display:block;margin-bottom:10px;color:#ddd"></i>
+  İşletme adını yazmaya başlayın<br>
+  <span style="font-size:11px;color:#bbb;margin-top:6px;display:block">
+    En az 2 karakter — Mapbox ile seçili ilçede arar</span></div>`;
+
+async function _searchMapboxBiz(q){
+  const dk=(_currentDistrict&&_currentDistrict!=='il')?_currentDistrict:'gokceada';
+  const frame=_DISTRICT_FRAMES[dk];
+  if(!frame) return;
   const bb=frame.drive||frame.walk;
+  // Mapbox bbox: lon_min,lat_min,lon_max,lat_max
+  const bbox=`${bb[0]},${bb[1]},${bb[2]},${bb[3]}`;
 
-  _ovpState='loading'; _renderLocState();
+  _setLocListHtml(`<div style="padding:28px;text-align:center;color:#aaa;font-size:13px">
+    <i class="fas fa-spinner fa-spin" style="font-size:20px;color:var(--brand);display:block;margin-bottom:8px"></i>
+    Aranıyor…</div>`);
 
-  // Overpass bbox: south,west,north,east
-  const bbox=`${bb[1]},${bb[0]},${bb[3]},${bb[2]}`;
-  const q=`[out:json][timeout:25];
-(
-  node["amenity"~"restaurant|cafe|bar|fast_food|pharmacy|bank|atm|hotel|hostel|guest_house|dive_centre|sports_centre|swimming_pool|camp_site|water_park|marketplace|supermarket|convenience|bakery|ice_cream|pub"](${bbox});
-  node["tourism"~"hotel|hostel|guest_house|apartment|camp_site|museum|attraction|gallery|information"](${bbox});
-  node["shop"](${bbox});
-  node["leisure"~"sports_centre|swimming_pool|marina|water_park|fitness_centre|beach_resort"](${bbox});
-  way["amenity"~"restaurant|cafe|bar|fast_food|hotel|hostel|supermarket"](${bbox});
-  way["tourism"~"hotel|hostel|guest_house|museum|attraction"](${bbox});
-  way["shop"](${bbox});
-)->.r;
-.r out center 500;`;
+  if(_locSearchAbort){ _locSearchAbort.abort(); }
+  _locSearchAbort=new AbortController();
 
-  const data=await _fetchOvp(q);
-  if(!data){ _ovpState='error'; _renderLocState(); return; }
+  try{
+    const url='https://api.mapbox.com/geocoding/v5/mapbox.places/'
+      +encodeURIComponent(q)
+      +'.json?access_token='+mapboxgl.accessToken
+      +'&types=poi,address'
+      +'&bbox='+bbox
+      +'&limit=10&language=tr&country=TR';
+    const r=await fetch(url,{signal:_locSearchAbort.signal});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const data=await r.json();
+    const features=data.features||[];
 
-  const items=[];
-  for(const el of (data.elements||[])){
-    const tags=el.tags||{};
-    const name=tags['name:tr']||tags.name||tags['name:en'];
-    if(!name) continue;
-    let lat=el.lat, lon=el.lon;
-    if(el.type==='way'&&el.center){ lat=el.center.lat; lon=el.center.lon; }
-    if(!lat||!lon) continue;
-
-    const amenity=tags.amenity||'';
-    const tourism=tags.tourism||'';
-    const shop=tags.shop||'';
-    const leisure=tags.leisure||'';
-
-    let cat='services', color='#808080', fa='fa-store', sub='İşletme';
-    if(['restaurant','cafe','bar','fast_food','pub','ice_cream','food_court'].includes(amenity)){
-      cat='food'; color='#FE5000'; fa='fa-utensils'; sub='Yeme-İçme';
-    } else if(amenity==='pharmacy'){
-      cat='pharmacy'; color='#0085CA'; fa='fa-pills'; sub='Eczane';
-    } else if(['bank','atm'].includes(amenity)){
-      cat='bank'; color='#0085CA'; fa='fa-building-columns'; sub='Banka / ATM';
-    } else if(['hotel','hostel','guest_house','apartment','motel'].includes(tourism)||
-               ['hotel','hostel','guest_house'].includes(amenity)){
-      cat='accommodation'; color='#7C5CBF'; fa='fa-bed'; sub='Konaklama';
-    } else if(['museum','gallery'].includes(tourism)){
-      cat='museum'; color='#5D4037'; fa='fa-building-columns'; sub='Müze / Galeri';
-    } else if(['dive_centre','sports_centre','swimming_pool','water_park','camp_site'].includes(amenity)||
-               ['sports_centre','swimming_pool','marina','water_park','fitness_centre','beach_resort'].includes(leisure)){
-      cat='sports'; color='#84BD00'; fa='fa-dumbbell'; sub='Spor & Rekreasyon';
-    } else if(shop){
-      cat='shop'; color='#808080'; fa='fa-bag-shopping'; sub='Mağaza';
+    if(!features.length){
+      _setLocListHtml(`<div style="padding:24px;text-align:center;color:#bbb;font-size:13px">
+        "<b>${q}</b>" için sonuç bulunamadı<br>
+        <span style="font-size:11px;color:#ccc;margin-top:6px;display:block">
+          Farklı bir kelime deneyin veya<br>haritaya tıklayarak konumunuzu ayarlayın.</span></div>`);
+      return;
     }
 
-    const dist=haversine(myLoc.lat,myLoc.lon,lat,lon);
-    items.push({name,lat,lon,cat,color,fa,sub,dist});
-  }
-
-  items.sort((a,b)=>a.dist-b.dist);
-  _ovpResults=items;
-  _ovpDistrictKey=dk;
-  _ovpState='done';
-  // Mevcut arama değeriyle yeniden render
-  const inp=document.getElementById('loc-search');
-  filterLocList(inp?inp.value:'');
-}
-
-function _renderLocState(){
-  const c=document.getElementById('loc-list'); if(!c) return;
-  if(_ovpState==='loading'){
-    c.innerHTML=`<div style="padding:32px;text-align:center;color:#aaa;font-size:13px">
-      <i class="fas fa-spinner fa-spin" style="font-size:24px;color:var(--brand);display:block;margin-bottom:10px"></i>
-      OSM verisi yükleniyor…</div>`;
-  } else if(_ovpState==='error'){
-    c.innerHTML=`<div style="padding:24px;text-align:center;color:#e74c3c;font-size:13px">
-      <i class="fas fa-triangle-exclamation"></i> Veri yüklenemedi.<br>
-      <span style="color:#aaa;font-size:11px;margin-top:4px;display:block">Lütfen internet bağlantınızı kontrol edip tekrar deneyin.</span></div>`;
+    _setLocListHtml(features.map(f=>{
+      const [lon,lat]=f.center;
+      const name=f.text||f.place_name;
+      // Adres: place_name'den kısa ismi çıkar, ilk 2 virgülü al
+      const addr=(f.place_name||'').replace(name+', ','').split(',').slice(0,2).join(',').trim();
+      const maki=f.properties?.maki||'';
+      const cat=f.properties?.category||'';
+      const {fa,color,sub}=_makiToStyle(maki,cat);
+      const dist=haversine(myLoc.lat,myLoc.lon,lat,lon);
+      const safeName=name.replace(/'/g,'&#39;').replace(/"/g,'&quot;');
+      return `<div class="loc-item" onclick="applyOvpLocation(${lat},${lon},'${safeName}','${color}','${fa}')">
+        <div class="loc-ico" style="background:${color}"><i class="fas ${fa}"></i></div>
+        <div class="loc-info">
+          <div class="loc-name">${name}</div>
+          <div class="loc-sub">${sub}${addr?' · '+addr:''}</div>
+        </div>
+        <div class="loc-dist">${fmtDist(dist)}</div>
+      </div>`;
+    }).join(''));
+  }catch(e){
+    if(e.name==='AbortError') return;
+    _setLocListHtml(`<div style="padding:24px;text-align:center;color:#e74c3c;font-size:13px">
+      <i class="fas fa-triangle-exclamation"></i> Arama başarısız.<br>
+      <span style="color:#aaa;font-size:11px;margin-top:4px;display:block">
+        İnternet bağlantınızı kontrol edin.</span></div>`);
   }
 }
 
 function openLocPicker(){
   const overlay=document.getElementById('loc-overlay');
   overlay.classList.add('open');
-  const dk=(_currentDistrict&&_currentDistrict!=='il')?_currentDistrict:'gokceada';
-  // Panel alt başlığını ilçe adıyla güncelle
+  // Panel alt başlığını güncelle
   const sel=document.getElementById('maps-sel');
-  const selTxt=sel&&sel.options[sel.selectedIndex]?
-    sel.options[sel.selectedIndex].text : dk;
+  const selTxt=sel&&sel.options[sel.selectedIndex]?sel.options[sel.selectedIndex].text:'';
   const sub=document.getElementById('loc-panel-sub');
-  if(sub) sub.textContent=`${selTxt} ilçesindeki OSM işletmelerini arayın`;
-  if(_ovpDistrictKey!==dk||_ovpState==='idle'||_ovpState==='error'){
-    _ovpResults=[]; _ovpDistrictKey=''; _ovpState='idle';
-    _renderLocState();
-    _loadDistrictBiz(dk);
-  } else {
-    const inp=document.getElementById('loc-search');
-    filterLocList(inp?inp.value:'');
-  }
+  if(sub) sub.textContent=`${selTxt} bölgesinde Mapbox POI araması`;
+  // Arama kutusunu temizle ve ipucu göster
+  const inp=document.getElementById('loc-search');
+  if(inp) inp.value='';
+  if(_locSearchAbort){ _locSearchAbort.abort(); _locSearchAbort=null; }
+  clearTimeout(_locSearchTimer);
+  _setLocListHtml(_LOC_HINT);
   setTimeout(()=>document.getElementById('loc-search').focus(),120);
 }
 
 function closeLocPicker(){
   document.getElementById('loc-overlay').classList.remove('open');
-  document.getElementById('loc-search').value='';
+  const inp=document.getElementById('loc-search'); if(inp) inp.value='';
+  clearTimeout(_locSearchTimer);
+  if(_locSearchAbort){ _locSearchAbort.abort(); _locSearchAbort=null; }
   stopMapPickMode();
 }
 
@@ -1943,28 +1937,11 @@ function _locNorm(s){
 }
 
 function filterLocList(q){
-  const container=document.getElementById('loc-list');
-  if(_ovpState!=='done'){ _renderLocState(); return; }
-  const norm=_locNorm((q||'').trim());
-  const results=_ovpResults.filter(p=>
-    !norm||_locNorm(p.name).includes(norm)
-  ).slice(0,100);
-
-  if(!results.length){
-    container.innerHTML='<div style="padding:24px;text-align:center;color:#bbb;font-size:13px">Eşleşen yer bulunamadı</div>';
-    return;
-  }
-  container.innerHTML=results.map(p=>{
-    const safeName=p.name.replace(/'/g,'&#39;').replace(/"/g,'&quot;');
-    return `<div class="loc-item" onclick="applyOvpLocation(${p.lat},${p.lon},'${safeName}','${p.color}','${p.fa}')">
-      <div class="loc-ico" style="background:${p.color}"><i class="fas ${p.fa}"></i></div>
-      <div class="loc-info">
-        <div class="loc-name">${p.name}</div>
-        <div class="loc-sub">${p.sub||''}</div>
-      </div>
-      <div class="loc-dist">${fmtDist(p.dist)}</div>
-    </div>`;
-  }).join('');
+  q=(q||'').trim();
+  if(!q){ _setLocListHtml(_LOC_HINT); return; }
+  if(q.length<2) return;
+  clearTimeout(_locSearchTimer);
+  _locSearchTimer=setTimeout(()=>_searchMapboxBiz(q), 380);
 }
 
 function applyOvpLocation(lat, lon, name, color, fa){
