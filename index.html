@@ -1,0 +1,2299 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>muhit.in — Çevre Rehberi</title>
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,600;0,6..12,700;0,6..12,800;0,6..12,900;1,6..12,400;1,6..12,700&family=Josefin+Sans:wght@100;200;300;400&display=swap" rel="stylesheet"/>
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+<script src="https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+/* ── NPS Wayside Map Design Tokens ── */
+:root {
+  --brand:      #1A6B4A;
+  --sw:         282px;
+  --hh:         62px;
+  /* NPS highlight palette */
+  --nps-orange: #FE5000;
+  --nps-blue:   #0085CA;
+  --nps-green:  #84BD00;
+  --nps-brown:  #5D4037;
+  --nps-gray:   #808080;
+  /* NPS text */
+  --txt-default:#000000;
+  --txt-water:  #0072BC;
+  --txt-admin:  #808080;
+  /* NPS area */
+  --area-park:  #D3E0BD;
+  --area-water: #D6E7F2;
+  --area-built: #FBF6D9;
+}
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Nunito Sans',sans-serif; height:100vh;
+       display:flex; flex-direction:column; background:#f0ede8; }
+
+/* ── Üst çubuk — NPS Title Block ── */
+#bar {
+  height:var(--hh); background:var(--brand); flex-shrink:0;
+  display:flex; align-items:center; padding:0 20px; gap:12px; z-index:20;
+  box-shadow:0 2px 12px rgba(0,0,0,.4);
+  border-bottom:3px solid rgba(255,255,255,.25);
+}
+#bar h1 {
+  color:#fff;
+  font-family:'Josefin Sans','Nunito Sans',sans-serif;
+  font-size:26px; font-weight:100; letter-spacing:6px;
+  text-transform:none; line-height:1;
+}
+#bar h1 .brand-dot { font-weight:300; opacity:.55; letter-spacing:2px; }
+#bar sub { color:rgba(255,255,255,.65); font-size:10px; display:block;
+           font-family:'Nunito Sans',sans-serif; font-weight:400;
+           letter-spacing:.8px; margin-top:2px; text-transform:uppercase; }
+.sp { flex:1; }
+.tb {
+  border:1.5px solid rgba(255,255,255,.4); background:rgba(255,255,255,.15);
+  color:#fff; padding:6px 13px; border-radius:6px; cursor:pointer;
+  font-size:12px; font-weight:700; transition:background .2s; white-space:nowrap;
+  font-family:inherit; display:flex; align-items:center; gap:6px;
+}
+.tb:hover    { background:rgba(255,255,255,.28); }
+.tb:disabled { opacity:.5; cursor:wait; }
+.tb.active   { background:rgba(255,255,255,.3); border-color:rgba(255,255,255,.8); }
+
+/* ── Mod grubu & yarıçap kontrolü ── */
+#mode-grp { display:flex; gap:3px; }
+#mode-grp .tb { padding:6px 10px; }
+#mode-grp .tb.active { background:rgba(255,255,255,.35); border-color:#fff; }
+#radius-ctrl {
+  display:flex; align-items:center; gap:6px;
+  background:rgba(255,255,255,.1); border:1.5px solid rgba(255,255,255,.3);
+  border-radius:6px; padding:3px 10px; white-space:nowrap;
+}
+#radius-lbl { font-size:11px; font-weight:800; color:#fff; min-width:36px; text-align:right; }
+#radius-slider {
+  width:80px; accent-color:#fff; height:4px; cursor:pointer;
+}
+#btn-gps { padding:6px 9px; }
+/* Arama sonucu uzak uyarısı */
+.loc-out-range {
+  font-size:10px; color:#f97316; font-weight:700;
+  margin-top:2px; display:flex; align-items:center; gap:4px;
+}
+.loc-item-far { opacity:.7; }
+.loc-item-far .loc-ico { filter:grayscale(.5); }
+
+/* ── Köy / Mahalle Sidebar ── */
+.vghdr {
+  background:linear-gradient(90deg,#f0f6f2 0%,#fafaf7 100%);
+  border-top:2px solid #c8ddd3 !important;
+}
+.vghdr .glbl { font-size:12px; font-weight:800; color:#1A6B4A; }
+.vghdr .gcnt { font-size:11px; color:#1A6B4A; font-weight:700; margin-left:auto; }
+.vsubhdr {
+  display:flex; align-items:center; gap:6px;
+  padding:6px 8px 6px 28px;
+  font-size:11px; color:#666; cursor:pointer;
+  border-top:1px solid #f0ece6; user-select:none;
+}
+.vsubhdr:hover { background:#f5f2ee; }
+.vsubhdr .vtoggle { margin-left:auto; font-size:9px; color:#aaa; }
+.vsub-body .pitem { padding-left:32px; background:#fafaf7; }
+.pitem-mybiz { background:#edf7f2 !important; border-left:3px solid #1A6B4A; }
+.pitem-mybiz .pnm { font-weight:700; }
+
+/* ── Haritada köy merkezi marker'ları ── */
+.village-mk { display:flex; flex-direction:column; align-items:center; pointer-events:none; }
+.vmk-dot {
+  width:10px; height:10px; border-radius:50%;
+  background:#1A6B4A; border:2.5px solid #fff;
+  box-shadow:0 1px 5px rgba(0,0,0,.45);
+}
+.vmk-lbl {
+  font-size:10px; font-weight:800; color:#1A6B4A; text-align:center;
+  line-height:1.25; background:rgba(255,255,255,.92);
+  border-radius:5px; padding:3px 6px; margin-top:3px;
+  white-space:nowrap; box-shadow:0 1px 4px rgba(0,0,0,.22);
+  border:1px solid rgba(26,107,74,.25);
+  font-family:'Nunito Sans',sans-serif;
+}
+.vmk-lbl small { font-size:9px; color:#555; font-weight:600; }
+
+/* ── Gövde ── */
+#body { display:flex; flex:1; overflow:hidden; }
+
+/* ── Kenar çubuğu — NPS Legend Panel ── */
+#side {
+  width:var(--sw); background:#FAFAF7; overflow-y:auto;
+  border-right:2px solid #D8D0C4; flex-shrink:0; display:flex; flex-direction:column;
+}
+#side-hdr {
+  padding:11px 15px 9px; border-bottom:2px solid #E8E2D8;
+  display:flex; align-items:center; justify-content:space-between;
+  font-size:9px; text-transform:uppercase; letter-spacing:1.2px;
+  color:var(--nps-gray); font-weight:700; position:sticky; top:0;
+  background:#FAFAF7; z-index:2; font-family:'Nunito Sans',sans-serif;
+}
+#side-hdr a { color:var(--brand); cursor:pointer; font-weight:700;
+              text-transform:none; letter-spacing:0; font-size:11px;
+              font-family:'Nunito Sans',sans-serif; }
+/* Gizli kategori uyarı bandı — kaldırıldı */
+#hidden-banner {
+  display:none !important; /* banner yok — checkbox zaten yönetiyor */
+}
+#hidden-banner a { color:var(--brand); cursor:pointer; font-weight:700; }
+.grp { border-bottom:1px solid #f0f0f0; }
+.ghdr {
+  display:flex; align-items:center; gap:8px; padding:9px 14px;
+  cursor:pointer; user-select:none;
+  font-size:13px; font-weight:700; color:#1A1A1A;
+  font-family:'Nunito Sans',sans-serif; letter-spacing:.1px;
+}
+.ghdr:hover { background:#F2EFE9; }
+.ghdr.hidden-cat { opacity:.55; }
+.gico {
+  width:26px; height:26px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; font-size:12px; color:#fff;
+}
+.glbl { flex:1; }
+.gcnt { font-size:10px; color:#bbb; background:#f2f2f2;
+        border-radius:9px; padding:1px 7px; font-weight:400; }
+.ghidden-tag {
+  font-size:9px; color:#fff; background:#bbb;
+  border-radius:4px; padding:1px 5px; font-weight:700;
+}
+.gcbx input { width:14px; height:14px; accent-color:var(--brand);
+              cursor:pointer; margin-left:6px; }
+.gitms { display:none; padding:2px 0 6px 0; }
+.gitms.open { display:block; }
+.pitem {
+  display:flex; align-items:center; gap:7px;
+  padding:5px 14px 5px 52px;
+  font-size:12px; color:#555;
+}
+.pitem:hover { color:#111; background:#fafafa; }
+.pitem input { width:13px; height:13px; accent-color:var(--brand); cursor:pointer; flex-shrink:0; }
+.pnm  { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; cursor:pointer; }
+.pdst { font-size:10px; color:#bbb; white-space:nowrap; }
+.pnum {
+  width:18px; height:18px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:9px; font-weight:800; color:#fff;
+  box-shadow:0 1px 3px rgba(0,0,0,.2);
+}
+#no-pois {
+  padding:32px 20px; text-align:center; color:#bbb; font-size:12px; display:none;
+}
+
+/* ── Harita ── */
+#mwrap { flex:1; position:relative; min-height:0; min-width:0; }
+#map   { position:absolute; inset:0; }
+
+/* ── POI Pin — NPS Locator Symbols ── */
+.map-pin {
+  width:38px; height:38px; border-radius:50%; position:relative;
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:14px;
+  box-shadow:0 2px 12px rgba(0,0,0,.42);
+  border:2.5px solid rgba(255,255,255,.95);
+  cursor:pointer; transition:opacity .15s;
+}
+.map-pin:hover { transform:scale(1.1); transition:transform .1s; }
+/* NPS kare işaret — yapı / anıt */
+.map-pin.nps-square { border-radius:6px; }
+/* NPS nokta — doğal (varsayılan, border-radius:50% kalır) */
+.map-pin.nps-circle { border-radius:50%; }
+.pin-num {
+  position:absolute; top:-5px; right:-5px;
+  width:17px; height:17px; border-radius:50%;
+  background:#fff; color:#222;
+  font-size:8px; font-weight:900;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 1px 4px rgba(0,0,0,.3);
+  border:1.5px solid rgba(0,0,0,.08);
+  pointer-events:none;
+}
+/* × kaldırma butonu — pin hover'ında görünür */
+.pin-close {
+  display:none; position:absolute; top:-8px; left:-8px;
+  width:18px; height:18px; border-radius:50%;
+  background:#fff; color:#666; border:1.5px solid #ddd;
+  font-size:11px; font-weight:900; cursor:pointer;
+  align-items:center; justify-content:center;
+  z-index:10; line-height:1; box-shadow:0 1px 4px rgba(0,0,0,.2);
+}
+.map-pin:hover .pin-close { display:flex; }
+
+/* ── POI Görsel Kartı (harita üzeri illüstrasyon) ── */
+/* NOT: position yazılmıyor — Mapbox GL JS .mapboxgl-marker { position:absolute }
+   kuralı devreye girmeli. position:relative yazılırsa our CSS daha sonra geldiği için
+   Mapbox'ı override eder ve tüm marker'lar flow'da 38px kayarak üst üste biner. */
+.poi-wrap { width:38px; height:38px; }
+.poi-img-card {
+  position:absolute; bottom:calc(100% + 10px); left:50%;
+  transform:translateX(-50%);
+  background:#fff; border-radius:12px;
+  box-shadow:0 6px 28px rgba(0,0,0,.38);
+  padding:4px; width:148px; z-index:20;
+  transition:opacity .2s;
+}
+.poi-img-card img {
+  width:100%; border-radius:9px; display:block;
+  object-fit:cover;
+}
+/* Büyük illüstrasyon kartı — floating kart (küçük resimli POI'lar için) */
+.poi-img-card--large {
+  width:260px;
+  background:transparent;
+  box-shadow:none;
+  padding:0;
+  border-radius:0;
+  filter:drop-shadow(0 8px 24px rgba(0,0,0,.45));
+}
+.poi-img-card--large img {
+  object-fit:contain;
+  border-radius:0;
+  background:transparent;
+}
+.poi-img-card--large::after { display:none; }
+.poi-img-card--large .poi-img-label {
+  background:rgba(80,30,100,.75);
+  border-radius:6px;
+  font-size:10px;
+  bottom:6px;
+}
+
+/* ── Resim-pin: illüstrasyon doğrudan haritada pin olarak ── */
+.has-img-pin {
+  width:auto !important; height:auto !important;
+  display:flex !important; flex-direction:column;
+  align-items:center; gap:2px;
+}
+/* floating kartı inline konuma al */
+.has-img-pin .poi-img-card {
+  position:static !important;
+  bottom:auto !important; left:auto !important;
+  transform:none !important;
+  width:88px; background:transparent;
+  box-shadow:none; padding:0; border-radius:0;
+  filter:drop-shadow(0 6px 20px rgba(0,0,0,.6));
+}
+.has-img-pin .poi-img-card img {
+  width:88px; height:auto;
+  object-fit:contain; border-radius:0; background:transparent;
+}
+.has-img-pin .poi-img-card::after { display:none; }
+.has-img-pin .poi-img-label { display:none; }
+.has-img-pin .poi-img-x { display:none; }
+/* standart ikonu gizle — görsel zaten yeterli */
+.has-img-pin .map-pin { display:none !important; }
+/* kapat butonu */
+.has-img-pin .pin-close { display:none; top:-4px; right:-4px; }
+.has-img-pin:hover .pin-close { display:flex; }
+.poi-img-label {
+  position:absolute; bottom:4px; left:4px; right:4px;
+  background:rgba(0,0,0,.52); color:#fff;
+  font-size:9px; font-weight:700; padding:3px 6px;
+  border-radius:0 0 6px 6px; text-align:center;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+/* Aşağıya bakan küçük üçgen */
+.poi-img-card::after {
+  content:''; position:absolute;
+  top:100%; left:50%; transform:translateX(-50%);
+  border:8px solid transparent;
+  border-top-color:#fff;
+}
+.poi-img-x {
+  position:absolute; top:-9px; right:-9px;
+  width:22px; height:22px; border-radius:50%;
+  background:#fff; color:#555; border:1.5px solid #ddd;
+  font-size:12px; font-weight:900; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.22); z-index:30; line-height:1;
+}
+
+/* ── Büyük landmark pin (havalimanı, iskele, plaj vb.) ── */
+.map-pin.landmark-pin {
+  width:50px; height:50px; font-size:20px;
+  box-shadow:0 3px 16px rgba(0,0,0,.5);
+  border-width:3px;
+}
+.map-pin.landmark-pin .pin-num {
+  width:20px; height:20px; font-size:9px; top:-6px; right:-6px;
+}
+.map-pin.landmark-pin .pin-dist {
+  font-size:11px; padding:3px 8px;
+}
+
+/* ── Yer adı etiketi — NPS town typography ── */
+.place-lbl {
+  background:rgba(251,246,217,.92);   /* NPS builtup area tonu */
+  color:#000; font-size:14px; font-weight:700;
+  font-family:'Nunito Sans',sans-serif; letter-spacing:.6px;
+  padding:3px 10px; border-radius:3px;
+  border:1px solid rgba(0,0,0,.22);
+  pointer-events:none;
+  box-shadow:0 1px 6px rgba(0,0,0,.22);
+  white-space:nowrap;
+  text-shadow:0 1px 0 rgba(255,255,255,.8);
+}
+
+/* ── Kuzey Oku — NPS mandatory element ── */
+#north-arrow {
+  position:absolute; bottom:90px; left:14px; z-index:10;
+  display:flex; flex-direction:column; align-items:center;
+  background:rgba(255,255,255,.92); border:1.5px solid #ccc;
+  border-radius:50%; width:44px; height:44px;
+  justify-content:center; gap:0;
+  box-shadow:0 2px 8px rgba(0,0,0,.25);
+  pointer-events:none;
+}
+#north-arrow svg { width:28px; height:28px; }
+#north-arrow span {
+  font-size:9px; font-weight:800; color:#1a1a1a;
+  font-family:'Nunito Sans',sans-serif; line-height:1; margin-top:-3px;
+  letter-spacing:1px;
+}
+
+/* ── İsim + mesafe rozeti (pin altında) ── */
+.pin-dist {
+  position:absolute; top:calc(100% + 4px); left:50%;
+  transform:translateX(-50%);
+  background:rgba(20,20,20,.82); color:#fff;
+  font-size:9.5px; font-weight:700; padding:2px 7px;
+  border-radius:8px; white-space:nowrap;
+  pointer-events:none; letter-spacing:.15px;
+  box-shadow:0 1px 6px rgba(0,0,0,.35);
+  max-width:150px; overflow:hidden; text-overflow:ellipsis;
+}
+/* mesafe kısmı hafif soluk — isimden ayrışsın */
+.pdk { opacity:.78; font-weight:600; }
+
+/* ── Hotel / Buradasınız pin — tek eleman ── */
+.hotel-pin-wrap {
+  display:flex; flex-direction:column; align-items:center;
+  pointer-events:none;
+}
+.hotel-dot {
+  width:20px; height:20px; border-radius:50%;
+  background:var(--brand); border:3px solid #fff;
+  box-shadow:0 3px 12px rgba(0,0,0,.45); position:relative;
+  flex-shrink:0;
+}
+.hotel-dot::after {
+  content:''; position:absolute;
+  top:-8px; left:-8px; right:-8px; bottom:-8px;
+  border-radius:50%; border:2px solid var(--brand);
+  animation:hotel-ring 2.4s ease-out infinite; opacity:0;
+}
+@keyframes hotel-ring {
+  0%   { opacity:.6; transform:scale(.6); }
+  100% { opacity:0;  transform:scale(1.9); }
+}
+.hotel-name-lbl {
+  background:var(--brand); color:#fff;
+  padding:4px 10px; border-radius:6px; margin-top:5px;
+  font-weight:800; font-size:12px; white-space:nowrap;
+  box-shadow:0 2px 8px rgba(0,0,0,.35);
+  font-family:'Nunito Sans',sans-serif;
+}
+
+/* ── Harita Arama Kutusu ── */
+#map-search {
+  position:absolute; top:14px; left:14px; z-index:20;
+  width:260px;
+}
+#map-search-input {
+  width:100%; box-sizing:border-box;
+  padding:9px 14px 9px 38px;
+  border:none; border-radius:10px;
+  background:rgba(255,255,255,.97);
+  box-shadow:0 2px 12px rgba(0,0,0,.28);
+  font-size:13px; font-family:'Nunito Sans',sans-serif;
+  color:#222; outline:none;
+}
+#map-search-input::placeholder { color:#aaa; }
+#map-search-icon {
+  position:absolute; left:12px; top:50%; transform:translateY(-50%);
+  color:#888; font-size:13px; pointer-events:none;
+}
+#map-search-clear {
+  position:absolute; right:10px; top:50%; transform:translateY(-50%);
+  color:#bbb; font-size:15px; cursor:pointer; display:none;
+  line-height:1; background:none; border:none; padding:0;
+}
+#map-search-clear:hover { color:#555; }
+#search-results {
+  margin-top:5px;
+  background:#fff; border-radius:10px;
+  box-shadow:0 4px 20px rgba(0,0,0,.22);
+  overflow:hidden; display:none;
+  max-height:320px; overflow-y:auto;
+}
+.sr-item {
+  padding:9px 14px; cursor:pointer;
+  display:flex; align-items:center; gap:10px;
+  border-bottom:1px solid #f0f0f0;
+  font-size:13px; font-family:'Nunito Sans',sans-serif;
+  transition:background .1s;
+}
+.sr-item:last-child { border-bottom:none; }
+.sr-item:hover { background:#f5f8ff; }
+.sr-dot {
+  width:26px; height:26px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; font-size:11px; color:#fff;
+}
+.sr-info { flex:1; min-width:0; }
+.sr-name { font-weight:700; color:#1a1a1a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sr-meta { font-size:11px; color:#888; margin-top:1px; }
+.sr-num {
+  font-size:11px; font-weight:800; color:#fff;
+  background:#333; border-radius:50%;
+  width:20px; height:20px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.sr-empty { padding:12px 14px; color:#aaa; font-size:13px; text-align:center; }
+/* Sidebar'da bulunan satır vurgusu */
+@keyframes sr-flash {
+  0%,100%{ background:transparent; }
+  20%,60%{ background:#fff3cd; }
+}
+.sr-highlight { animation:sr-flash 2.2s ease; }
+@media print { #map-search { display:none !important; } }
+
+/* ── Attribution & Scale küçük/soluk ── */
+.mapboxgl-ctrl-attrib-button { width:16px !important; height:16px !important; }
+.mapboxgl-ctrl-attrib.mapboxgl-compact { opacity:.45; transition:opacity .2s; }
+.mapboxgl-ctrl-attrib.mapboxgl-compact:hover { opacity:1; }
+.mapboxgl-ctrl-attrib a { font-size:8px !important; }
+
+/* ── İndirme sırasında UI elemanlarını gizle ── */
+#mwrap.downloading #map-search           { display:none !important; }
+#mwrap.downloading .mapboxgl-ctrl-group  { display:none !important; }
+#mwrap.downloading .mapboxgl-ctrl-scale  { display:none !important; }
+#mwrap.downloading .mapboxgl-ctrl-attrib { display:none !important; }
+
+/* ── Araç modu: harita kilitli göstergesi ── */
+#mwrap.map-locked::after {
+  content:'🔒 Ada Haritası — Araç Modu';
+  position:absolute; bottom:54px; left:50%; transform:translateX(-50%);
+  background:rgba(20,20,20,.72); color:#fff;
+  font-size:11px; font-weight:700; letter-spacing:.3px;
+  padding:5px 14px; border-radius:20px;
+  pointer-events:none; z-index:15; white-space:nowrap;
+  font-family:'Nunito Sans',sans-serif;
+}
+#mwrap.map-locked .mapboxgl-ctrl-top-right { visibility:hidden; }
+
+/* ── İlçe seçici ── */
+#district-sel {
+  border:1.5px solid rgba(255,255,255,.4);
+  background:rgba(255,255,255,.15);
+  color:#fff; padding:6px 10px; border-radius:6px; cursor:pointer;
+  font-size:12px; font-weight:700; font-family:inherit;
+  outline:none; appearance:none; -webkit-appearance:none;
+  padding-right:24px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(255,255,255,.7)'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 8px center;
+}
+#district-sel:hover { background-color:rgba(255,255,255,.28); }
+#district-sel option { background:#1a1a1a; color:#fff; font-weight:600; }
+
+/* ── İşletme Konum Seçici ── */
+#loc-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,.52); z-index:500;
+  display:none; align-items:center; justify-content:center;
+}
+#loc-overlay.open { display:flex; }
+#loc-panel {
+  background:#fff; border-radius:18px; width:480px; max-height:76vh;
+  display:flex; flex-direction:column;
+  box-shadow:0 12px 48px rgba(0,0,0,.45);
+  overflow:hidden;
+}
+#loc-panel-hdr {
+  background:var(--brand); color:#fff; padding:18px 22px 14px;
+  display:flex; align-items:center; justify-content:space-between; flex-shrink:0;
+}
+#loc-panel-hdr h3 { font-size:16px; font-weight:800; font-family:'Nunito Sans',sans-serif; }
+#loc-panel-hdr p  { font-size:11px; opacity:.8; margin-top:2px; font-family:'Nunito Sans',sans-serif; }
+#loc-close { background:rgba(255,255,255,.2); border:none; color:#fff;
+             width:30px; height:30px; border-radius:50%; cursor:pointer;
+             font-size:16px; display:flex; align-items:center; justify-content:center; }
+#loc-close:hover { background:rgba(255,255,255,.35); }
+#loc-search-wrap { padding:12px 16px; border-bottom:1px solid #eee; flex-shrink:0; position:relative; }
+#loc-search { width:100%; padding:9px 12px 9px 36px; border:1.5px solid #ddd;
+              border-radius:10px; font-size:13px; font-family:'Nunito Sans',sans-serif;
+              outline:none; box-sizing:border-box; }
+#loc-search:focus { border-color:var(--brand); }
+#loc-search-icon { position:absolute; left:28px; top:50%; transform:translateY(-50%);
+                   color:#bbb; font-size:13px; pointer-events:none; }
+#loc-list { overflow-y:auto; flex:1; }
+.loc-item {
+  display:flex; align-items:center; gap:12px;
+  padding:11px 20px; cursor:pointer; border-bottom:1px solid #f5f5f5;
+  transition:background .1s;
+}
+.loc-item:hover { background:#f0f7ff; }
+.loc-ico {
+  width:34px; height:34px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; font-size:14px; color:#fff;
+}
+.loc-info { flex:1; min-width:0; }
+.loc-name { font-size:13px; font-weight:700; color:#1a1a1a;
+            white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.loc-sub  { font-size:11px; color:#999; margin-top:1px; }
+.loc-dist { font-size:11px; font-weight:700; color:#bbb; white-space:nowrap; }
+#loc-panel-footer {
+  padding:12px 20px; border-top:1px solid #eee; flex-shrink:0;
+  display:flex; align-items:center; gap:10px; background:#fafafa;
+}
+#loc-map-mode {
+  flex:1; padding:8px 14px; border:1.5px dashed #ccc; background:#fff;
+  border-radius:8px; cursor:pointer; font-size:12px; font-weight:700;
+  color:#555; font-family:'Nunito Sans',sans-serif; text-align:center;
+  transition:all .15s;
+}
+#loc-map-mode:hover { border-color:var(--brand); color:var(--brand); background:#f0f8ff; }
+#loc-reset {
+  padding:8px 14px; border:1.5px solid #ddd; background:#fff;
+  border-radius:8px; cursor:pointer; font-size:12px; font-weight:700;
+  color:#888; font-family:'Nunito Sans',sans-serif;
+}
+#loc-reset:hover { border-color:#e74c3c; color:#e74c3c; }
+/* Haritaya tık modu — imleç */
+body.map-pick-mode #map { cursor:crosshair !important; }
+body.map-pick-mode #loc-pick-hint {
+  position:absolute; bottom:120px; left:50%; transform:translateX(-50%);
+  background:var(--brand); color:#fff; padding:10px 20px; border-radius:10px;
+  font-size:13px; font-weight:700; font-family:'Nunito Sans',sans-serif;
+  z-index:30; pointer-events:none; white-space:nowrap;
+  box-shadow:0 4px 16px rgba(0,0,0,.3);
+}
+#loc-pick-hint { display:none; }
+
+/* ── Baskı ── */
+@media print {
+  @page { size:A3 landscape; margin:0; }
+  #bar,#side { display:none !important; }
+  body,#body,#mwrap,#map { display:block !important;
+    width:100vw !important; height:100vh !important; }
+  #ph { display:flex !important; }
+  #pft { display:flex !important; }
+}
+#ph,#pft { display:none; }
+#ph {
+  position:fixed; top:0; left:0; right:0; z-index:999;
+  height:68px; background:var(--brand);
+  align-items:center; padding:0 34px; gap:14px;
+  border-bottom:3px solid rgba(255,255,255,.3);
+}
+/* NPS mapTitle: 36pt bold uppercase tracking:100 */
+#ph h2  { color:#fff; font-size:24pt; font-weight:700;
+          font-family:'Nunito Sans',sans-serif;
+          text-transform:uppercase; letter-spacing:4px; }
+#ph sub { color:rgba(255,255,255,.75); font-size:10pt;
+          font-family:'Nunito Sans',sans-serif; }
+#pft {
+  position:fixed; bottom:0; left:0; right:0; z-index:999;
+  height:24px; background:rgba(255,255,255,.92); border-top:1px solid #ddd;
+  align-items:center; justify-content:space-between;
+  padding:0 28px; font-size:8pt; color:#bbb;
+}
+</style>
+</head>
+<body>
+
+<div id="bar">
+  <div>
+    <h1 id="bar-brand">muhit.in</h1>
+    <sub>Çanakkale İl Kültür ve Turizm Müdürlüğü</sub>
+  </div>
+  <div class="sp"></div>
+  <button class="tb" id="btn-3d" onclick="toggle3D()">
+    <i class="fas fa-cube"></i> 3D
+  </button>
+  <button class="tb" id="btn-myloc" onclick="openLocPicker()" title="İşletmenizi seçin — Buradasınız konumunu değiştirin">
+    <i class="fas fa-store"></i> Konumum
+  </button>
+  <!-- İlçe seçici -->
+  <select id="district-sel" onchange="setDistrict(this.value)" title="İlçe seçin">
+    <option value="gokceada">📍 Gökçeada</option>
+    <option value="ayvacik">📍 Ayvacık</option>
+    <option value="canakkale">📍 Çanakkale</option>
+  </select>
+  <!-- Mod: Yürüyüş / Araç -->
+  <div id="mode-grp" title="Mod seçin">
+    <button class="tb mode-btn" id="btn-mode-walk" onclick="setMode('walk')">
+      <i class="fas fa-person-walking"></i> Yürüyüş
+    </button>
+    <button class="tb mode-btn active" id="btn-mode-drive" onclick="setMode('drive')">
+      <i class="fas fa-car"></i> Araç
+    </button>
+  </div>
+  <!-- Yürüyüş yarıçapı (sadece walk modunda görünür) -->
+  <div id="radius-ctrl" title="Yürüyüş yarıçapı">
+    <span id="radius-lbl">800m</span>
+    <input type="range" id="radius-slider" min="200" max="2000" step="100" value="800"
+      oninput="setWalkRadius(+this.value)">
+  </div>
+  <!-- GPS -->
+  <button class="tb" id="btn-gps" onclick="useGPS()" title="Cihaz konumunu kullan">
+    <i class="fas fa-crosshairs"></i>
+  </button>
+  <button class="tb" id="btn-share" onclick="shareSelection()" title="Seçili yerleri paylaş">
+    <i class="fas fa-share-nodes"></i> Paylaş
+  </button>
+  <button class="tb" onclick="window.print()">
+    <i class="fas fa-print"></i> Yazdır
+  </button>
+  <!-- Çerçeve kaydetme: mevcut harita görünümünü walk/drive çerçevesi olarak sakla -->
+  <div style="display:flex;gap:3px;align-items:center" title="Mevcut görünümü çerçeve olarak kaydet">
+    <button class="tb" onclick="saveFrame('walk')"
+      title="Bu görünümü yürüyüş indirme çerçevesi olarak kaydet" style="padding:0 8px;font-size:11px">
+      <i class="fas fa-person-walking"></i><i class="fas fa-crop-simple" style="margin-left:2px;font-size:9px"></i>
+    </button>
+    <button class="tb" onclick="saveFrame('drive')"
+      title="Bu görünümü araç indirme çerçevesi olarak kaydet" style="padding:0 8px;font-size:11px">
+      <i class="fas fa-car"></i><i class="fas fa-crop-simple" style="margin-left:2px;font-size:9px"></i>
+    </button>
+  </div>
+  <button class="tb" id="btn-img" onclick="downloadImage()">
+    <i class="fas fa-image"></i> İndir
+  </button>
+</div>
+
+<div id="body">
+  <div id="side">
+    <div id="side-hdr">
+      <span>Çevredeki Yerler</span>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span id="cat-counter" title="NPS standardı: haritada en fazla 6 kategori" style="font-size:10px;font-weight:700;color:#888;cursor:default">0/6</span>
+        <a onclick="toggleAll(true)">Tümü</a>
+        <a onclick="toggleAll(false)" style="color:#bbb">Gizle</a>
+      </div>
+    </div>
+    <div id="hidden-banner">
+      <i class="fas fa-eye-slash"></i>
+      <span>Bazı kategoriler gizli &mdash; <a onclick="showAllCats()">hepsini göster</a></span>
+    </div>
+    <div id="catlist"></div>
+    <div id="no-pois">Bu yarıçapta hiç POI bulunamadı.</div>
+  </div>
+  <div id="mwrap">
+    <div id="map"></div>
+    <!-- Arama kutusu -->
+    <div id="map-search">
+      <i class="fas fa-magnifying-glass" id="map-search-icon"></i>
+      <input id="map-search-input" type="text" placeholder="Yer ara… (restoran, kilise, plaj…)" autocomplete="off">
+      <button id="map-search-clear" onclick="clearSearch()">×</button>
+      <div id="search-results"></div>
+    </div>
+    <!-- NPS mandatory: north arrow -->
+    <div id="north-arrow">
+      <svg viewBox="0 0 24 28" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="12,2 17,16 12,12 7,16" fill="#1a1a1a"/>
+        <polygon points="12,26 17,12 12,16 7,12" fill="#aaaaaa"/>
+      </svg>
+      <span>N</span>
+    </div>
+  </div>
+</div>
+
+<!-- İşletme konum seçici modal -->
+<div id="loc-overlay" onclick="if(event.target===this)closeLocPicker()">
+  <div id="loc-panel">
+    <div id="loc-panel-hdr">
+      <div>
+        <h3><i class="fas fa-store" style="margin-right:8px;opacity:.85"></i>İşletmenizi Seçin</h3>
+        <p>Seçtiğiniz yer "Buradasınız" konumu olur · Tüm mesafeler oradan hesaplanır</p>
+      </div>
+      <button id="loc-close" onclick="closeLocPicker()">×</button>
+    </div>
+    <div id="loc-search-wrap">
+      <i class="fas fa-magnifying-glass" id="loc-search-icon"></i>
+      <input id="loc-search" type="text" placeholder="İşletme adını arayın…" oninput="filterLocList(this.value)" autocomplete="off">
+    </div>
+    <div id="loc-list"></div>
+    <div id="loc-panel-footer">
+      <button id="loc-map-mode" onclick="startMapPickMode()">
+        <i class="fas fa-map-pin"></i> Haritaya tıklayarak konum seç
+      </button>
+      <button id="loc-reset" onclick="resetMyLocation()" title="Otel konumuna dön">
+        <i class="fas fa-rotate-left"></i> Sıfırla
+      </button>
+    </div>
+  </div>
+</div>
+<!-- Haritaya tık modu ipucu -->
+<div id="loc-pick-hint" style="position:absolute;bottom:120px;left:50%;transform:translateX(-50%);
+  background:var(--brand);color:#fff;padding:10px 20px;border-radius:10px;
+  font-size:13px;font-weight:700;font-family:'Nunito Sans',sans-serif;
+  z-index:30;pointer-events:none;white-space:nowrap;
+  box-shadow:0 4px 16px rgba(0,0,0,.3);display:none">
+  <i class="fas fa-crosshairs"></i> &nbsp;Konumunuzu haritada işaretleyin &nbsp; <span style="opacity:.7;font-weight:400">· ESC ile iptal</span>
+</div>
+
+<!-- Baskı elemanları -->
+<div id="ph"><h2>muhit.in</h2>&nbsp;<sub>Çanakkale İl Kültür ve Turizm Müdürlüğü</sub></div>
+<div id="pft">
+  <span>© Mapbox · © OpenStreetMap katkıcıları</span>
+  <span>muhit.in — Yakın Çevre Rehber Haritası</span>
+</div>
+
+<script>
+const HOTEL  = { lat:40.213, lon:25.959, name:"muhit.in", sub:"Çanakkale İl Kültür ve Turizm Müdürlüğü", brand:"#1A6B4A" };
+
+/* ── Marka adı biçimlendirme: "muhit.in" → muhit<span>.in</span> ── */
+(function(){
+  const el=document.getElementById('bar-brand');
+  if(!el) return;
+  const n=HOTEL.name;
+  const dot=n.lastIndexOf('.');
+  if(dot>0){
+    el.innerHTML=n.slice(0,dot)+'<span class="brand-dot">'+n.slice(dot)+'</span>';
+  }
+})();
+const POIS   = [{"lat": 40.2053, "lon": 25.8867, "cat": "airport", "sup": "transport", "name": "Gökçeada Havalimanı", "fa": "fa-plane", "color": "#0085CA", "hidden": false, "img_url": "", "landmark": true, "must_see": true, "shape": "circle", "village": "Yeni Bademli Köyü"}, {"lat": 40.2338, "lon": 25.948, "cat": "ferry_terminal", "sup": "transport", "name": "Kuzulimanı Feribot İskelesi", "fa": "fa-ship", "color": "#0085CA", "hidden": false, "img_url": "", "landmark": true, "must_see": true, "shape": "circle", "village": "Kuzulimanı"}, {"lat": 40.1969, "lon": 25.9122, "cat": "place_of_worship", "sup": "culture", "name": "Panaya Kilisesi", "fa": "fa-place-of-worship", "color": "#5D4037", "hidden": false, "img_url": "", "landmark": true, "must_see": true, "shape": "square", "village": "Yenimahalle"}, {"lat": 40.195, "lon": 25.8988, "cat": "place_of_worship", "sup": "culture", "name": "Zeytinliköy Metropolit Kilisesi", "fa": "fa-place-of-worship", "color": "#5D4037", "hidden": false, "img_url": "", "landmark": true, "must_see": true, "shape": "square", "village": "Fatih"}, {"lat": 40.232, "lon": 25.9478, "cat": "historic", "sup": "culture", "name": "Kaleköy Kalesi", "fa": "fa-monument", "color": "#5D4037", "hidden": false, "img_url": "", "landmark": true, "must_see": true, "shape": "square", "village": "Kuzulimanı"}, {"lat": 40.1975, "lon": 25.889, "cat": "attraction", "sup": "culture", "name": "Gökçeada Merkez", "fa": "fa-circle-info", "color": "#5D4037", "hidden": false, "img_url": "", "landmark": true, "must_see": true, "shape": "circle", "village": "Fatih"}, {"lat": 40.1275764, "lon": 25.9477061, "cat": "parking", "sup": "transport", "name": "Otopark", "fa": "fa-bus", "color": "#0085CA", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Çınarlı"}, {"lat": 40.1291026, "lon": 25.9452579, "cat": "camp_site", "sup": "nature", "name": "Kamp Alanı", "fa": "fa-tree", "color": "#84BD00", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "circle", "village": "Çınarlı"}, {"lat": 40.1475997, "lon": 25.9461606, "cat": "hostel", "sup": "accommodation", "name": "Deniz Apart Pansiyon", "fa": "fa-bed", "color": "#7C5CBF", "hidden": true, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Çınarlı"}, {"lat": 40.127627, "lon": 25.9473392, "cat": "hotel", "sup": "accommodation", "name": "Gökçeada Sörf Eğitim Oteli", "fa": "fa-bed", "color": "#7C5CBF", "hidden": true, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Çınarlı"}, {"lat": 40.1289412, "lon": 25.9413581, "cat": "hostel", "sup": "accommodation", "name": "Şen Motel", "fa": "fa-bed", "color": "#7C5CBF", "hidden": true, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Çınarlı"}, {"lat": 40.1184577, "lon": 25.7010702, "cat": "restaurant", "sup": "food", "name": "Sahil Restorant", "fa": "fa-utensils", "color": "#FE5000", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Uğurlu Köyü"}, {"lat": 40.1158063, "lon": 25.6996123, "cat": "ferry_terminal", "sup": "transport", "name": "Uğurlu Liman İskelesi", "fa": "fa-bus", "color": "#0085CA", "hidden": false, "img_url": "", "landmark": true, "must_see": true, "shape": "circle", "village": "Uğurlu Köyü"}, {"lat": 40.1113301, "lon": 25.7183993, "cat": "hotel", "sup": "accommodation", "name": "Mavi Su Resort", "fa": "fa-bed", "color": "#7C5CBF", "hidden": true, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Uğurlu Köyü"}, {"lat": 40.123839, "lon": 25.7089728, "cat": "hostel", "sup": "accommodation", "name": "Deniz Pansiyon", "fa": "fa-bed", "color": "#7C5CBF", "hidden": true, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Uğurlu Köyü"}, {"lat": 40.1219819, "lon": 25.7049767, "cat": "restaurant", "sup": "food", "name": "Uğurlu Cafe Restorant", "fa": "fa-utensils", "color": "#FE5000", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Uğurlu Köyü"}, {"lat": 40.1286009, "lon": 25.7411814, "cat": "hostel", "sup": "accommodation", "name": "Fidan Pansiyon", "fa": "fa-bed", "color": "#7C5CBF", "hidden": true, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Dereköy Köyü"}, {"lat": 40.1521246, "lon": 25.770612, "cat": "cafe", "sup": "food", "name": "Halaka Köy Evi", "fa": "fa-utensils", "color": "#FE5000", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Dereköy Köyü"}, {"lat": 40.1522054, "lon": 25.7749376, "cat": "place_of_worship", "sup": "culture", "name": "Kilise", "fa": "fa-monument", "color": "#5D4037", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Dereköy Köyü"}, {"lat": 40.1515366, "lon": 25.7749002, "cat": "hotel", "sup": "accommodation", "name": "Natural Otel", "fa": "fa-bed", "color": "#7C5CBF", "hidden": true, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Dereköy Köyü"}, {"lat": 40.1929623, "lon": 25.9060467, "cat": "cafe", "sup": "food", "name": "Fısıltı Kafe", "fa": "fa-utensils", "color": "#FE5000", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Çınarlı"}, {"lat": 40.1937366, "lon": 25.9052684, "cat": "townhall", "sup": "services", "name": "Gökçeada Belediyesi", "fa": "fa-people-group", "color": "#808080", "hidden": true, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Çınarlı"}, {"lat": 40.199269, "lon": 25.9152982, "cat": "hotel", "sup": "accommodation", "name": "Alaylıhisar Apart Hotel", "fa": "fa-bed", "color": "#7C5CBF", "hidden": true, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Yenimahalle"}, {"lat": 40.2050041, "lon": 25.9194173, "cat": "hotel", "sup": "accommodation", "name": "Kuzey Park Otel", "fa": "fa-bed", "color": "#7C5CBF", "hidden": true, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Fatih"}, {"lat": 40.2229957, "lon": 25.9073807, "cat": "hotel", "sup": "accommodation", "name": "Masi Otel", "fa": "fa-bed", "color": "#7C5CBF", "hidden": true, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Bademli Köyü"}, {"lat": 40.2247107, "lon": 25.9010528, "cat": "hostel", "sup": "accommodation", "name": "Aydın Pansiyon", "fa": "fa-bed", "color": "#7C5CBF", "hidden": true, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Yeni Bademli Köyü"}, {"lat": 40.2295329, "lon": 25.9009702, "cat": "hostel", "sup": "accommodation", "name": "Gökkuşağı pansiyon", "fa": "fa-bed", "color": "#7C5CBF", "hidden": true, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Yeni Bademli Köyü"}, {"lat": 40.2337567, "lon": 25.898747, "cat": "hostel", "sup": "accommodation", "name": "Kale Konak Pansiyon", "fa": "fa-bed", "color": "#7C5CBF", "hidden": true, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Yeni Bademli Köyü"}, {"lat": 40.233625, "lon": 25.8989596, "cat": "place_of_worship", "sup": "culture", "name": "Tarihi Kilise", "fa": "fa-monument", "color": "#5D4037", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Yeni Bademli Köyü"}, {"lat": 40.2325908, "lon": 25.8967812, "cat": "bar", "sup": "food", "name": "İspinoz Piyano Bar & Restoran", "fa": "fa-utensils", "color": "#FE5000", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Yeni Bademli Köyü"}, {"lat": 40.2320587, "lon": 25.8944457, "cat": "ferry_terminal", "sup": "transport", "name": "Kaleköy Limanı", "fa": "fa-bus", "color": "#0085CA", "hidden": false, "img_url": "", "landmark": true, "must_see": true, "shape": "circle", "village": "Kaleköy Köyü"}, {"lat": 40.1912996, "lon": 25.7524772, "cat": "beach", "sup": "beach", "name": "Marmaros", "fa": "fa-umbrella-beach", "color": "#1A7A6A", "hidden": false, "img_url": "", "landmark": true, "must_see": false, "shape": "circle", "village": "Tepeköy Köyü"}, {"lat": 40.2399692, "lon": 25.9453152, "cat": "attraction", "sup": "nature", "name": "Peynir Kayalıkları (Kaşkaval)", "fa": "fa-tree", "color": "#84BD00", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "circle", "village": "Kuzulimanı"}, {"lat": 40.1808787, "lon": 25.7697288, "cat": "attraction", "sup": "nature", "name": "Marmaros Şelalesi", "fa": "fa-tree", "color": "#84BD00", "hidden": false, "img_url": "", "landmark": false, "must_see": true, "shape": "circle", "village": "Tepeköy Köyü"}, {"lat": 40.1726905, "lon": 25.7602331, "cat": "attraction", "sup": "nature", "name": "Marmaros Waterfall Minor 1", "fa": "fa-tree", "color": "#84BD00", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "circle", "village": "Dereköy Köyü"}, {"lat": 40.2343521, "lon": 25.9467512, "cat": "bar", "sup": "food", "name": "Club Shine On", "fa": "fa-utensils", "color": "#FE5000", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Kuzulimanı"}, {"lat": 40.199451, "lon": 25.9173038, "cat": "fuel", "sup": "transport", "name": "Petrol Ofisi", "fa": "fa-bus", "color": "#0085CA", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Yenimahalle"}, {"lat": 40.1935295, "lon": 25.9044585, "cat": "hotel", "sup": "accommodation", "name": "Özbek Otel", "fa": "fa-bed", "color": "#7C5CBF", "hidden": true, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Çınarlı"}, {"lat": 40.1902729, "lon": 25.8719796, "cat": "hotel", "sup": "accommodation", "name": "Yeşil Ev Otel", "fa": "fa-bed", "color": "#7C5CBF", "hidden": true, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Zeytinli Köyü"}, {"lat": 40.171714, "lon": 25.9096875, "cat": "hostel", "sup": "accommodation", "name": "Gökçeada Yeşil Vadi Pansiyon", "fa": "fa-bed", "color": "#7C5CBF", "hidden": true, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Çınarlı"}, {"lat": 40.2338932, "lon": 25.9043888, "cat": "camp_site", "sup": "nature", "name": "Yıldızkoy Camping", "fa": "fa-tree", "color": "#84BD00", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "circle", "village": "Yeni Bademli Köyü"}, {"lat": 40.1908385, "lon": 25.8729914, "cat": "restaurant", "sup": "food", "name": "Dami", "fa": "fa-utensils", "color": "#FE5000", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Zeytinli Köyü"}, {"lat": 40.1246679, "lon": 25.6768821, "cat": "camp_site", "sup": "nature", "name": "Uğurlu Kamp Alanı", "fa": "fa-tree", "color": "#84BD00", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "circle", "village": "Dereköy Köyü"}, {"lat": 40.1444813, "lon": 25.9748195, "cat": "beach", "sup": "beach", "name": "Aydıncık Plajı", "fa": "fa-umbrella-beach", "color": "#1A7A6A", "hidden": false, "img_url": "", "landmark": true, "must_see": true, "shape": "circle", "village": "Çınarlı"}, {"lat": 40.1796455, "lon": 25.9236584, "cat": "attraction", "sup": "nature", "name": "Radar", "fa": "fa-tree", "color": "#84BD00", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "circle", "village": "Çınarlı"}, {"lat": 40.1935849, "lon": 25.9048567, "cat": "taxi", "sup": "transport", "name": "Gökçeada Taksi", "fa": "fa-bus", "color": "#0085CA", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "circle", "village": "Çınarlı"}, {"lat": 40.2281954, "lon": 25.9468308, "cat": "fast_food", "sup": "food", "name": "Muhtarın Yeri", "fa": "fa-utensils", "color": "#FE5000", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Kuzulimanı"}, {"lat": 40.2269549, "lon": 25.9462493, "cat": "picnic_site", "sup": "nature", "name": "Piknik Alanı", "fa": "fa-tree", "color": "#84BD00", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "circle", "village": "Kuzulimanı"}, {"lat": 40.1983998, "lon": 25.9069201, "cat": "restaurant", "sup": "food", "name": "Değirmentepe Cafe", "fa": "fa-utensils", "color": "#FE5000", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Cumhuriyet"}, {"lat": 40.1966768, "lon": 25.9096277, "cat": "hotel", "sup": "accommodation", "name": "Hasankeyf Apart & Otel", "fa": "fa-bed", "color": "#7C5CBF", "hidden": true, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Yenimahalle"}, {"lat": 40.2018124, "lon": 25.8333841, "cat": "attraction", "sup": "nature", "name": "Anıt Çınar", "fa": "fa-tree", "color": "#84BD00", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "circle", "village": "Tepeköy Köyü"}, {"lat": 40.1294905, "lon": 25.9421447, "cat": "restaurant", "sup": "food", "name": "Argos", "fa": "fa-utensils", "color": "#FE5000", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Çınarlı"}, {"lat": 40.1236079, "lon": 25.6779935, "cat": "cafe", "sup": "food", "name": "Güngör Yeri plaj cafe", "fa": "fa-utensils", "color": "#FE5000", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Uğurlu Köyü"}, {"lat": 40.1627241, "lon": 26.0113867, "cat": "historic", "sup": "culture", "name": "Tarihi Yer", "fa": "fa-monument", "color": "#5D4037", "hidden": false, "img_url": "", "landmark": true, "must_see": false, "shape": "square", "village": "Çınarlı"}, {"lat": 40.1484897, "lon": 25.9457367, "cat": "place_of_worship", "sup": "culture", "name": "Eşelek Köyü Cami", "fa": "fa-monument", "color": "#5D4037", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Çınarlı"}, {"lat": 40.2291443, "lon": 25.8901186, "cat": "swimming_pool", "sup": "nature", "name": "Yüzme Havuzu", "fa": "fa-tree", "color": "#84BD00", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Kaleköy Köyü"}, {"lat": 40.122298, "lon": 25.6831913, "cat": "beach", "sup": "beach", "name": "Gizli Liman Kumsalı", "fa": "fa-umbrella-beach", "color": "#1A7A6A", "hidden": false, "img_url": "", "landmark": true, "must_see": false, "shape": "circle", "village": "Uğurlu Köyü"}, {"lat": 40.0991927, "lon": 25.7820059, "cat": "beach", "sup": "beach", "name": "Laz Koyu", "fa": "fa-umbrella-beach", "color": "#1A7A6A", "hidden": false, "img_url": "", "landmark": true, "must_see": true, "shape": "circle", "village": "Şirinköy Köyü"}, {"lat": 40.0965098, "lon": 25.7532676, "cat": "beach", "sup": "beach", "name": "Yuvalı Plajı", "fa": "fa-umbrella-beach", "color": "#1A7A6A", "hidden": false, "img_url": "", "landmark": true, "must_see": false, "shape": "circle", "village": "Şirinköy Köyü"}, {"lat": 40.124736, "lon": 25.6720254, "cat": "beach", "sup": "beach", "name": "Gizli Liman", "fa": "fa-umbrella-beach", "color": "#1A7A6A", "hidden": false, "img_url": "", "landmark": true, "must_see": false, "shape": "circle", "village": "Uğurlu Köyü"}, {"lat": 40.2244766, "lon": 25.950856, "cat": "beach", "sup": "beach", "name": "Gökçeada Kuzu Limanı Plajı", "fa": "fa-umbrella-beach", "color": "#1A7A6A", "hidden": false, "img_url": "", "landmark": true, "must_see": false, "shape": "circle", "village": "Kuzulimanı"}, {"lat": 40.1086871, "lon": 25.720489, "cat": "beach", "sup": "beach", "name": "Koy & Plaj", "fa": "fa-umbrella-beach", "color": "#1A7A6A", "hidden": false, "img_url": "", "landmark": true, "must_see": false, "shape": "circle", "village": "Uğurlu Köyü"}, {"lat": 40.1976581, "lon": 25.9017799, "cat": "hospital", "sup": "services", "name": "Gökçeada Devlet Hastanesi", "fa": "fa-people-group", "color": "#808080", "hidden": true, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Fatih"}, {"lat": 40.2342408, "lon": 25.9037977, "cat": "beach", "sup": "beach", "name": "Yıldız Koy", "fa": "fa-umbrella-beach", "color": "#1A7A6A", "hidden": false, "img_url": "", "landmark": true, "must_see": false, "shape": "circle", "village": "Yeni Bademli Köyü"}, {"lat": 40.2351801, "lon": 25.9133166, "cat": "beach", "sup": "beach", "name": "Mavi Koy", "fa": "fa-umbrella-beach", "color": "#1A7A6A", "hidden": false, "img_url": "", "landmark": true, "must_see": false, "shape": "circle", "village": "Bademli Köyü"}, {"lat": 40.179786, "lon": 25.9702112, "cat": "beach", "sup": "beach", "name": "Güzelce Koy", "fa": "fa-umbrella-beach", "color": "#1A7A6A", "hidden": false, "img_url": "", "landmark": true, "must_see": false, "shape": "circle", "village": "Yenimahalle"}, {"lat": 40.103939, "lon": 25.8086196, "cat": "beach", "sup": "beach", "name": "Kapıkaya Plajı", "fa": "fa-umbrella-beach", "color": "#1A7A6A", "hidden": false, "img_url": "", "landmark": true, "must_see": false, "shape": "circle", "village": "Şirinköy Köyü"}, {"lat": 40.1963489, "lon": 25.9033346, "cat": "place_of_worship", "sup": "culture", "name": "İbadethane", "fa": "fa-monument", "color": "#5D4037", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Fatih"}, {"lat": 40.1243679, "lon": 25.7073963, "cat": "place_of_worship", "sup": "culture", "name": "Uğurlu Köyü Cami", "fa": "fa-monument", "color": "#5D4037", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Uğurlu Köyü"}, {"lat": 40.1179812, "lon": 25.6997859, "cat": "beach", "sup": "beach", "name": "Uğurlu Plajı", "fa": "fa-umbrella-beach", "color": "#1A7A6A", "hidden": false, "img_url": "", "landmark": true, "must_see": false, "shape": "circle", "village": "Uğurlu Köyü"}, {"lat": 40.1506155, "lon": 25.7856955, "cat": "place_of_worship", "sup": "culture", "name": "Şahinkaya Köyü Cami", "fa": "fa-monument", "color": "#5D4037", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Dereköy Köyü"}, {"lat": 40.1297417, "lon": 25.7430783, "cat": "place_of_worship", "sup": "culture", "name": "Şirinköy Cami", "fa": "fa-monument", "color": "#5D4037", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Dereköy Köyü"}, {"lat": 40.1907258, "lon": 25.8335602, "cat": "place_of_worship", "sup": "culture", "name": "Agridia Kilisesi", "fa": "fa-monument", "color": "#5D4037", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Tepeköy Köyü"}, {"lat": 40.1911472, "lon": 25.8331295, "cat": "restaurant", "sup": "food", "name": "Meraklis Taverna", "fa": "fa-utensils", "color": "#FE5000", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Tepeköy Köyü"}, {"lat": 40.1899763, "lon": 25.8308357, "cat": "guest_house", "sup": "accommodation", "name": "Pansiyon Agridia", "fa": "fa-bed", "color": "#7C5CBF", "hidden": true, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Tepeköy Köyü"}, {"lat": 40.1952714, "lon": 25.8383123, "cat": "restaurant", "sup": "food", "name": "KARDELİZ Kahvaltı Salonu", "fa": "fa-utensils", "color": "#FE5000", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Tepeköy Köyü"}, {"lat": 40.1476802, "lon": 25.7633, "cat": "historic", "sup": "culture", "name": "İskinit Kalesi", "fa": "fa-monument", "color": "#5D4037", "hidden": false, "img_url": "", "landmark": true, "must_see": false, "shape": "square", "village": "Dereköy Köyü"}, {"lat": 40.1911863, "lon": 25.9064749, "cat": "place_of_worship", "sup": "culture", "name": "Osmanlı (Merkez) Camii", "fa": "fa-monument", "color": "#5D4037", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Çınarlı"}, {"lat": 40.191173, "lon": 25.8963591, "cat": "fire_station", "sup": "services", "name": "Gökçeada İtfaiyesi", "fa": "fa-people-group", "color": "#808080", "hidden": true, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Fatih"}, {"lat": 40.201734, "lon": 25.9147384, "cat": "clinic", "sup": "services", "name": "Gökçeada Aile Sağlığı Merkezi", "fa": "fa-people-group", "color": "#808080", "hidden": true, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Cumhuriyet"}, {"lat": 40.2301801, "lon": 25.8926496, "cat": "beach", "sup": "beach", "name": "Kaleköy Koyu", "fa": "fa-umbrella-beach", "color": "#1A7A6A", "hidden": false, "img_url": "", "landmark": true, "must_see": true, "shape": "circle", "village": "Kaleköy Köyü"}, {"lat": 40.2072596, "lon": 25.8603899, "cat": "historic", "sup": "culture", "name": "Tarihi Yıkık Rum Evi", "fa": "fa-monument", "color": "#5D4037", "hidden": false, "img_url": "", "landmark": true, "must_see": false, "shape": "square", "village": "Tepeköy Köyü"}, {"lat": 40.1241043, "lon": 25.8979171, "cat": "historic", "sup": "culture", "name": "Tarihi Kaya Mezarı", "fa": "fa-monument", "color": "#5D4037", "hidden": false, "img_url": "", "landmark": true, "must_see": false, "shape": "square", "village": "Çınarlı"}, {"lat": 40.1870614, "lon": 25.8845389, "cat": "restaurant", "sup": "food", "name": "Restoran", "fa": "fa-utensils", "color": "#FE5000", "hidden": false, "img_url": "", "landmark": false, "must_see": false, "shape": "square", "village": "Zeytinli Köyü"}, {"lat": 40.2169872, "lon": 25.8953913, "cat": "historic", "sup": "culture", "name": "Yenibademli Höyük", "fa": "fa-monument", "color": "#5D4037", "hidden": false, "img_url": "", "landmark": true, "must_see": false, "shape": "square", "village": "Yeni Bademli Köyü"}];
+const SMETA  = {"beach": {"fa": "fa-umbrella-beach", "color": "#1A7A6A", "label": "Koy & Plaj", "hidden": false}, "nature": {"fa": "fa-tree", "color": "#84BD00", "label": "Doğa & Rekreasyon", "hidden": false}, "culture": {"fa": "fa-monument", "color": "#5D4037", "label": "Tarihi & Kültür", "hidden": false}, "food": {"fa": "fa-utensils", "color": "#FE5000", "label": "Yeme-İçme", "hidden": false}, "transport": {"fa": "fa-bus", "color": "#0085CA", "label": "Ulaşım", "hidden": false}, "services": {"fa": "fa-people-group", "color": "#808080", "label": "Kamusal Hizmetler", "hidden": true}, "accommodation": {"fa": "fa-bed", "color": "#7C5CBF", "label": "Konaklama İşletmeleri", "hidden": true}};   // 6 süper-kategori meta
+const CLABELS= {"beach": "Koy & Plaj", "viewpoint": "Manzara", "picnic_site": "Piknik Alanı", "attraction": "Turistik Alan", "historic": "Tarihi Yer", "place_of_worship": "İbadethane", "museum": "Müze", "restaurant": "Restoran", "cafe": "Kafe", "bar": "Bar", "bakery": "Fırın", "fast_food": "Lokanta", "airport": "Havalimanı", "ferry_terminal": "Feribot İskelesi", "bus_stop": "Otobüs / Dolmuş", "taxi": "Taksi", "charging_station": "EV Şarj", "parking": "Otopark", "fuel": "Akaryakıt", "pharmacy": "Eczane", "bank": "Banka & ATM", "supermarket": "Market", "marketplace": "Pazar", "hospital": "Hastane", "clinic": "Klinik", "doctors": "Doktor", "fire_station": "İtfaiye", "police": "Jandarma / Polis", "townhall": "Belediye / Kamu", "post_office": "PTT", "community_centre": "Kültür Merkezi", "sports_centre": "Spor & Aktivite", "marina": "Marina", "water_park": "Su Parkı", "diving": "Dalış Noktası", "dive_centre": "Dalış Merkezi", "swimming_pool": "Yüzme Havuzu", "horse_riding": "Atlı Doğa Yürüyüşü", "golf_course": "Golf", "hotel": "Otel", "motel": "Motel", "hostel": "Hostel", "guest_house": "Pansiyon", "apartment": "Apart / Kiralık", "camp_site": "Kamp Alanı"};    // alt-kategori Türkçe etiketleri
+const PLACE_LABELS = [];
+/* Köy/mahalle centroid'leri ve adları (Python'da GeoJSON'dan üretilir) */
+const VILLAGE_DATA = [{"id": 38507, "name": "Bademli Köyü", "lat": 40.226968, "lon": 25.925711}, {"id": 205500, "name": "Cumhuriyet", "lat": 40.201098, "lon": 25.909098}, {"id": 38010, "name": "Çınarlı", "lat": 40.154251, "lon": 25.94606}, {"id": 37735, "name": "Dereköy Köyü", "lat": 40.133403, "lon": 25.746513}, {"id": 37260, "name": "Eşelek Köyü", "lat": 40.143909, "lon": 25.962799}, {"id": 38565, "name": "Fatih", "lat": 40.203163, "lon": 25.900893}, {"id": 38063, "name": "Kaleköy Köyü", "lat": 40.226875, "lon": 25.884515}, {"id": 205502, "name": "Kuzulimanı", "lat": 40.216922, "lon": 25.939862}, {"id": 207167, "name": "Şirinköy Köyü", "lat": 40.113647, "lon": 25.744528}, {"id": 38100, "name": "Tepeköy Köyü", "lat": 40.185385, "lon": 25.82578}, {"id": 37875, "name": "Uğurlu Köyü", "lat": 40.12554, "lon": 25.714501}, {"id": 154949, "name": "Yeni Bademli Köyü", "lat": 40.219459, "lon": 25.894489}, {"id": 37727, "name": "Yenimahalle", "lat": 40.197043, "lon": 25.943713}, {"id": 38110, "name": "Zeytinli Köyü", "lat": 40.153083, "lon": 25.860403}];
+
+/* ── İlçe çerçeveleri [lon_min, lat_min, lon_max, lat_max] ── */
+const _DISTRICT_FRAMES = {"gokceada": {"walk": [25.86, 40.183, 25.92, 40.215], "drive": [25.68, 40.092, 26.13, 40.293]}, "ayvacik": {"walk": [26.37, 39.575, 26.42, 39.6], "drive": [26.25, 39.48, 26.58, 39.73]}, "canakkale": {"walk": [26.38, 40.135, 26.43, 40.165], "drive": [26.24, 40.0, 26.6, 40.28]}};  // tüm ilçe çerçeveleri
+let _currentDistrict = 'gokceada';
+
+function getFrame(mode){
+  // 1. localStorage'da kayıtlı özel çerçeve var mı?
+  const key=`frame_${mode}_${HOTEL.name}`;
+  try{ const s=localStorage.getItem(key); if(s) return JSON.parse(s); }catch(_){}
+  // 2. Seçili ilçenin varsayılan çerçevesi
+  const df = _DISTRICT_FRAMES[_currentDistrict] || _DISTRICT_FRAMES['gokceada'] || {};
+  return mode==='walk' ? df.walk : df.drive;
+}
+
+function setDistrict(d){
+  _currentDistrict = d;
+  // İlçe değişince her zaman o ilçenin tam idari sınırını göster (araç modu + kilitli)
+  // — yürüyüş modundaysa da araç moduna geçilir
+  setMode('drive');
+  showToast(`📍 İlçe: ${document.getElementById('district-sel').options[document.getElementById('district-sel').selectedIndex].text.replace(/^📍\s*/,'')}`);
+}
+
+function saveFrame(mode){
+  const b=map.getBounds();
+  const frame=[b.getWest(),b.getSouth(),b.getEast(),b.getNorth()];
+  localStorage.setItem(`frame_${mode}_${HOTEL.name}`,JSON.stringify(frame));
+  showToast(`✅ ${mode==='walk'?'Yürüyüş':'Araç'} çerçevesi kaydedildi`);
+}
+let is3D = false;
+
+/* ── Yardımcılar ── */
+function haversine(lat1,lon1,lat2,lon2){
+  const R=6371000, toR=Math.PI/180;
+  const φ1=lat1*toR, φ2=lat2*toR, Δφ=(lat2-lat1)*toR, Δλ=(lon2-lon1)*toR;
+  const a=Math.sin(Δφ/2)**2+Math.cos(φ1)*Math.cos(φ2)*Math.sin(Δλ/2)**2;
+  return Math.round(R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)));
+}
+function fmtDist(m){ return m<1000?`${m} m`:`${+(m/1000).toFixed(1)} km`; }
+function hexToRgb(h){ h=h.replace('#',''); return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+
+/* ══════════════════════════════════════════════════════════════
+   Yürüyüş / Araç modu + GPS
+══════════════════════════════════════════════════════════════ */
+let walkMode=true;      // varsayılan: yürüyüş modu
+let walkRadius=800;     // metre
+
+/* Araç modu: haritayı kilitle (kaydırma/zoom yok) */
+function _lockMap(){
+  map.scrollZoom.disable();
+  map.doubleClickZoom.disable();
+  map.touchZoomRotate.disable();
+  map.dragPan.disable();
+  map.dragRotate.disable();
+  map.keyboard.disable();
+  document.getElementById('mwrap').classList.add('map-locked');
+}
+
+/* Yürüyüş modu: harita kilidini aç */
+function _unlockMap(){
+  map.scrollZoom.enable();
+  map.doubleClickZoom.enable();
+  map.touchZoomRotate.enable();
+  map.dragPan.enable();
+  map.dragRotate.enable();
+  map.keyboard.enable();
+  document.getElementById('mwrap').classList.remove('map-locked');
+}
+
+function setMode(mode){
+  walkMode=(mode==='walk');
+  document.getElementById('btn-mode-walk').classList.toggle('active', walkMode);
+  document.getElementById('btn-mode-drive').classList.toggle('active', !walkMode);
+  document.getElementById('radius-ctrl').style.display=walkMode?'flex':'none';
+
+  if(!walkMode){
+    // Araç modu: her zaman ilçenin varsayılan tam görünümü — kilitli statik harita
+    // NOT: localStorage override'ı kasıtlı olarak kullanılmıyor;
+    //      drive kilit görünümü her zaman tüm ada/ilçeyi göstermeli.
+    _lockMap();
+    const df = _DISTRICT_FRAMES[_currentDistrict] || _DISTRICT_FRAMES['gokceada'] || {};
+    const frame = df.drive;
+    if(frame){
+      // Sol panel (#side, ~282px) haritanın üstünde yer alır.
+      // fitBounds padding.left ile dengelenir — sabit 300px yeterlidir.
+      map.fitBounds([[frame[0],frame[1]],[frame[2],frame[3]]],
+        {padding:{top:30,bottom:30,left:300,right:30},pitch:0,bearing:0,duration:900,animate:true});
+    }
+  } else {
+    _unlockMap();
+  }
+
+  applyModeFilter();
+}
+
+function setWalkRadius(r){
+  walkRadius=r;
+  document.getElementById('radius-lbl').textContent=r>=1000?(r/1000).toFixed(r%1000?1:0)+'km':r+'m';
+  // Walk çemberi güncelle
+  const src=map.getSource('walk');
+  if(src) src.setData({type:'FeatureCollection',
+    features:[circle(myLoc.lon,myLoc.lat,walkRadius/1000)]});
+  applyModeFilter();
+}
+
+function applyModeFilter(){
+  // Sidebar checkbox durumlarını koru, mesafeye göre görünürlük ayarla
+  enriched.forEach(p=>{
+    const cb=document.querySelector(`[data-pid="${p.idx}"]`);
+    const checked=cb?cb.checked:!p.hidden;
+    const inRange=!walkMode||(p.dist<=walkRadius);
+    setVis(p.idx, checked&&inRange);
+    // Sidebar satırını soluk göster / normale döndür
+    const row=cb?cb.closest('.item'):null;
+    if(row) row.style.opacity=inRange?'1':'0.35';
+  });
+  updateRouteLines();
+  // Walk çemberi
+  const src=map.getSource('walk');
+  if(src){
+    if(walkMode){
+      src.setData({type:'FeatureCollection',
+        features:[circle(myLoc.lon,myLoc.lat,walkRadius/1000)]});
+    } else {
+      src.setData({type:'FeatureCollection',features:[]});
+    }
+  }
+}
+
+function useGPS(){
+  if(!navigator.geolocation){
+    showToast('❌ Tarayıcı konum erişimini desteklemiyor'); return;
+  }
+  showToast('📡 Konum alınıyor...');
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      _moveMyPin(pos.coords.latitude, pos.coords.longitude, 'Konumunuz');
+      map.flyTo({center:[pos.coords.longitude, pos.coords.latitude], zoom:14, speed:1.2});
+      showToast('📍 GPS konumu uygulandı');
+    },
+    err=>{ showToast('❌ Konum alınamadı: '+err.message); },
+    {enableHighAccuracy:true, timeout:8000}
+  );
+}
+
+// jsPDF helvetica Türkçe karakter desteği yok — ASCII'ye dönüştür
+function pdfTr(s){
+  return (s||'')
+    .replace(/ş/g,'s').replace(/Ş/g,'S')
+    .replace(/ğ/g,'g').replace(/Ğ/g,'G')
+    .replace(/ı/g,'i').replace(/İ/g,'I')
+    .replace(/ö/g,'o').replace(/Ö/g,'O')
+    .replace(/ü/g,'u').replace(/Ü/g,'U')
+    .replace(/ç/g,'c').replace(/Ç/g,'C')
+    .replace(/…/g,'...');
+}
+
+/* POI'ları mesafeye göre sırala + numara ata */
+const enriched = POIS
+  .map((p,i)=>({...p, idx:i, dist:haversine(HOTEL.lat,HOTEL.lon,p.lat,p.lon)}))
+  .sort((a,b)=>a.dist-b.dist)
+  .map((p,i)=>({...p, num:i+1}));
+
+const groups={};
+enriched.forEach(p=>{
+  if(!groups[p.sup]) groups[p.sup]=[];
+  groups[p.sup].push(p);
+});
+
+/* ── Harita ── */
+mapboxgl.accessToken = 'pk.eyJ1IjoibXBhcmxhayIsImEiOiJjbW14Y3VpMWQybndnMnJxdHNkZ3JzeWR1In0.1si56orb9DhQ8Eh83r7Kcw';
+// Sol panel (#side ~282px) haritanın üstünde yer alır.
+// Başlangıç görünümü olarak tüm Gökçeada adası gösterilsin.
+// bounds+fitBoundsOptions constructor-da belirtilirse style yüklenmeden önce uygulanır
+// → map.on('load') ile race condition olmaz.
+const _INIT_FRAME = _DISTRICT_FRAMES['gokceada'].drive; // [25.68, 40.092, 26.13, 40.293]
+const map = new mapboxgl.Map({
+  container:'map',
+  // Özel Gökçeada stili — İmbros etiketi kaldırılmış, ada isimleri Türkçe
+  style:'mapbox://styles/mparlak/cmqs2sj6o000f01s77ip9dbim',
+  bounds: [[_INIT_FRAME[0], _INIT_FRAME[1]], [_INIT_FRAME[2], _INIT_FRAME[3]]],
+  fitBoundsOptions: {padding:{top:30,bottom:30,left:300,right:30}, pitch:0, bearing:0},
+  attributionControl:false,
+  preserveDrawingBuffer:true,  // PDF/canvas capture için zorunlu
+});
+map.addControl(new mapboxgl.NavigationControl({showCompass:false}),'top-right');
+map.addControl(new mapboxgl.ScaleControl({unit:'metric'}),'bottom-left');
+map.addControl(new mapboxgl.AttributionControl({compact:true,customAttribution:''}),'bottom-right');
+
+function toggle3D(){
+  is3D=!is3D;
+  map.easeTo({pitch:is3D?52:0, bearing:is3D?-12:0, duration:700});
+  document.getElementById('btn-3d').classList.toggle('active',is3D);
+}
+
+function circle(cx,cy,rKm,n=72){
+  const pts=[];
+  for(let i=0;i<=n;i++){
+    const a=(i/n)*2*Math.PI;
+    pts.push([cx+rKm/(111.32*Math.cos(cy*Math.PI/180))*Math.cos(a),
+              cy+rKm/110.57*Math.sin(a)]);
+  }
+  return {type:'Feature',geometry:{type:'Polygon',coordinates:[pts]}};
+}
+
+// Haritanın tam yüklenmesini beklemeden güvenli başlatma
+// Özel Mapbox stilleri bazen 'load' event'ini geç/hiç tetiklemez.
+// _initDone bayrağı ile çift çağrımı engelliyoruz.
+let _initDone=false;
+function _initMap(){
+  if(_initDone) return; _initDone=true;
+
+  /* ── Yalın altlık: eşyükselti + hillshade katmanlarını kaldır ── */
+  try{
+    const removePat=/(contour|hillshade|hillshading|slope|terrain|elevation)/i;
+    map.getStyle().layers
+      .filter(l=>removePat.test(l.id)||removePat.test(l['source-layer']||''))
+      .forEach(l=>{ try{ map.removeLayer(l.id); }catch(_){} });
+    if(map.getTerrain) try{ map.setTerrain(null); }catch(_){}
+  }catch(_){}
+
+  /* ── NPS Park Tiles Standard renk paleti ─────────────────────────────────
+     Kaynak: NPS NPMap.js / atlas-stg.geoplatform.gov stil analizi
+     Land #f7eee8 · Water #b5d0de · Forest #c9cdb1 · Roads #fefefe         */
+  (function _applyNPSPalette(){
+    const C={
+      land:      '#f7eee8',   // arazi zemini — NPS krem
+      landcover: '#c9cdb1',   // bitki/orman — NPS wilderness mat yeşil
+      park:      '#d4d9c5',   // parklar, yeşil alanlar
+      water:     '#b5d0de',   // su yüzeyi — NPS açık mavi
+      waterDp:   '#9cbfd0',   // derin su
+      waterLn:   '#587889',   // su çizgisi / kıyı
+      waterSh:   '#9ec2d1',   // su gölgesi
+      wetland:   '#c4cba8',   // bataklık
+      bldg:      '#e8e0d5',   // bina dolgusu
+      road:      '#fefefe',   // yol yüzeyi
+      roadHwy:   '#fdefbe',   // otoyol — hafif sarı
+      roadMinor: '#efefef',   // küçük yol
+      pedArea:   '#f0ebe4',   // yaya alanı
+    };
+    // layerId → { paintProp: renk }
+    const M={
+      'land':                        {'background-color': C.land},
+      'landcover':                   {'fill-color': C.landcover, 'fill-opacity': 0.85},
+      'national-park':               {'fill-color': C.park},
+      'landuse':                     {'fill-color': C.park},
+      'water-shadow':                {'fill-color': C.waterSh},
+      'water':                       {'fill-color': C.water},
+      'water-depth':                 {'fill-color': C.waterDp},
+      'wetland':                     {'fill-color': C.wetland},
+      'wetland-pattern':             {'fill-color': C.wetland},
+      'waterway-shadow':             {'line-color': C.waterSh},
+      'waterway':                    {'line-color': C.waterLn},
+      'building':                    {'fill-color': C.bldg, 'fill-outline-color':'#d5cdc4'},
+      'building-underground':        {'fill-color': '#ddd5cc'},
+      'road-pedestrian-polygon-fill':{'fill-color': C.pedArea},
+    };
+    Object.entries(M).forEach(([id,props])=>{
+      Object.entries(props).forEach(([prop,val])=>{
+        try{ map.setPaintProperty(id,prop,val); }catch(_){}
+      });
+    });
+    // Tüm yol çizgilerini NPS tonlarına çek
+    map.getStyle().layers.forEach(l=>{
+      if(l.type!=='line') return;
+      const id=l.id;
+      try{
+        if(/motorway|trunk/.test(id))  map.setPaintProperty(id,'line-color',C.roadHwy);
+        else if(/road-(?!path|step|ped|ferry|cliff|rail)|street|primary|secondary|tertiary/.test(id))
+          map.setPaintProperty(id,'line-color',C.road);
+        else if(/minor|service|track/.test(id))
+          map.setPaintProperty(id,'line-color',C.roadMinor);
+      }catch(_){}
+    });
+  })();
+
+  // Yürüyüş çemberleri (400m / 800m)
+  map.addSource('walk',{type:'geojson',data:{type:'FeatureCollection',
+    features:[circle(HOTEL.lon,HOTEL.lat,0.4),circle(HOTEL.lon,HOTEL.lat,0.8)]}});
+  map.addLayer({id:'wf',type:'fill',source:'walk',
+    paint:{'fill-color':HOTEL.brand,'fill-opacity':0.05}});
+  map.addLayer({id:'wl',type:'line',source:'walk',
+    paint:{'line-color':HOTEL.brand,'line-width':1.6,'line-opacity':.5,'line-dasharray':[5,5]}});
+
+  /* 3D Binalar — composite source'dan kireçtaşı renk */
+  try{
+    const lbl=map.getStyle().layers.find(l=>l.type==='symbol'&&l.layout?.['text-field']);
+    const hasBldgSource=map.getSource('composite')!=null;
+    if(hasBldgSource){
+      map.addLayer({
+        id:'3d-bldg',type:'fill-extrusion',
+        source:'composite','source-layer':'building',minzoom:14,
+        filter:['==','extrude','true'],
+        paint:{
+          'fill-extrusion-color':  '#D4C4A8',
+          'fill-extrusion-height': ['coalesce',['get','height'],4],
+          'fill-extrusion-base':   ['coalesce',['get','min_height'],0],
+          'fill-extrusion-opacity': 0.86,
+          'fill-extrusion-ambient-occlusion-intensity': 0.38,
+          'fill-extrusion-ambient-occlusion-radius':    3.0,
+        }
+      }, lbl?.id);
+    }
+  }catch(e){ console.warn('3D binalar eklenemedi:',e.message); }
+
+  // ── Güzergah çizgileri: tüm yol tile katmanlarının ÜSTÜNE yerleştir ──
+  map.addSource('routes',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
+  // Ekleme noktası: tüm line katmanlarından sonra, ilk metin/simge katmanından önce.
+  // Bu sayede güzergah karayollarının üstünde, yer adı etiketlerinin altında kalır.
+  (function _addRouteLayers(){
+    const stLayers = map.getStyle().layers;
+    // Tüm line katmanlarının sonuncusunu bul
+    let lastLineIdx = -1;
+    stLayers.forEach((l,i)=>{ if(l.type==='line') lastLineIdx=i; });
+    // Ondan sonraki ilk katmanı 'before' noktası olarak kullan
+    const insertBefore = lastLineIdx>=0 && lastLineIdx+1<stLayers.length
+      ? stLayers[lastLineIdx+1].id : undefined;
+    map.addLayer({
+      id:'route-shadow',type:'line',source:'routes',
+      layout:{'line-cap':'round','line-join':'round'},
+      paint:{'line-color':'rgba(0,0,0,0.22)','line-width':8,'line-blur':2}
+    }, insertBefore);
+    map.addLayer({
+      id:'route-line',type:'line',source:'routes',
+      layout:{'line-cap':'butt','line-join':'round'},
+      paint:{
+        'line-color':['get','color'],
+        'line-width':4,
+        'line-dasharray':[3,2],
+        'line-opacity':0.95,
+      }
+    }, insertBefore);
+  })();
+
+  // Mesafe etiketleri: sadece SVG text, çizgi yok (HTML marker'lar üstünde OK)
+  routeLabelSVG=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  routeLabelSVG.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5;overflow:visible';
+  document.getElementById('mwrap').appendChild(routeLabelSVG);
+  map.on('move',updateRouteLines);
+  map.on('resize',updateRouteLines);
+
+  // Kritik: map.resize() → map.project() yeniden kalibre edilir →
+  // ardından addMarkers() doğru piksel koordinatlarını kullanır.
+  map.resize();
+  addMarkers();
+  addHotelPin();
+  addPlaceLabels();
+  buildSidebar();
+  buildSearch();
+  applyURLSelection();   // URL ?s= parametresi ile gelen paylaşım seçimini uygula
+  // UI + akıllı filtre hemen uygula
+  _applySmartDefault();
+  // İşletme seçilmeden rota çizilmez / mesafe gösterilmez
+  // fetchRoutes() applyMyLocation() içinde çağrılacak
+
+  // Başlangıç: araç modu — harita 'idle' olduktan sonra fitBounds çağır
+  // (stil yüklemesi henüz bitmemişse fitBounds görmezden gelinir)
+  setMode('drive');  // lock + buton durumu ayarla
+  map.once('idle', ()=>{
+    // Stil + tüm tile'lar yüklendikten sonra adayı ortala
+    setMode('drive');
+  });
+}
+
+map.on('load', _initMap);
+
+// Yedek: özel stil yüklemesi yavaşsa her 1.5 sn kontrol et
+const _fallback=setInterval(()=>{
+  if(map.isStyleLoaded()){ _initMap(); clearInterval(_fallback); }
+},1500);
+
+// Pencere yeniden boyutlandırıldığında haritayı güncelle
+window.addEventListener('resize', ()=>map.resize());
+
+// Map container boyutu değiştiğinde (sidebar reflow vb.) resize tetikle
+new ResizeObserver(()=>map.resize()).observe(document.getElementById('map'));
+
+/* ── Görünür POI seti ── */
+const _visSet=new Set(enriched.filter(p=>!p.hidden).map(p=>p.idx));
+
+/* ── Mesafe etiketi SVG (map.on('load') içinde oluşturulur) ── */
+let routeLabelSVG=null;
+
+/* ── Yol güzergahı verisi: idx → {roadDist, coords:[[lon,lat],...]} ── */
+const routeData={};
+
+/* Görünen POI'ları mesafeye göre 1'den N'e yeniden numaralandır */
+function renumberVisible(){
+  const visible=enriched.filter(p=>_visSet.has(p.idx)).sort((a,b)=>a.dist-b.dist);
+  // Önce hepsini sıfırla
+  enriched.forEach(p=>{ p.num=null; });
+  visible.forEach((p,i)=>{ p.num=i+1; });
+  // DOM güncelle
+  document.querySelectorAll('[data-num-for]').forEach(el=>{
+    const idx=+el.dataset.numFor;
+    const p=enriched.find(x=>x.idx===idx);
+    el.textContent=p&&p.num!=null ? p.num : '';
+  });
+}
+
+/* Güzergah çizgilerini Mapbox GL source'una yaz (HTML marker ALTI garantili) */
+function updateRouteLines(){
+  const src=map.getSource('routes'); if(!src) return;
+  const features=[];
+  enriched.forEach(p=>{
+    if(!_visSet.has(p.idx)) return;
+    const rd=routeData[p.idx];
+    const coords=rd&&rd.coords&&rd.coords.length>1
+      ? rd.coords
+      : [[HOTEL.lon,HOTEL.lat],[p.lon,p.lat]];
+    features.push({
+      type:'Feature',
+      properties:{color:p.color,idx:p.idx},
+      geometry:{type:'LineString',coordinates:coords}
+    });
+  });
+  src.setData({type:'FeatureCollection',features});
+  renumberVisible();
+  updateDistanceLabels();
+}
+
+/* Mesafe etiketleri haritadan kaldırıldı — yalnızca kenar çubuğunda gösterilir */
+function updateDistanceLabels(){
+  if(routeLabelSVG) routeLabelSVG.innerHTML='';
+}
+
+function refreshRoutes(){ updateRouteLines(); }
+
+/* ── OSRM güzergah çekimi ── */
+async function fetchSingleRoute(p){
+  try{
+    // Landmark POI'lar (havalimanı, iskele) araçla erişilir → driving modu
+    // Yakın POI'lar yaya yürüyüşüyle → walking modu
+    const profile=p.landmark?'driving':'walking';
+    // approaches=unrestricted → rota terminal/iskele binasına tam ulaşır
+    const url=`https://api.mapbox.com/directions/v5/mapbox/${profile}/`
+      +`${HOTEL.lon},${HOTEL.lat};${p.lon},${p.lat}`
+      +`?access_token=${mapboxgl.accessToken}&geometries=geojson&overview=full`
+      +`&approaches=unrestricted%3Bunrestricted`;
+    const resp=await fetch(url,{signal:AbortSignal.timeout(9000)});
+    if(!resp.ok) return;
+    const data=await resp.json();
+    if(!data.routes?.[0]) return;
+    const r=data.routes[0];
+    routeData[p.idx]={
+      roadDist: Math.round(r.distance),
+      coords:   r.geometry.coordinates   // [[lon,lat], ...]
+    };
+    // Kenar çubuğu mesafesini güncelle
+    const sEl=document.querySelector(`[data-sdist-idx="${p.idx}"]`);
+    if(sEl) sEl.textContent=fmtDist(routeData[p.idx].roadDist);
+    // Pin etiketindeki mesafeyi de yol mesafesiyle güncelle
+    const pEl=document.querySelector(`[data-pdist-idx="${p.idx}"]`);
+    if(pEl) pEl.textContent=fmtDist(routeData[p.idx].roadDist);
+  }catch(e){
+    // Ağ hatası / timeout — düz çizgi kullanılmaya devam edilir
+  }
+}
+
+async function fetchRoutes(){
+  // İşletme seçilmeden rota hesaplamak anlamsız
+  if(!_myLocReady) return;
+  // OSRM'e 4'erli gruplar halinde istek at (nazik kullanım)
+  const batch=4;
+  for(let i=0;i<enriched.length;i+=batch){
+    await Promise.all(enriched.slice(i,i+batch).map(fetchSingleRoute));
+    updateRouteLines();
+  }
+}
+
+/* ── POI Marker'lar ── */
+const mkrs={};
+function addMarkers(){
+  enriched.forEach(p=>{
+    // Wrapper — MapLibre bu elementin merkezini koordinata kilitler
+    const wrap=document.createElement('div');
+    wrap.className='poi-wrap';
+
+    // Görsel kart (img_url varsa)
+    // isImgPin: görsel doğrudan pin olarak kullanılır (has-img-pin CSS sınıfı)
+    const isImgPin=!!(p.img_url&&(p.cat==='place_of_worship'||p.cat==='historic'||p.cat==='museum'));
+    if(p.img_url){
+      const card=document.createElement('div');
+      card.className='poi-img-card'+(isImgPin?' poi-img-card--large':'');
+      card.innerHTML=`
+        <img src="${p.img_url}" loading="lazy" alt="${p.name}">
+        ${p.name?`<div class="poi-img-label">${p.name.slice(0,32)}</div>`:''}
+        <span class="poi-img-x" title="Kapat">×</span>`;
+      card.querySelector('.poi-img-x').addEventListener('click',e=>{
+        e.stopPropagation();
+        card.style.display='none';
+      });
+      wrap.appendChild(card);
+      if(isImgPin) wrap.classList.add('has-img-pin');
+    }
+
+    // Pin — NPS shape: square (yapı/anıt) veya circle (doğal)
+    const el=document.createElement('div');
+    const shape=p.shape||'circle';
+    el.className='map-pin nps-'+shape+(p.landmark?' landmark-pin':'');
+    el.style.background=p.color;
+    el.innerHTML=`<i class="fas ${p.fa}"></i><span class="pin-num" data-num-for="${p.idx}">${p.num??''}</span>`;
+    el.title=p.name;
+
+    // × Kaldırma butonu (pin üzerinde)
+    const closeBtn=document.createElement('span');
+    closeBtn.className='pin-close'; closeBtn.innerHTML='×';
+    closeBtn.addEventListener('click',e=>{
+      e.stopPropagation();
+      setVis(p.idx,false);
+      const cb=document.querySelector(`[data-pid="${p.idx}"]`);
+      if(cb){ cb.checked=false; syncSup(p.sup); }
+    });
+    el.appendChild(closeBtn);
+
+    // İsim + mesafe rozeti — pin altında
+    const distEl=document.createElement('div');
+    distEl.className='pin-dist';
+    distEl.dataset.distIdx=p.idx;
+    const _nm=p.name;
+    const _short=_nm.length>11?_nm.slice(0,10)+'…':_nm;
+    distEl.innerHTML=`${_short} <span class="pdk" data-pdist-idx="${p.idx}">${_distLabel(p.dist)}</span>`;
+    el.appendChild(distEl);
+
+    wrap.appendChild(el);
+
+    const popup=new mapboxgl.Popup({offset:22,closeButton:false,maxWidth:'220px'})
+      .setHTML(`
+        <div style="font-size:13px;font-weight:700;color:#222;padding:4px 2px;display:flex;align-items:center;gap:8px">
+          <span style="background:${p.color};color:#fff;border-radius:50%;
+                width:18px;height:18px;display:inline-flex;align-items:center;
+                justify-content:center;font-size:9px;font-weight:900;flex-shrink:0">${p.num}</span>
+          ${p.name}
+        </div>
+        <div style="font-size:11px;color:#888;margin-top:3px;padding-left:26px">
+          ${SMETA[p.sup]?.label||CLABELS[p.cat]||p.cat}${_myLocReady?' &nbsp;·&nbsp; '+fmtDist(p.dist):''}
+        </div>`);
+
+    // isImgPin → anchor:'bottom' (görsel koordinatın üstünde durar)
+    // normal pin → anchor:'center' (daire merkezi = koordinat)
+    const mk=new mapboxgl.Marker({element:wrap,anchor:isImgPin?'bottom':'center'})
+      .setLngLat([p.lon,p.lat]).setPopup(popup).addTo(map);
+    mkrs[p.idx]={mk,el:wrap};
+
+    // Varsayılan gizli kategoriler
+    if(p.hidden) setVis(p.idx,false);
+  });
+  if(enriched.length===0) document.getElementById('no-pois').style.display='block';
+}
+
+function setVis(idx,v){
+  const m=mkrs[idx]; if(!m) return;
+  // display:none yerine opacity kullanmak yerine tamamen gizle —
+  // böylece harita üzerinde seçili olmayan yerlerin adı görünmez.
+  m.el.style.display=v?'':'none';
+  if(v) _visSet.add(idx); else _visSet.delete(idx);
+  refreshRoutes();
+}
+
+/* ── Yer adı etiketleri (Kuzulimanı vb.) ── */
+function addPlaceLabels(){
+  PLACE_LABELS.forEach(lbl=>{
+    const el=document.createElement('div');
+    el.className='place-lbl';
+    el.textContent=lbl.name;
+    new mapboxgl.Marker({element:el,anchor:'center'})
+      .setLngLat([lbl.lon,lbl.lat]).addTo(map);
+  });
+}
+
+/* ── Hotel / Buradasınız pin (hareketli — işletme seçimi) ── */
+let myLoc={lat:HOTEL.lat,lon:HOTEL.lon,name:HOTEL.name};
+let _myMk=null;
+// İşletme henüz seçilmedi — mesafe/rota gösterimi kapalı
+let _myLocReady=false;
+function _distLabel(m){ return _myLocReady ? fmtDist(m) : '–'; }
+
+function addHotelPin(){
+  const wrap=document.createElement('div');
+  wrap.className='hotel-pin-wrap';
+  // Platform modunda pin, işletme seçmeye davet eder
+  const isPlatform=(HOTEL.name==='muhit.in');
+  const lbl=isPlatform?'İşletmenizi Seçin ↓':HOTEL.name;
+  const clickAttr=isPlatform?' onclick="openLocPicker()" style="cursor:pointer"':'';
+  wrap.innerHTML=`<div class="hotel-dot"${clickAttr}></div>`
+    +`<div class="hotel-name-lbl" id="my-lbl-txt"${clickAttr}>${lbl}</div>`;
+  _myMk=new mapboxgl.Marker({element:wrap, anchor:'top'})
+    .setLngLat([myLoc.lon,myLoc.lat]).addTo(map);
+  // Platform modunda işletme seçici otomatik aç (1.5 sn gecikmeli)
+  if(isPlatform) setTimeout(openLocPicker, 1500);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Köy/Mahalle bazlı sidebar — işletme seçildikten sonra aktif
+   ══════════════════════════════════════════════════════════════ */
+let _villageMks = [];  // haritadaki köy merkezi marker'ları
+let _myBizIdx   = null; // seçili işletmenin POI idx'i
+
+function _removeVillageMarkers(){
+  _villageMks.forEach(m=>m.remove());
+  _villageMks=[];
+}
+
+function _addVillageMarkers(sortedVillages){
+  _removeVillageMarkers();
+  sortedVillages.forEach(v=>{
+    const el=document.createElement('div');
+    el.className='village-mk';
+    // "Köyü" / "Mahallesi" son eklerini kısalt
+    const shortName=v.name.replace(/ Köyü$/,'').replace(/ Mahallesi$/,'').replace(/ Mah\.$/,'');
+    el.innerHTML=`<div class="vmk-dot"></div>`
+      +`<div class="vmk-lbl">${shortName}<br><small>${fmtDist(v.distToCenter)}</small></div>`;
+    const mk=new mapboxgl.Marker({element:el, anchor:'top'})
+      .setLngLat([v.lon,v.lat]).addTo(map);
+    _villageMks.push(mk);
+  });
+}
+
+/* Köy sidebar — işletme seçiminden sonra çağrılır */
+function buildVillageSidebar(){
+  const root=document.getElementById('catlist');
+  root.innerHTML='';
+
+  if(!_myLocReady||!VILLAGE_DATA||!VILLAGE_DATA.length){
+    buildSidebar(); return;
+  }
+
+  // ── Görünürlük: walk-radius filtresini bypass et ──
+  // _applySmartDefault + applyModeFilter zinciri 800m walk radius'u uygular;
+  // köy sidebar'ında mesafe sınırı yoktur — tüm must_see POI'lar görünür başlar.
+  const _isDefaultVis=(p)=>
+    p.must_see||p.cat==='ferry_terminal'||p.cat==='airport'||p.idx===_myBizIdx;
+  enriched.forEach(p=>{
+    if(_isDefaultVis(p)) _visSet.add(p.idx);
+    else _visSet.delete(p.idx);
+  });
+  // Harita pinlerini yeniden numaralandır
+  if(typeof renumberVisible==='function') renumberVisible();
+
+  const bizLat=myLoc.lat, bizLon=myLoc.lon;
+
+  // Köy merkezine mesafe hesapla ve sırala
+  const villages=VILLAGE_DATA.map(v=>({
+    ...v,
+    distToCenter: haversine(bizLat,bizLon,v.lat,v.lon)
+  })).sort((a,b)=>a.distToCenter-b.distToCenter);
+
+  // Köy merkezi marker'larını haritaya ekle
+  _addVillageMarkers(villages);
+
+  villages.forEach(v=>{
+    const vPois=enriched.filter(p=>p.village===v.name);
+    if(!vPois.length) return;
+
+    // Default gösterilecekler: must_see + ferry + airport + seçili işletme
+    const mustSee=vPois.filter(_isDefaultVis).sort((a,b)=>a.dist-b.dist);
+
+    // Ağaç menüde gösterilecekler — süper-kategori bazlı gruplar
+    const otherBySup={};
+    vPois.filter(p=>!_isDefaultVis(p)).sort((a,b)=>a.dist-b.dist).forEach(p=>{
+      (otherBySup[p.sup]=otherBySup[p.sup]||[]).push(p);
+    });
+
+    // ── Köy grubu ──
+    const grp=document.createElement('div');
+    grp.className='grp vgrp';
+    grp.dataset.village=v.name;
+
+    // Köy başlık satırı
+    const hdr=document.createElement('div');
+    hdr.className='ghdr vghdr';
+    const shortName=v.name.replace(/ Köyü$/,'').replace(/ Mahallesi$/,'');
+    hdr.innerHTML=
+      `<span class="gico" style="background:var(--brand)"><i class="fas fa-map-marker-alt"></i></span>`
+      +`<span class="glbl">${shortName}</span>`
+      +`<span class="gcnt">${fmtDist(v.distToCenter)}</span>`;
+    const body=document.createElement('div');
+    body.className='gitms open';
+    hdr.addEventListener('click',()=>body.classList.toggle('open'));
+
+    // ── Must-see / default satırları ──
+    mustSee.forEach(p=>{
+      const isBiz=(p.idx===_myBizIdx);
+      const subLbl=CLABELS[p.cat]||p.cat;
+      const row=document.createElement('label');
+      row.className='pitem'+(isBiz?' pitem-mybiz':'');
+      row.innerHTML=
+        `<input type="checkbox" checked data-pid="${p.idx}"
+                onchange="setVis(${p.idx},this.checked)">`
+        +`<span class="pnum" style="background:${p.color}" data-num-for="${p.idx}">${p.num??''}</span>`
+        +`<span class="pnm" title="${p.name}">${isBiz?'<i class="fas fa-store" style="color:var(--brand);margin-right:3px"></i>':''}`
+        +`${p.name}<span style="font-size:10px;color:#aaa;font-weight:400"> · ${subLbl}</span></span>`
+        +`<span class="pdst" data-sdist-idx="${p.idx}">${_distLabel(p.dist)}</span>`;
+      body.appendChild(row);
+    });
+
+    // ── Ağaç menü: opsiyonel kategoriler ──
+    Object.entries(otherBySup).forEach(([sup,pois])=>{
+      const m=SMETA[sup]||{fa:'fa-circle',color:'#888',label:sup};
+      const subHdr=document.createElement('div');
+      subHdr.className='vsubhdr';
+      subHdr.innerHTML=
+        `<span class="gico" style="background:${m.color};width:18px;height:18px;font-size:9px"><i class="fas ${m.fa}"></i></span>`
+        +`<span>${m.label}&nbsp;<span style="color:#aaa">(${pois.length})</span></span>`
+        +`<span class="vtoggle">▶</span>`;
+      const subBody=document.createElement('div');
+      subBody.className='vsub-body';
+      subBody.style.display='none';
+      subHdr.addEventListener('click',e=>{
+        e.stopPropagation();
+        const open=subBody.style.display!=='none';
+        subBody.style.display=open?'none':'block';
+        subHdr.querySelector('.vtoggle').textContent=open?'▶':'▼';
+      });
+      pois.forEach(p=>{
+        const subLbl=CLABELS[p.cat]||p.cat;
+        const row=document.createElement('label');
+        row.className='pitem';
+        row.innerHTML=
+          `<input type="checkbox" data-pid="${p.idx}"
+                  onchange="setVis(${p.idx},this.checked)">`
+          +`<span class="pnum" style="background:${p.color}" data-num-for="${p.idx}">${p.num??''}</span>`
+          +`<span class="pnm" title="${p.name}">${p.name}`
+          +`<span style="font-size:10px;color:#aaa;font-weight:400"> · ${subLbl}</span></span>`
+          +`<span class="pdst" data-sdist-idx="${p.idx}">${_distLabel(p.dist)}</span>`;
+        subBody.appendChild(row);
+      });
+      body.appendChild(subHdr);
+      body.appendChild(subBody);
+    });
+
+    grp.appendChild(hdr); grp.appendChild(body); root.appendChild(grp);
+  });
+
+  // Sidebar başlığını güncelle
+  const sideHdr=document.querySelector('#side-hdr span:first-child');
+  if(sideHdr) sideHdr.textContent='KÖY REHBERİ';
+
+  // Harita marker görünürlüklerini senkronize et
+  updateRouteLines && updateRouteLines();
+}
+
+/* ── Kenar çubuğu — 6 NPS süper-kategorisi ── */
+function buildSidebar(){
+  const root=document.getElementById('catlist');
+  let hasHidden=false;
+
+  // SMETA'daki sırayla 6 grubu oluştur
+  Object.keys(SMETA).forEach(sup=>{
+    if(!groups[sup]||!groups[sup].length) return;
+    const items=groups[sup];
+    const m=SMETA[sup];
+    const isHidden=!!m.hidden;
+    if(isHidden) hasHidden=true;
+
+    const grp=document.createElement('div'); grp.className='grp';
+    const hdr=document.createElement('div');
+    hdr.className='ghdr'+(isHidden?' hidden-cat':'');
+    hdr.innerHTML=`
+      <span class="gico" style="background:${m.color}"><i class="fas ${m.fa}"></i></span>
+      <span class="glbl">${m.label}</span>
+      ${isHidden?'<span class="ghidden-tag">GİZLİ</span>':''}
+      <span class="gcnt">${items.length}</span>
+      <span class="gcbx"><input type="checkbox" ${isHidden?'':'checked'} data-sup="${sup}"
+        onclick="event.stopPropagation();superToggle('${sup}',this.checked)"></span>`;
+    hdr.addEventListener('click',()=>grp.querySelector('.gitms').classList.toggle('open'));
+
+    const body=document.createElement('div'); body.className='gitms'+(isHidden?'':' open');
+    items.forEach(p=>{
+      const subLabel=CLABELS[p.cat]||p.cat;
+      const row=document.createElement('label'); row.className='pitem';
+      row.innerHTML=`
+        <input type="checkbox" ${isHidden?'':'checked'} data-pid="${p.idx}"
+               onchange="setVis(${p.idx},this.checked);syncSup('${sup}')">
+        <span class="pnum" style="background:${p.color}" data-num-for="${p.idx}">${p.num??''}</span>
+        <span class="pnm" title="${p.name}">${p.name}
+          <span style="font-size:10px;color:#aaa;font-weight:400"> · ${subLabel}</span></span>
+        <span class="pdst" data-sdist-idx="${p.idx}">${_distLabel(p.dist)}</span>`;
+      body.appendChild(row);
+    });
+    grp.appendChild(hdr); grp.appendChild(body); root.appendChild(grp);
+  });
+
+  if(hasHidden){
+    const banner=document.getElementById('hidden-banner');
+    banner.style.display='flex';
+  }
+  updateCatCounter();
+}
+
+/* ── NPS: max 6 süper-kategori ── */
+const NPS_MAX=6;
+
+function countActiveCats(){
+  return Object.keys(SMETA).filter(sup=>{
+    const cb=document.querySelector(`[data-sup="${sup}"]`);
+    return cb && (cb.checked||cb.indeterminate);
+  }).length;
+}
+
+function updateCatCounter(){
+  const n=countActiveCats();
+  const el=document.getElementById('cat-counter');
+  if(!el) return;
+  el.textContent=`${n}/${NPS_MAX}`;
+  if(n>=NPS_MAX){
+    el.style.color='#C0392B'; el.style.fontWeight='900';
+    el.title='NPS standardı: haritada en fazla 6 kategori — maksimuma ulaştınız';
+  } else {
+    el.style.color='#888'; el.style.fontWeight='700';
+    el.title='NPS standardı: haritada en fazla 6 kategori gösterilebilir';
+  }
+}
+
+let _toastTimer=null;
+function showToast(msg){
+  let t=document.getElementById('nps-toast');
+  if(!t){
+    t=document.createElement('div'); t.id='nps-toast';
+    t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);'
+      +'background:#C0392B;color:#fff;padding:10px 22px;border-radius:8px;'
+      +'font-size:13px;font-weight:700;font-family:Nunito Sans,sans-serif;'
+      +'box-shadow:0 4px 20px rgba(0,0,0,.35);z-index:9999;'
+      +'opacity:0;transition:opacity .2s;pointer-events:none;';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg; t.style.opacity='1';
+  clearTimeout(_toastTimer);
+  _toastTimer=setTimeout(()=>{ t.style.opacity='0'; },3000);
+}
+
+function superToggle(sup,v){
+  if(v){
+    const alreadyActive=(groups[sup]||[]).some(p=>_visSet.has(p.idx));
+    if(!alreadyActive && countActiveCats()>=NPS_MAX){
+      showToast(`NPS standardı: haritada en fazla ${NPS_MAX} kategori gösterilebilir`);
+      const cb=document.querySelector(`[data-sup="${sup}"]`);
+      if(cb){ cb.checked=false; cb.indeterminate=false; }
+      return;
+    }
+  }
+  (groups[sup]||[]).forEach(p=>{
+    setVis(p.idx,v);
+    const cb=document.querySelector(`[data-pid="${p.idx}"]`);
+    if(cb) cb.checked=v;
+  });
+  updateCatCounter();
+}
+function syncSup(sup){
+  const cb=document.querySelector(`[data-sup="${sup}"]`); if(!cb) return;
+  const all=(groups[sup]||[]).every(p=>document.querySelector(`[data-pid="${p.idx}"]`)?.checked);
+  const any=(groups[sup]||[]).some(p=>document.querySelector(`[data-pid="${p.idx}"]`)?.checked);
+  cb.checked=all; cb.indeterminate=!all&&any;
+  updateCatCounter();
+}
+function toggleAll(v){
+  if(v){
+    // 6 süper-kategori, limit 6 — hepsi açılabilir, uyarı gereksiz
+    enriched.forEach(p=>setVis(p.idx,v));
+    document.querySelectorAll('input[type=checkbox]').forEach(cb=>{cb.checked=v;cb.indeterminate=false;});
+    updateCatCounter(); return;
+  }
+  enriched.forEach(p=>setVis(p.idx,v));
+  document.querySelectorAll('input[type=checkbox]').forEach(cb=>{cb.checked=v;cb.indeterminate=false;});
+  updateCatCounter();
+}
+function showAllCats(){
+  Object.keys(SMETA).forEach(sup=>{
+    if(!groups[sup]) return;
+    superToggle(sup,true);
+    const cb=document.querySelector(`[data-sup="${sup}"]`);
+    if(cb) cb.checked=true;
+  });
+  updateCatCounter();
+}
+
+/* ── Arama ── */
+function buildSearch(){
+  const inp=document.getElementById('map-search-input');
+  const res=document.getElementById('search-results');
+  const clr=document.getElementById('map-search-clear');
+
+  // Türkçe karakterleri normalize et (ş→s, ğ→g, ı→i…)
+  function tr(s){
+    return (s||'').toLowerCase()
+      .replace(/ş/g,'s').replace(/ğ/g,'g').replace(/ı/g,'i')
+      .replace(/ö/g,'o').replace(/ü/g,'u').replace(/ç/g,'c')
+      .replace(/İ/g,'i').replace(/Ş/g,'s').replace(/Ğ/g,'g')
+      .replace(/Ö/g,'o').replace(/Ü/g,'u').replace(/Ç/g,'c');
+  }
+
+  function showResults(items){
+    if(!items.length){
+      res.innerHTML='<div class="sr-empty">Eşleşen yer bulunamadı</div>';
+      res.style.display='block'; return;
+    }
+    res.innerHTML=items.slice(0,10).map(p=>{
+      const supMeta=SMETA[p.sup]||{};
+      const subLbl=CLABELS[p.cat]||p.cat;
+      return `<div class="sr-item" onclick="flyToResult(${p.idx})">
+        <div class="sr-dot" style="background:${p.color}"><i class="fas ${p.fa}"></i></div>
+        <div class="sr-info">
+          <div class="sr-name">${p.name}</div>
+          <div class="sr-meta">${subLbl}${_myLocReady?' · '+fmtDist(p.dist):''}</div>
+        </div>
+        <div class="sr-num" data-num-for="${p.idx}">${p.num??''}</div>
+      </div>`;
+    }).join('');
+    res.style.display='block';
+  }
+
+  inp.addEventListener('input',()=>{
+    const q=tr(inp.value.trim());
+    clr.style.display=inp.value?'block':'none';
+    if(!q){ res.style.display='none'; return; }
+    const hits=enriched.filter(p=>
+      tr(p.name).includes(q) ||
+      tr(SMETA[p.sup]?.label||'').includes(q) ||
+      tr(CLABELS[p.cat]||'').includes(q)
+    );
+    showResults(hits);
+  });
+
+  inp.addEventListener('keydown',e=>{
+    if(e.key==='Escape') clearSearch();
+  });
+
+  // Dışarı tıklayınca kapat
+  document.addEventListener('click',e=>{
+    if(!document.getElementById('map-search').contains(e.target)){
+      res.style.display='none';
+    }
+  });
+}
+
+function flyToResult(idx){
+  const p=enriched.find(x=>x.idx===idx); if(!p) return;
+  // Gizliyse göster
+  if(!_visSet.has(idx)){
+    setVis(idx,true);
+    const cb=document.querySelector(`[data-pid="${idx}"]`);
+    if(cb){ cb.checked=true; syncSup(p.sup); }
+  }
+  map.flyTo({center:[p.lon,p.lat], zoom:17, speed:1.4});
+  setTimeout(()=>{
+    const mk=mkrs[idx];
+    if(mk && mk.mk.getPopup()) mk.mk.togglePopup();
+  },700);
+  // Sidebar'da scroll-to
+  const row=document.querySelector(`[data-pid="${idx}"]`);
+  if(row){
+    // Grup açık mı?
+    const body=row.closest('.gitms');
+    if(body && !body.classList.contains('open')) body.classList.add('open');
+    row.scrollIntoView({behavior:'smooth', block:'center'});
+    row.closest('.pitem')?.classList.add('sr-highlight');
+    setTimeout(()=>row.closest('.pitem')?.classList.remove('sr-highlight'),2200);
+  }
+  document.getElementById('search-results').style.display='none';
+  document.getElementById('map-search-input').value='';
+  document.getElementById('map-search-clear').style.display='none';
+}
+
+function clearSearch(){
+  document.getElementById('map-search-input').value='';
+  document.getElementById('search-results').style.display='none';
+  document.getElementById('map-search-clear').style.display='none';
+}
+
+/* ══════════════════════════════════════════════════════════════
+   URL Paylaşım — "Paylaş" butonu
+   Seçili POI indekslerini URL ?s=1,3,7,12 parametresine kodlar.
+   İşletmeler kendi önerdikleri yerleri seçip URL paylaşabilir;
+   ziyaretçi linke tıklayınca tam o seçim hazır gelir.
+══════════════════════════════════════════════════════════════ */
+function shareSelection(){
+  const ids=[..._visSet].sort((a,b)=>a-b).join(',');
+  const url=new URL(window.location.href);
+  url.searchParams.set('s', ids);
+  // Harita merkezini ve zoom'u ekle
+  const c=map.getCenter();
+  url.searchParams.set('lng', c.lng.toFixed(5));
+  url.searchParams.set('lat2', c.lat.toFixed(5));
+  url.searchParams.set('z', map.getZoom().toFixed(2));
+  // Özel işletme konumu varsa ekle
+  if(myLoc.lat!==HOTEL.lat||myLoc.lon!==HOTEL.lon){
+    url.searchParams.set('mlat', myLoc.lat.toFixed(6));
+    url.searchParams.set('mlon', myLoc.lon.toFixed(6));
+    url.searchParams.set('mname', encodeURIComponent(myLoc.name));
+  }
+  const shareUrl=url.toString();
+  // Panoya kopyala
+  navigator.clipboard.writeText(shareUrl).then(()=>{
+    showToast('🔗 Bağlantı kopyalandı! Misafirlerinizle paylaşabilirsiniz.');
+    const btn=document.getElementById('btn-share');
+    if(btn){ btn.classList.add('active'); setTimeout(()=>btn.classList.remove('active'),2500); }
+  }).catch(()=>{
+    // Clipboard API yoksa prompt ile göster
+    prompt('Bu bağlantıyı kopyalayın:', shareUrl);
+  });
+}
+
+/* ══════════════════════════════════════════════════════════════
+   İşletme Konum Seçici
+   "Konumum" butonuna basınca açılır. İşletme listeden kendini
+   seçer → Buradasınız pini oraya taşınır, tüm mesafeler yeniden
+   hesaplanır, rotalar yeniden çizilir.
+══════════════════════════════════════════════════════════════ */
+function openLocPicker(){
+  const overlay=document.getElementById('loc-overlay');
+  overlay.classList.add('open');
+  // Listeyi (yeniden) doldur
+  filterLocList('');
+  setTimeout(()=>document.getElementById('loc-search').focus(),120);
+}
+
+function closeLocPicker(){
+  document.getElementById('loc-overlay').classList.remove('open');
+  document.getElementById('loc-search').value='';
+  stopMapPickMode();
+}
+
+/* Türkçe normalize (arama için) */
+function _locNorm(s){
+  return (s||'').toLowerCase()
+    .replace(/ş/g,'s').replace(/ğ/g,'g').replace(/ı/g,'i')
+    .replace(/ö/g,'o').replace(/ü/g,'u').replace(/ç/g,'c')
+    .replace(/İ/g,'i').replace(/Ş/g,'s').replace(/Ğ/g,'g')
+    .replace(/Ö/g,'o').replace(/Ü/g,'u').replace(/Ç/g,'c');
+}
+
+// İşletme sayılabilecek POI süper-kategorileri
+const _BIZ_SUPS = new Set(['accommodation','food','services']);
+// Doğa kategorisindeki işletme türleri (dalış merkezi, spor tesisi vb.)
+const _BIZ_CATS = new Set(['dive_centre','sports_centre','marina','camp_site','horse_riding','water_park','swimming_pool']);
+
+function filterLocList(q){
+  const container=document.getElementById('loc-list');
+  const norm=_locNorm(q.trim());
+  // Yalnızca işletme niteliğindeki POI'ler listelenir
+  // (plajlar, kültürel alanlar, ulaşım, manzara noktaları hariç)
+  const results=enriched.filter(p=>{
+    const isBiz=_BIZ_SUPS.has(p.sup)||_BIZ_CATS.has(p.cat);
+    if(!isBiz) return false;
+    return !norm ||
+      _locNorm(p.name).includes(norm) ||
+      _locNorm(CLABELS[p.cat]||'').includes(norm);
+  }).slice(0,80);
+
+  container.innerHTML=results.map(p=>{
+    const inRange=!walkMode||(p.dist<=walkRadius);
+    const rangeTag=(!inRange)
+      ? `<div class="loc-out-range"><i class="fas fa-car"></i> Yürüyüş dışı — ${fmtDist(p.dist)}</div>`
+      : '';  // picker listesinde mesafe her zaman göster (sıralama için)
+    return `
+    <div class="loc-item ${inRange?'':'loc-item-far'}" onclick="applyMyLocation(${p.idx})">
+      <div class="loc-ico" style="background:${p.color}">
+        <i class="fas ${p.fa}"></i>
+      </div>
+      <div class="loc-info">
+        <div class="loc-name">${p.name}</div>
+        <div class="loc-sub">${CLABELS[p.cat]||p.cat}</div>
+        ${rangeTag}
+      </div>
+      <div class="loc-dist">${fmtDist(p.dist)}</div>
+    </div>`;
+  }).join('');
+
+  if(!results.length){
+    container.innerHTML='<div style="padding:24px;text-align:center;color:#bbb;font-size:13px">Eşleşen yer bulunamadı</div>';
+  }
+}
+
+function applyMyLocation(idx){
+  const p=enriched.find(x=>x.idx===idx); if(!p) return;
+  _moveMyPin(p.lat, p.lon, p.name);
+  closeLocPicker();
+
+  // İşletme seçildi — mesafe/rota gösterimini aç
+  _myLocReady=true;
+  _myBizIdx=idx;  // köy sidebar için işletme idx'ini sakla
+
+  // İşletme seçilince yürüyüş moduna geç (harita kilidi açılır)
+  setMode('walk');
+
+  // ── Default seçim: konum değişince akıllı filtre ──
+  _applySmartDefault();
+
+  // Köy bazlı sidebar'ı kur
+  buildVillageSidebar();
+
+  map.flyTo({center:[p.lon,p.lat], zoom:13, speed:1.2});
+  fetchRoutes();
+  showToast(`📍 Konum: ${p.name}`);
+}
+
+/* Konum değişince varsayılan seçim: tüm turistik + hizmet kategorileri seçili,
+   plajlardan yalnızca en yakını seçili */
+/* ── NPS "Top Landmarks Only" varsayılanı ──────────────────────────────────
+   Varsayılan görünüm: sadece gezilmesi gereken önemli yerler
+   • must_see=true olan POI'lar (elle seçilmiş veya bilinen landmark)
+   • Feribot iskelesi + havalimanı (her zaman görünür)
+   • En yakın 1 plaj
+   Kullanıcı isterse kategorileri açarak diğerlerini görebilir.         ── */
+function _applySmartDefault(){
+  const beaches=enriched.filter(x=>x.sup==='beach').sort((a,b)=>a.dist-b.dist);
+  const nearestBeach=beaches[0];
+
+  enriched.forEach(p=>{
+    let checked=false;
+
+    if(p.must_see){
+      // Elle işaretlenmiş önemli yer (landmark, tarihi alan, viewpoint vb.)
+      checked=true;
+    } else if(p.sup==='beach'){
+      // Sadece en yakın 1 plaj görünsün
+      checked=!!(nearestBeach&&p.idx===nearestBeach.idx);
+    } else if(p.cat==='ferry_terminal'||p.cat==='airport'){
+      // Feribot + havalimanı her zaman
+      checked=true;
+    }
+    // Restoran, banka, market, dolmuş, konaklama → gizli
+    // Kullanıcı kategori checkbox'larından açabilir
+
+    const cb=document.querySelector(`[data-pid="${p.idx}"]`);
+    if(cb) cb.checked=checked;
+    setVis(p.idx, checked);
+  });
+
+  Object.keys(SMETA).forEach(sup=>syncSup(sup));
+  applyModeFilter();
+}
+
+function resetMyLocation(){
+  _moveMyPin(HOTEL.lat, HOTEL.lon, HOTEL.name);
+  closeLocPicker();
+  _myLocReady=false;
+  _myBizIdx=null;
+  _removeVillageMarkers();
+  // Kategori bazlı sidebar'a geri dön
+  const catlist=document.getElementById('catlist');
+  if(catlist) catlist.innerHTML='';
+  buildSidebar();
+  const sideHdr=document.querySelector('#side-hdr span:first-child');
+  if(sideHdr) sideHdr.textContent='ÇEVREDEKİ YERLER';
+  map.flyTo({center:[HOTEL.lon,HOTEL.lat], zoom:11.5, speed:1.2});
+  showToast('Orijinal konuma dönüldü');
+}
+
+function _moveMyPin(lat, lon, name){
+  myLoc={lat, lon, name};
+
+  // Marker'ı taşı
+  if(_myMk) _myMk.setLngLat([lon,lat]);
+
+  // Üst çubuk etiketini güncelle
+  const t=document.getElementById('my-lbl-txt'); if(t) t.textContent=name;
+
+  // Yürüme çemberlerini yeni konuma taşı
+  const src=map.getSource('walk');
+  if(src) src.setData({type:'FeatureCollection',
+    features:[circle(lon,lat,0.4),circle(lon,lat,0.8)]});
+
+  // Tüm mesafeleri yeniden hesapla
+  enriched.forEach(p=>{
+    p.dist=haversine(lat,lon,p.lat,p.lon);
+    // pin-dist artık isim gösteriyor, sadece sidebar mesafesini güncelle
+    const sEl=document.querySelector(`[data-sdist-idx="${p.idx}"]`);
+    if(sEl) sEl.textContent=fmtDist(p.dist);
+    delete routeData[p.idx];
+  });
+
+  updateRouteLines();
+  fetchRoutes();
+}
+
+/* ── Haritaya tıkla modu ── */
+let _mapPickHandler=null;
+
+function startMapPickMode(){
+  closeLocPicker();
+  document.body.classList.add('map-pick-mode');
+  document.getElementById('loc-pick-hint').style.display='block';
+  document.getElementById('loc-pick-hint').style.position='absolute';
+  // hint'i mwrap içine taşı
+  document.getElementById('mwrap').appendChild(document.getElementById('loc-pick-hint'));
+
+  _mapPickHandler=function(e){
+    const {lng,lat}=e.lngLat;
+    const name=prompt('İşletme adınız:', myLoc.name)||myLoc.name;
+    _moveMyPin(lat,lng,name);
+    stopMapPickMode();
+    showToast(`📍 Konum ayarlandı: ${name}`);
+  };
+  map.once('click',_mapPickHandler);
+
+  document.addEventListener('keydown',function esc(e){
+    if(e.key==='Escape'){ stopMapPickMode(); document.removeEventListener('keydown',esc); }
+  });
+}
+
+function stopMapPickMode(){
+  document.body.classList.remove('map-pick-mode');
+  document.getElementById('loc-pick-hint').style.display='none';
+  if(_mapPickHandler){ map.off('click',_mapPickHandler); _mapPickHandler=null; }
+}
+
+/* URL parametrelerinden seçimi geri yükle */
+function applyURLSelection(){
+  const params=new URLSearchParams(window.location.search);
+  const s=params.get('s');
+  const lng=parseFloat(params.get('lng'));
+  const lat2=parseFloat(params.get('lat2'));
+  const z=parseFloat(params.get('z'));
+
+  if(s){
+    // Tüm POI'ları gizle
+    enriched.forEach(p=>{ setVis(p.idx,false); });
+    document.querySelectorAll('input[data-pid]').forEach(cb=>cb.checked=false);
+
+    // Sadece seçilenleri göster
+    const ids=new Set(s.split(',').map(Number));
+    enriched.forEach(p=>{
+      if(ids.has(p.idx)){
+        setVis(p.idx,true);
+        const cb=document.querySelector(`[data-pid="${p.idx}"]`);
+        if(cb) cb.checked=true;
+      }
+    });
+
+    // Süper-kategori checkboxlarını senkronize et
+    Object.keys(SMETA).forEach(sup=>syncSup(sup));
+    updateCatCounter();
+
+    // Paylaşım bildirimi
+    const cnt=ids.size;
+    showToast(`📍 ${cnt} önerilen yer yüklendi`);
+  }
+
+  if(!isNaN(lng)&&!isNaN(lat2)&&!isNaN(z)){
+    map.jumpTo({center:[lng,lat2],zoom:z});
+  }
+
+  // Özel işletme konumu
+  const mlat=parseFloat(params.get('mlat'));
+  const mlon=parseFloat(params.get('mlon'));
+  const mname=params.get('mname');
+  if(!isNaN(mlat)&&!isNaN(mlon)){
+    _moveMyPin(mlat,mlon,decodeURIComponent(mname||HOTEL.name));
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PDF İndir — A3 Landscape (420 × 297 mm)
+
+   Düzen:
+   ┌──────────────────────────────────────────────────┬────────┐
+   │  HEADER — logo + otel adı + alt başlık (28mm)   │        │
+   ├─────────────────────────────────────────────────│ LEJANT │
+   │                                                  │  (82mm │
+   │            HARİTA  (338 × 269 mm)               │  sabit)│
+   │                                                  │        │
+   └──────────────────────────────────────────────────┴────────┘
+   Lejant: numaralı POI listesi (# + isim + mesafe) + kategori renkleri
+   Tüm metinler ≥ 8pt
+══════════════════════════════════════════════════════════════ */
+function downloadPDF(){
+  const btn=document.getElementById('btn-pdf');
+  btn.disabled=true;
+  btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Hazırlanıyor...';
+
+  map.once('idle', async ()=>{
+    try{
+      const {jsPDF}=window.jspdf;
+      const pdf=new jsPDF({orientation:'landscape',unit:'mm',format:'a3'});
+
+      const W=420, H=297;
+      const HH=28;          // Header yüksekliği
+      const LW=82;          // Lejant paneli genişliği (sağ)
+      const MW=W-LW;        // Harita genişliği  = 338mm
+      const MH=H-HH;        // Harita + lejant yüksekliği = 269mm
+      const LX=W-LW;        // Lejant sol kenarı x
+      const LY=HH;          // Lejant üst y
+      // NPS Wayside Map Standard: labels/features ≥ 1-3/8" (35mm) from outer edge
+      const NPS_MARGIN=35;  // dış sayfa güvenli bölgesi (mm)
+      const LEG_PAD=8;      // lejant panel iç dolgu (sol kenardan) (mm)
+      // Sağa hizalı metin: W - NPS_MARGIN = 385mm'yi geçemez
+      // Sol metin harita alanında: x ≥ NPS_MARGIN = 35mm
+
+      const [br,bg,bb]=hexToRgb(HOTEL.brand);
+
+      /* ── HEADER (tam genişlik, 28mm) ── */
+      pdf.setFillColor(br,bg,bb);
+      pdf.rect(0,0,W,HH,'F');
+
+      // Logo dairesi — otel baş harfleri
+      const initials=HOTEL.name.split(/\s+/).filter(Boolean)
+                       .map(w=>w[0]).join('').slice(0,2).toUpperCase();
+      pdf.setFillColor(255,255,255);
+      pdf.circle(20, HH/2, 12, 'F');
+      pdf.setTextColor(br,bg,bb);
+      pdf.setFontSize(14); pdf.setFont('helvetica','bold');
+      pdf.text(initials, 20-pdf.getTextWidth(initials)/2, HH/2+5);
+
+      // NPS mapTitle: 36pt Bold ALL CAPS track 100 — header 28mm'ye sığan maks
+      pdf.setTextColor(255,255,255);
+      pdf.setFontSize(22); pdf.setFont('helvetica','bold');
+      const titleTxt=pdfTr(HOTEL.name).toUpperCase();
+      pdf.text(titleTxt, NPS_MARGIN+5, HH/2+3);
+
+      // NPS subtitle: 14pt minimum
+      pdf.setFontSize(10); pdf.setFont('helvetica','normal');
+      pdf.text(pdfTr(`${HOTEL.sub}  -  Yakin Cevre Rehberi`),
+               NPS_MARGIN+5, HH/2+11);
+
+      // Sağ üstte OSM kredisi — NPS minimum 10pt, sağ marj uyumlu
+      pdf.setFontSize(7); pdf.setTextColor(255,255,255,128);
+      const oattr='Mapbox | OpenStreetMap';
+      pdf.text(oattr, W-NPS_MARGIN-pdf.getTextWidth(oattr), HH-5);
+
+      /* ── HARİTA: html2canvas ile tam DOM yakalama (ikonlar + isimler dahil) ── */
+      const mwrap=document.getElementById('mwrap');
+      const mwRect=mwrap.getBoundingClientRect();
+
+      // html2canvas: mwrap'i (harita + HTML marker'lar + SVG) yakala
+      // useCORS=true → Mapbox tile'larının cross-origin canvas'a yazılmasını sağlar
+      const h2cCanvas=await html2canvas(mwrap,{
+        useCORS:true,
+        allowTaint:false,
+        scale:1.5,           // hafif üp-ölçekleme → keskin çizgiler
+        logging:false,
+        backgroundColor:null,
+        ignoreElements:el=>el.id==='routeLabelSVG'  // mesafe SVG'si PDF'te ayrı çizilir
+      });
+
+      const canvasAR=h2cCanvas.width/h2cCanvas.height;
+      const pdfAR=MW/MH;
+
+      // Letterbox: aspect ratio koru
+      let imgW,imgH,imgOffX=0,imgOffY=0;
+      if(canvasAR>pdfAR){
+        imgW=MW; imgH=MW/canvasAR; imgOffY=(MH-imgH)/2;
+      } else {
+        imgH=MH; imgW=MH*canvasAR; imgOffX=(MW-imgW)/2;
+      }
+
+      // Letterbox arka planı (deniz mavisi)
+      pdf.setFillColor(185,210,228);
+      pdf.rect(0,HH,MW,MH,'F');
+
+      const img=h2cCanvas.toDataURL('image/png');
+      pdf.addImage(img,'PNG',imgOffX,HH+imgOffY,imgW,imgH,'','FAST');
+
+      /* ── Marker overlay atlandı — html2canvas zaten yakaladı ──
+         Sadece sınır dışı kalan pinler için ek işlem yapılmaz.       ── */
+      // (html2canvas çıktısında ikonlar, isimler ve rotalar görünür)
+
+      /* ── LEJANT PANELİ (sağ, 82mm × 269mm) — NPS Legend Standards ── */
+      // NPS area.other arka plan (#EDE7D3)
+      pdf.setFillColor(237,231,211);
+      pdf.rect(LX, LY, LW, MH, 'F');
+
+      // Sol kenar aksan çizgisi (brand rengi, 3mm)
+      pdf.setFillColor(br,bg,bb);
+      pdf.rect(LX, LY, 3, MH, 'F');
+
+      // ── Lejant başlık bandı — NPS poiStructure ──
+      pdf.setFillColor(br,bg,bb);
+      pdf.rect(LX, LY, LW, 12, 'F');
+      pdf.setTextColor(255,255,255);
+      pdf.setFontSize(11); pdf.setFont('helvetica','bold');
+      pdf.text('YAKIN CEVRE', LX+LEG_PAD, LY+8.5);
+
+      // Yürüme mesafesi notu — NPS scaleBar — min 10pt
+      pdf.setFillColor(251,246,217);  // NPS builtup
+      pdf.rect(LX+3, LY+13, LW-3, 12, 'F');
+      pdf.setTextColor(80,70,60);
+      pdf.setFontSize(8); pdf.setFont('helvetica','normal');
+      pdf.text('-- ~400m / 5 dk', LX+LEG_PAD, LY+19);
+      pdf.text('.. ~800m / 10 dk', LX+LEG_PAD, LY+25);
+
+      // ── Numaralı POI listesi — yalnızca görünür POI'lar ──
+      const LIST_Y=LY+27;
+      const ROW_H=7.5;           // 7.5mm satır @ 9pt
+      const NAME_MAX=15;         // max karakter
+      const maxRows=Math.floor((MH-27-52)/ROW_H);
+      const visiblePois=enriched.filter(p=>_visSet.has(p.idx));
+
+      visiblePois.slice(0,maxRows).forEach((p,i)=>{
+        const y=LIST_Y+i*ROW_H;
+
+        // Zebra şerit
+        if(i%2===0){
+          pdf.setFillColor(244,240,230);
+          pdf.rect(LX+3,y-5.5,LW-3,ROW_H,'F');
+        }
+
+        // NPS kare/daire işaret (shape'e göre)
+        const [cr,cg,cb]=hexToRgb(p.color);
+        pdf.setFillColor(cr,cg,cb);
+        const isSquare=(p.shape==='square');
+        const symX=LX+LEG_PAD+0.5;
+        if(isSquare){
+          pdf.roundedRect(symX,y-4.5,7,7,1,1,'F');
+        } else {
+          pdf.circle(symX+3.5,y-1.2,3.6,'F');
+        }
+        pdf.setTextColor(255,255,255);
+        pdf.setFontSize(7); pdf.setFont('helvetica','bold');
+        const ns=String(p.num);
+        pdf.text(ns, symX+3.5-pdf.getTextWidth(ns)/2, y+0.8);
+
+        // POI adı — NPS otherSite min 10pt
+        pdf.setTextColor(20,18,15); pdf.setFontSize(9); pdf.setFont('helvetica','normal');
+        const nm=pdfTr(p.name.length>NAME_MAX?p.name.slice(0,NAME_MAX-1)+'..':p.name);
+        pdf.text(nm, LX+LEG_PAD+10, y);
+
+        // Mesafe (sağa hizalı)
+        pdf.setTextColor(100,90,75); pdf.setFontSize(8); pdf.setFont('helvetica','bold');
+        const ds=fmtDist(routeData[p.idx]?.roadDist||p.dist);
+        pdf.text(ds, LX+LW-4-pdf.getTextWidth(ds), y);
+      });
+
+      // Taşan kayıt sayısı
+      if(visiblePois.length>maxRows){
+        const rem=visiblePois.length-maxRows;
+        pdf.setTextColor(140,130,115); pdf.setFontSize(9);
+        pdf.text(`+${rem} yer daha`, LX+7, LIST_Y+maxRows*ROW_H);
+      }
+
+      // ── Kategori renk lejantı (altta) — NPS legend min 10pt ──
+      const CAT_Y=H-48;
+      pdf.setFillColor(br,bg,bb);
+      pdf.rect(LX,CAT_Y,LW,9,'F');
+      pdf.setTextColor(255,255,255);
+      pdf.setFontSize(9); pdf.setFont('helvetica','bold');
+      pdf.text('KATEGORILER', LX+LEG_PAD, CAT_Y+6.5);
+
+      let cy=CAT_Y+15;
+      Object.entries(SMETA).forEach(([sup,m])=>{
+        if(!groups[sup]||cy>H-NPS_MARGIN) return;
+        const [cr,cg,cb]=hexToRgb(m.color);
+        pdf.setFillColor(cr,cg,cb);
+        // Süper-kategori lejantı: her zaman daire
+        pdf.circle(LX+LEG_PAD+3,cy-1.5,3,'F');
+        pdf.setTextColor(30,25,15); pdf.setFontSize(9); pdf.setFont('helvetica','normal');
+        pdf.text(pdfTr(m.label), LX+LEG_PAD+10, cy);
+        cy+=6.5;
+      });
+
+      // Dikey ayırıcı (harita / lejant arası)
+      pdf.setDrawColor(220,215,210); pdf.setLineWidth(0.3);
+      pdf.line(LX, LY, LX, H);
+
+      pdf.save(`rehber-${HOTEL.name.toLowerCase().replace(/\s+/g,'-')}.pdf`);
+    }catch(e){ alert('PDF hatası: '+e.message); console.error(e); }
+    btn.disabled=false;
+    btn.innerHTML='<i class="fas fa-file-pdf"></i> PDF İndir';
+  });
+  map.triggerRepaint();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   downloadImage()
+   • Mevcut mod (walk/drive) için kayıtlı çerçeveye sığdır
+   • html2canvas ile tam DOM'u yakala (ikonlar + isimler + rotalar)
+   • Orijinal görünüme geri dön
+   ══════════════════════════════════════════════════════════════ */
+async function downloadImage(){
+  const btn=document.getElementById('btn-img');
+  btn.disabled=true;
+  btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Hazırlanıyor...';
+
+  // Mevcut harita durumunu sakla
+  const origCenter  = map.getCenter();
+  const origZoom    = map.getZoom();
+  const origPitch   = map.getPitch();
+  const origBearing = map.getBearing();
+
+  const mode  = walkMode ? 'walk' : 'drive';
+  const frame = getFrame(mode);   // [lon_min, lat_min, lon_max, lat_max]
+
+  const mwrap=document.getElementById('mwrap');
+  try{
+    // 1. Çerçeveye sığdır (pitch/bearing sıfırla → yatay/kuzey)
+    await new Promise(res=>{
+      map.once('idle', res);
+      map.fitBounds([[frame[0],frame[1]],[frame[2],frame[3]]],{
+        padding:24, pitch:0, bearing:0, duration:800, animate:true
+      });
+    });
+
+    // 2. Tile'ların render tamamlanması için kısa bekleme
+    await new Promise(res=>setTimeout(res,500));
+
+    // 3. UI elemanlarını gizle (arama, zoom kontrolleri, ölçek, atıf)
+    mwrap.classList.add('downloading');
+
+    // 4. html2canvas ile yakala (scale:1.5 → tarayıcı donmasını önler)
+    const canvas=await html2canvas(mwrap,{
+      useCORS:true, allowTaint:false,
+      scale:1.5, logging:false,
+      backgroundColor:'#c8dff0',
+      imageTimeout:20000
+    });
+
+    // 5. UI elemanlarını geri getir
+    mwrap.classList.remove('downloading');
+
+    // 6. İndir
+    const link=document.createElement('a');
+    const safeName=(HOTEL.name||'harita').toLowerCase().replace(/[^a-z0-9]+/g,'-');
+    link.download=`rehber-${safeName}-${mode}.jpg`;
+    link.href=canvas.toDataURL('image/jpeg',0.92);
+    link.click();
+
+  }catch(e){
+    mwrap.classList.remove('downloading');
+    alert('İndirme hatası: '+e.message);
+    console.error(e);
+  }
+
+  // 5. Orijinal görünüme dön
+  map.easeTo({center:origCenter, zoom:origZoom,
+              pitch:origPitch, bearing:origBearing, duration:700});
+
+  btn.disabled=false;
+  btn.innerHTML='<i class="fas fa-image"></i> İndir';
+}
+</script>
+</body>
+</html>
