@@ -490,8 +490,13 @@ body { font-family:'Nunito Sans',sans-serif; height:100vh;
 }
 #mwrap.map-locked .mapboxgl-ctrl-top-right { visibility:hidden; }
 
-/* ── İlçe seçici ── */
-#district-sel {
+/* ── Harita seçici ── */
+.maps-wrap {
+  display:flex; align-items:center; gap:5px;
+  color:rgba(255,255,255,.8); font-size:12px; font-weight:700;
+}
+.maps-wrap i { font-size:12px; }
+#maps-sel {
   border:1.5px solid rgba(255,255,255,.4);
   background:rgba(255,255,255,.15);
   color:#fff; padding:6px 10px; border-radius:6px; cursor:pointer;
@@ -501,8 +506,8 @@ body { font-family:'Nunito Sans',sans-serif; height:100vh;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(255,255,255,.7)'/%3E%3C/svg%3E");
   background-repeat:no-repeat; background-position:right 8px center;
 }
-#district-sel:hover { background-color:rgba(255,255,255,.28); }
-#district-sel option { background:#1a1a1a; color:#fff; font-weight:600; }
+#maps-sel:hover { background-color:rgba(255,255,255,.28); }
+#maps-sel option, #maps-sel optgroup { background:#1a1a1a; color:#fff; font-weight:600; }
 
 /* ── İşletme Konum Seçici ── */
 #loc-overlay {
@@ -616,18 +621,30 @@ body.map-pick-mode #loc-pick-hint {
     <sub>Çanakkale İl Kültür ve Turizm Müdürlüğü için geliştirilmektedir. Demo</sub>
   </div>
   <div class="sp"></div>
-  <button class="tb" id="btn-3d" onclick="toggle3D()">
-    <i class="fas fa-cube"></i> 3D
-  </button>
   <button class="tb" id="btn-myloc" onclick="openLocPicker()" title="İşletmenizi seçin — Buradasınız konumunu değiştirin">
     <i class="fas fa-store"></i> Konumum
   </button>
-  <!-- İlçe seçici -->
-  <select id="district-sel" onchange="setDistrict(this.value)" title="İlçe seçin">
-    <option value="gokceada">📍 Gökçeada</option>
-    <option value="ayvacik">📍 Ayvacık</option>
-    <option value="canakkale">📍 Çanakkale</option>
-  </select>
+  <!-- Harita / İlçe seçici -->
+  <div class="maps-wrap">
+    <i class="fas fa-map"></i>
+    <select id="maps-sel" onchange="setDistrict(this.value)" title="Harita seçin">
+      <option value="il">Çanakkale İli</option>
+      <optgroup label="─── İlçeler ───">
+        <option value="gokceada">Gökçeada</option>
+        <option value="bozcaada">Bozcaada</option>
+        <option value="ayvacik">Ayvacık</option>
+        <option value="ezine">Ezine</option>
+        <option value="canakkale">Çanakkale</option>
+        <option value="eceabat">Eceabat</option>
+        <option value="gelibolu">Gelibolu</option>
+        <option value="lapseki">Lapseki</option>
+        <option value="biga">Biga</option>
+        <option value="can">Çan</option>
+        <option value="bayramuc">Bayramiç</option>
+        <option value="yenice">Yenice</option>
+      </optgroup>
+    </select>
+  </div>
   <!-- Mod: Yürüyüş / Araç -->
   <div id="mode-grp" title="Mod seçin">
     <button class="tb mode-btn" id="btn-mode-walk" onclick="setMode('walk')">
@@ -712,7 +729,7 @@ body.map-pick-mode #loc-pick-hint {
     <div id="loc-panel-hdr">
       <div>
         <h3><i class="fas fa-store" style="margin-right:8px;opacity:.85"></i>İşletmenizi Seçin</h3>
-        <p>Seçtiğiniz yer "Buradasınız" konumu olur · Tüm mesafeler oradan hesaplanır</p>
+        <p id="loc-panel-sub">Seçili ilçedeki OSM kayıtlarından kendi işletmenizi bulun</p>
       </div>
       <button id="loc-close" onclick="closeLocPicker()">×</button>
     </div>
@@ -763,7 +780,7 @@ const PLACE_LABELS = [];
 const VILLAGE_DATA = [{"id": 38507, "name": "Bademli Köyü", "lat": 40.226968, "lon": 25.925711}, {"id": 205500, "name": "Cumhuriyet", "lat": 40.201098, "lon": 25.909098}, {"id": 38010, "name": "Çınarlı", "lat": 40.154251, "lon": 25.94606}, {"id": 37735, "name": "Dereköy Köyü", "lat": 40.133403, "lon": 25.746513}, {"id": 37260, "name": "Eşelek Köyü", "lat": 40.143909, "lon": 25.962799}, {"id": 38565, "name": "Fatih", "lat": 40.203163, "lon": 25.900893}, {"id": 38063, "name": "Kaleköy Köyü", "lat": 40.226875, "lon": 25.884515}, {"id": 205502, "name": "Kuzulimanı", "lat": 40.216922, "lon": 25.939862}, {"id": 207167, "name": "Şirinköy Köyü", "lat": 40.113647, "lon": 25.744528}, {"id": 38100, "name": "Tepeköy Köyü", "lat": 40.185385, "lon": 25.82578}, {"id": 37875, "name": "Uğurlu Köyü", "lat": 40.12554, "lon": 25.714501}, {"id": 154949, "name": "Yeni Bademli Köyü", "lat": 40.219459, "lon": 25.894489}, {"id": 37727, "name": "Yenimahalle", "lat": 40.197043, "lon": 25.943713}, {"id": 38110, "name": "Zeytinli Köyü", "lat": 40.153083, "lon": 25.860403}];
 
 /* ── İlçe çerçeveleri [lon_min, lat_min, lon_max, lat_max] ── */
-const _DISTRICT_FRAMES = {"gokceada": {"walk": [25.86, 40.183, 25.92, 40.215], "drive": [25.68, 40.092, 26.13, 40.293]}, "ayvacik": {"walk": [26.37, 39.575, 26.42, 39.6], "drive": [26.25, 39.48, 26.58, 39.73]}, "canakkale": {"walk": [26.38, 40.135, 26.43, 40.165], "drive": [26.24, 40.0, 26.6, 40.28]}};  // tüm ilçe çerçeveleri
+const _DISTRICT_FRAMES = {"il": {"walk": [25.6, 39.4, 27.6, 40.75], "drive": [25.6, 39.4, 27.6, 40.75]}, "gokceada": {"walk": [25.86, 40.183, 25.92, 40.215], "drive": [25.68, 40.092, 26.13, 40.293]}, "bozcaada": {"walk": [26.0, 39.825, 26.085, 39.872], "drive": [25.96, 39.8, 26.13, 39.92]}, "ayvacik": {"walk": [26.37, 39.575, 26.42, 39.6], "drive": [26.25, 39.48, 26.6, 39.77]}, "ezine": {"walk": [26.335, 39.785, 26.385, 39.815], "drive": [26.2, 39.7, 26.68, 40.02]}, "canakkale": {"walk": [26.38, 40.135, 26.43, 40.165], "drive": [26.24, 40.0, 26.6, 40.28]}, "eceabat": {"walk": [26.34, 40.188, 26.385, 40.218], "drive": [26.08, 40.12, 26.48, 40.44]}, "gelibolu": {"walk": [26.655, 40.4, 26.705, 40.432], "drive": [26.47, 40.31, 26.99, 40.7]}, "lapseki": {"walk": [26.67, 40.35, 26.715, 40.38], "drive": [26.55, 40.26, 27.06, 40.5]}, "biga": {"walk": [27.22, 40.22, 27.27, 40.255], "drive": [26.99, 40.08, 27.53, 40.47]}, "can": {"walk": [27.025, 39.99, 27.075, 40.025], "drive": [26.84, 39.84, 27.36, 40.24]}, "bayramuc": {"walk": [26.6, 39.815, 26.65, 39.845], "drive": [26.39, 39.72, 26.83, 40.02]}, "yenice": {"walk": [27.135, 39.895, 27.185, 39.925], "drive": [26.91, 39.72, 27.45, 40.07]}};  // tüm ilçe çerçeveleri
 let _currentDistrict = 'gokceada';
 
 function getFrame(mode){
@@ -777,10 +794,24 @@ function getFrame(mode){
 
 function setDistrict(d){
   _currentDistrict = d;
-  // İlçe değişince her zaman o ilçenin tam idari sınırını göster (araç modu + kilitli)
-  // — yürüyüş modundaysa da araç moduna geçilir
+  // İlçe değişince Overpass önbelleğini sıfırla
+  _ovpResults = []; _ovpDistrictKey = ''; _ovpState = 'idle';
+
+  if(d === 'il'){
+    // Tüm il görünümü — kilitlemeden zoom
+    const frame = _DISTRICT_FRAMES['il'];
+    if(frame && frame.drive){
+      map.fitBounds([[frame.drive[0],frame.drive[1]],[frame.drive[2],frame.drive[3]]],
+        {padding:{top:20,bottom:20,left:320,right:20}, duration:900});
+    }
+    showToast('📍 Çanakkale İli');
+    return;
+  }
+  // İlçe seçildi — idari sınıra kilitli araç modu
   setMode('drive');
-  showToast(`📍 İlçe: ${document.getElementById('district-sel').options[document.getElementById('district-sel').selectedIndex].text.replace(/^📍\s*/,'')}`);
+  const sel = document.getElementById('maps-sel');
+  const opt = sel && sel.options[sel.selectedIndex];
+  showToast(`📍 İlçe: ${opt ? opt.text.replace(/^📍\s*/,'') : d}`);
 }
 
 function saveFrame(mode){
@@ -1763,16 +1794,136 @@ function shareSelection(){
 }
 
 /* ══════════════════════════════════════════════════════════════
-   İşletme Konum Seçici
-   "Konumum" butonuna basınca açılır. İşletme listeden kendini
-   seçer → Buradasınız pini oraya taşınır, tüm mesafeler yeniden
-   hesaplanır, rotalar yeniden çizilir.
+   İşletme Konum Seçici — OSM/Overpass tabanlı
+   "Konumum" butonuna basınca açılır. Seçili ilçenin OSM verisini
+   çeker, kullanıcı kendi işletmesini arar ve seçer.
 ══════════════════════════════════════════════════════════════ */
+
+/* ── Overpass durumu ── */
+let _ovpResults = [];       // [{name,lat,lon,cat,color,fa,dist,sub}]
+let _ovpDistrictKey = '';   // hangi ilçe için yüklendi
+let _ovpState = 'idle';     // 'idle'|'loading'|'done'|'error'
+
+const _OVP_EPS = [
+  "https://overpass-api.de/api/interpreter",
+  "https://overpass.private.coffee/api/interpreter",
+  "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+  "https://overpass.openstreetmap.ru/api/interpreter",
+];
+
+async function _fetchOvp(query){
+  for(const ep of _OVP_EPS){
+    try{
+      const r=await fetch(ep,{method:'POST',
+        body:'data='+encodeURIComponent(query),
+        signal:AbortSignal.timeout(20000)});
+      if(r.ok) return await r.json();
+    }catch(_){}
+  }
+  return null;
+}
+
+async function _loadDistrictBiz(dk){
+  const frame=_DISTRICT_FRAMES[dk==='il'?'gokceada':dk];
+  if(!frame){ _ovpState='error'; _renderLocState(); return; }
+  const bb=frame.drive||frame.walk;
+
+  _ovpState='loading'; _renderLocState();
+
+  // Overpass bbox: south,west,north,east
+  const bbox=`${bb[1]},${bb[0]},${bb[3]},${bb[2]}`;
+  const q=`[out:json][timeout:25];
+(
+  node["amenity"~"restaurant|cafe|bar|fast_food|pharmacy|bank|atm|hotel|hostel|guest_house|dive_centre|sports_centre|swimming_pool|camp_site|water_park|marketplace|supermarket|convenience|bakery|ice_cream|pub"](${bbox});
+  node["tourism"~"hotel|hostel|guest_house|apartment|camp_site|museum|attraction|gallery|information"](${bbox});
+  node["shop"](${bbox});
+  node["leisure"~"sports_centre|swimming_pool|marina|water_park|fitness_centre|beach_resort"](${bbox});
+  way["amenity"~"restaurant|cafe|bar|fast_food|hotel|hostel|supermarket"](${bbox});
+  way["tourism"~"hotel|hostel|guest_house|museum|attraction"](${bbox});
+  way["shop"](${bbox});
+)->.r;
+.r out center 500;`;
+
+  const data=await _fetchOvp(q);
+  if(!data){ _ovpState='error'; _renderLocState(); return; }
+
+  const items=[];
+  for(const el of (data.elements||[])){
+    const tags=el.tags||{};
+    const name=tags['name:tr']||tags.name||tags['name:en'];
+    if(!name) continue;
+    let lat=el.lat, lon=el.lon;
+    if(el.type==='way'&&el.center){ lat=el.center.lat; lon=el.center.lon; }
+    if(!lat||!lon) continue;
+
+    const amenity=tags.amenity||'';
+    const tourism=tags.tourism||'';
+    const shop=tags.shop||'';
+    const leisure=tags.leisure||'';
+
+    let cat='services', color='#808080', fa='fa-store', sub='İşletme';
+    if(['restaurant','cafe','bar','fast_food','pub','ice_cream','food_court'].includes(amenity)){
+      cat='food'; color='#FE5000'; fa='fa-utensils'; sub='Yeme-İçme';
+    } else if(amenity==='pharmacy'){
+      cat='pharmacy'; color='#0085CA'; fa='fa-pills'; sub='Eczane';
+    } else if(['bank','atm'].includes(amenity)){
+      cat='bank'; color='#0085CA'; fa='fa-building-columns'; sub='Banka / ATM';
+    } else if(['hotel','hostel','guest_house','apartment','motel'].includes(tourism)||
+               ['hotel','hostel','guest_house'].includes(amenity)){
+      cat='accommodation'; color='#7C5CBF'; fa='fa-bed'; sub='Konaklama';
+    } else if(['museum','gallery'].includes(tourism)){
+      cat='museum'; color='#5D4037'; fa='fa-building-columns'; sub='Müze / Galeri';
+    } else if(['dive_centre','sports_centre','swimming_pool','water_park','camp_site'].includes(amenity)||
+               ['sports_centre','swimming_pool','marina','water_park','fitness_centre','beach_resort'].includes(leisure)){
+      cat='sports'; color='#84BD00'; fa='fa-dumbbell'; sub='Spor & Rekreasyon';
+    } else if(shop){
+      cat='shop'; color='#808080'; fa='fa-bag-shopping'; sub='Mağaza';
+    }
+
+    const dist=haversine(myLoc.lat,myLoc.lon,lat,lon);
+    items.push({name,lat,lon,cat,color,fa,sub,dist});
+  }
+
+  items.sort((a,b)=>a.dist-b.dist);
+  _ovpResults=items;
+  _ovpDistrictKey=dk;
+  _ovpState='done';
+  // Mevcut arama değeriyle yeniden render
+  const inp=document.getElementById('loc-search');
+  filterLocList(inp?inp.value:'');
+}
+
+function _renderLocState(){
+  const c=document.getElementById('loc-list'); if(!c) return;
+  if(_ovpState==='loading'){
+    c.innerHTML=`<div style="padding:32px;text-align:center;color:#aaa;font-size:13px">
+      <i class="fas fa-spinner fa-spin" style="font-size:24px;color:var(--brand);display:block;margin-bottom:10px"></i>
+      OSM verisi yükleniyor…</div>`;
+  } else if(_ovpState==='error'){
+    c.innerHTML=`<div style="padding:24px;text-align:center;color:#e74c3c;font-size:13px">
+      <i class="fas fa-triangle-exclamation"></i> Veri yüklenemedi.<br>
+      <span style="color:#aaa;font-size:11px;margin-top:4px;display:block">Lütfen internet bağlantınızı kontrol edip tekrar deneyin.</span></div>`;
+  }
+}
+
 function openLocPicker(){
   const overlay=document.getElementById('loc-overlay');
   overlay.classList.add('open');
-  // Listeyi (yeniden) doldur
-  filterLocList('');
+  const dk=(_currentDistrict&&_currentDistrict!=='il')?_currentDistrict:'gokceada';
+  // Panel alt başlığını ilçe adıyla güncelle
+  const sel=document.getElementById('maps-sel');
+  const selTxt=sel&&sel.options[sel.selectedIndex]?
+    sel.options[sel.selectedIndex].text : dk;
+  const sub=document.getElementById('loc-panel-sub');
+  if(sub) sub.textContent=`${selTxt} ilçesindeki OSM işletmelerini arayın`;
+  if(_ovpDistrictKey!==dk||_ovpState==='idle'||_ovpState==='error'){
+    _ovpResults=[]; _ovpDistrictKey=''; _ovpState='idle';
+    _renderLocState();
+    _loadDistrictBiz(dk);
+  } else {
+    const inp=document.getElementById('loc-search');
+    filterLocList(inp?inp.value:'');
+  }
   setTimeout(()=>document.getElementById('loc-search').focus(),120);
 }
 
@@ -1791,46 +1942,40 @@ function _locNorm(s){
     .replace(/Ö/g,'o').replace(/Ü/g,'u').replace(/Ç/g,'c');
 }
 
-// İşletme sayılabilecek POI süper-kategorileri
-const _BIZ_SUPS = new Set(['accommodation','food','services']);
-// Doğa kategorisindeki işletme türleri (dalış merkezi, spor tesisi vb.)
-const _BIZ_CATS = new Set(['dive_centre','sports_centre','marina','camp_site','horse_riding','water_park','swimming_pool']);
-
 function filterLocList(q){
   const container=document.getElementById('loc-list');
-  const norm=_locNorm(q.trim());
-  // Yalnızca işletme niteliğindeki POI'ler listelenir
-  // (plajlar, kültürel alanlar, ulaşım, manzara noktaları hariç)
-  const results=enriched.filter(p=>{
-    const isBiz=_BIZ_SUPS.has(p.sup)||_BIZ_CATS.has(p.cat);
-    if(!isBiz) return false;
-    return !norm ||
-      _locNorm(p.name).includes(norm) ||
-      _locNorm(CLABELS[p.cat]||'').includes(norm);
-  }).slice(0,80);
+  if(_ovpState!=='done'){ _renderLocState(); return; }
+  const norm=_locNorm((q||'').trim());
+  const results=_ovpResults.filter(p=>
+    !norm||_locNorm(p.name).includes(norm)
+  ).slice(0,100);
 
+  if(!results.length){
+    container.innerHTML='<div style="padding:24px;text-align:center;color:#bbb;font-size:13px">Eşleşen yer bulunamadı</div>';
+    return;
+  }
   container.innerHTML=results.map(p=>{
-    const inRange=!walkMode||(p.dist<=walkRadius);
-    const rangeTag=(!inRange)
-      ? `<div class="loc-out-range"><i class="fas fa-car"></i> Yürüyüş dışı — ${fmtDist(p.dist)}</div>`
-      : '';  // picker listesinde mesafe her zaman göster (sıralama için)
-    return `
-    <div class="loc-item ${inRange?'':'loc-item-far'}" onclick="applyMyLocation(${p.idx})">
-      <div class="loc-ico" style="background:${p.color}">
-        <i class="fas ${p.fa}"></i>
-      </div>
+    const safeName=p.name.replace(/'/g,'&#39;').replace(/"/g,'&quot;');
+    return `<div class="loc-item" onclick="applyOvpLocation(${p.lat},${p.lon},'${safeName}','${p.color}','${p.fa}')">
+      <div class="loc-ico" style="background:${p.color}"><i class="fas ${p.fa}"></i></div>
       <div class="loc-info">
         <div class="loc-name">${p.name}</div>
-        <div class="loc-sub">${CLABELS[p.cat]||p.cat}</div>
-        ${rangeTag}
+        <div class="loc-sub">${p.sub||''}</div>
       </div>
       <div class="loc-dist">${fmtDist(p.dist)}</div>
     </div>`;
   }).join('');
+}
 
-  if(!results.length){
-    container.innerHTML='<div style="padding:24px;text-align:center;color:#bbb;font-size:13px">Eşleşen yer bulunamadı</div>';
-  }
+function applyOvpLocation(lat, lon, name, color, fa){
+  _moveMyPin(lat, lon, name);
+  closeLocPicker();
+  _myLocReady=true;
+  setMode('walk');
+  _applySmartDefault();
+  buildVillageSidebar();
+  map.flyTo({center:[lon,lat], zoom:15, speed:1.2});
+  showToast(`📍 Konum: ${name}`);
 }
 
 function applyMyLocation(idx){
@@ -1852,7 +1997,6 @@ function applyMyLocation(idx){
   buildVillageSidebar();
 
   map.flyTo({center:[p.lon,p.lat], zoom:13, speed:1.2});
-  fetchRoutes();
   showToast(`📍 Konum: ${p.name}`);
 }
 
@@ -1933,7 +2077,7 @@ function _moveMyPin(lat, lon, name){
   });
 
   updateRouteLines();
-  fetchRoutes();
+  // fetchRoutes kaldırıldı — kuş uçuşu (haversine) mesafeleri kullanılır
 }
 
 /* ── Haritaya tıkla modu ── */
