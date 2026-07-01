@@ -822,7 +822,7 @@ body.map-pick-mode #loc-pick-hint {
   }
   .pm-sub {
     font-family:var(--map-font) !important;
-    font-size:14pt !important; font-weight:400 !important;
+    font-size:18pt !important; font-weight:400 !important;
     color:rgba(255,255,255,.8) !important; letter-spacing:1px !important;
     line-height:1 !important;
   }
@@ -939,7 +939,7 @@ body.map-pick-mode #loc-pick-hint {
   /* K8: Künye / edition satırı */
   #logo-credit {
     display:block !important;
-    font-size:7pt !important; color:#808080 !important;
+    font-size:8pt !important; color:#808080 !important;
     text-align:center !important; font-family:var(--map-font) !important;
     margin-top:auto !important; line-height:1.4 !important;
   }
@@ -2738,296 +2738,28 @@ function applyFormatPreset(key){
 const _origApplyMyLocation=typeof applyMyLocation==='function'?applyMyLocation:null;
 
 /* ══════════════════════════════════════════════════════════════
-   PDF İndir — A3 Landscape (420 × 297 mm)
-
-   Düzen:
-   ┌──────────────────────────────────────────────────┬────────┐
-   │  HEADER — logo + otel adı + alt başlık (28mm)   │        │
-   ├─────────────────────────────────────────────────│ LEJANT │
-   │                                                  │  (82mm │
-   │            HARİTA  (338 × 269 mm)               │  sabit)│
-   │                                                  │        │
-   └──────────────────────────────────────────────────┴────────┘
-   Lejant: numaralı POI listesi (# + isim + mesafe) + kategori renkleri
-   Tüm metinler ≥ 8pt
+   PDF İndir — O: window.print() yolu
+   @media print CSS'i (A1-K12) eksiksiz uygulanır.
+   K2: sabit kadraj → K4: font → window.print()
 ══════════════════════════════════════════════════════════════ */
 function downloadPDF(){
   const btn=document.getElementById('btn-pdf');
   btn.disabled=true;
   btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Hazırlanıyor...';
 
-  /* ════════════════════════════════════════════════════════════════
-     NPS Unigrid — A3 Yatay (420×297mm)
-     12 sütun × 35mm = 420mm tam sayfa
-     Harita : 8 sütun = 280mm (W×0.667)
-     Lejant  : 4 sütun = 140mm (W×0.333)
-     Header = Footer = 1 modül yüksekliği = 26mm (simetrik)
-     Full-bleed bantlar: kenara sıfır boşluk
-  ════════════════════════════════════════════════════════════════ */
-  const W=420, H=297;
-  const COL=35;          // 1 Unigrid sütun = 420/12 = 35mm
-  const HH=26;           // header bandı = 1 modül (simetrik)
-  const FH=14;           // footer bandı = ½ modül (hafifçe ince — kredi için yeterli)
-  const LW=COL*4;        // lejant = 4 sütun = 140mm
-  const MW=COL*8;        // harita = 8 sütun = 280mm
-  const MH=H-HH-FH;     // içerik yüksekliği = 297-26-14 = 257mm
-  const MAP_X=0, MAP_Y=HH;
-  const LEG_X=MW, LEG_Y=HH;
-  const FOO_Y=HH+MH;
-  const LP=9;            // lejant iç dolgu = ¼ modül
-
-  // NPS renk sabitleri
-  const NPS_BROWN  = [61,43,31];      // #3D2B1F — yapısal bantlar
-  const NPS_MID    = [139,109,79];    // #8B6D4F — ikincil aksan
-  const NPS_CREAM  = [247,243,236];   // #F7F3EC — lejant zemini
-  const NPS_CREAM2 = [239,234,224];   // #EFE9E0 — zebra çift satır
-
-  // ── PDF ÇERÇEVE: ada/ilçe ortalı baskı bounds (.pdf → .drive sırayla) ──
-  // Not: Gökçeada .drive frame'i feribot rotasını kapsar (lon 26.13'e kadar),
-  // bu yüzden merkez doğuya kayar. .pdf frame adayı tam ortalar.
-  const _df = _DISTRICT_FRAMES[_currentDistrict] || _DISTRICT_FRAMES['gokceada'];
-  const _pdf_frame = _df.pdf || _df.drive;
-
-  map.fitBounds([[_pdf_frame[0],_pdf_frame[1]],[_pdf_frame[2],_pdf_frame[3]]],
-    {padding:70, duration:900, pitch:0, bearing:0});
-
-  map.once('idle', async ()=>{
-    const mwrap=document.getElementById('mwrap');
-    mwrap.classList.add('downloading');
-    // PDF scale bar etiketlerini haritanın gerçek ölçeğine göre hesapla
-    {
-      const bds=map.getBounds();
-      const lonSpan=bds.getEast()-bds.getWest();
-      const latMid=(bds.getNorth()+bds.getSouth())/2;
-      const mapPxW=mwrap.offsetWidth;
-      const mPerPx=lonSpan*111320*Math.cos(latMid*Math.PI/180)/mapPxW;
-      // Hedef: haritanın ~%18'i kadar bir güzel mesafe
-      const tgt=mapPxW*0.18*mPerPx;
-      const nice=[200,500,1000,2000,5000,10000].find(v=>v>=tgt*0.5)||2000;
-      const km=nice>=1000?`${nice/1000} km`:`${nice} m`;
-      const mi=`${(nice/1609.34).toFixed(1).replace(/\.0$/,'')} mi`;
-      const kEl=document.getElementById('sb-km-lbl');
-      const mEl=document.getElementById('sb-mi-lbl');
-      if(kEl) kEl.textContent=km;
-      if(mEl) mEl.textContent=mi;
-    }
-    const _pinLabels=document.querySelectorAll('.pin-dist');
-    _pinLabels.forEach(el=>el.style.visibility='hidden');
-    try{
-      const {jsPDF}=window.jspdf;
-      const pdf=new jsPDF({orientation:'landscape',unit:'mm',format:'a3'});
-      const [br,bg,bb]=hexToRgb(HOTEL.brand);
-      const _T=s=>pdfTr(s||'');
-
-      /* ════════════════════════════════════════════════════════════════
-         NPS VISITOR MAP GRID — A3 Yatay
-         [1] Neat Line   — NPS Brown dış çerçeve, 0.75pt
-         [2] Üst Bant    — NPS Brown, beyaz metin, marka aksanı
-         [3] Harita      — sol %64, deniz zemini, harita görseli
-         [4] Lejant      — sağ %32, NPS Cream #F7F3EC, koyu bantlar
-         [5] Footer Bant — NPS Brown, beyaz attribution
-      ════════════════════════════════════════════════════════════════ */
-
-      /* ── [1] NEAT LINE — full bleed kenara, NPS Brown 1pt ── */
-      pdf.setDrawColor(...NPS_BROWN); pdf.setLineWidth(1.0);
-      pdf.rect(0, 0, W, H, 'S');
-
-      /* ── [2] ÜST BAŞLIK BANDI — full bleed, HH=26mm, NPS Brown ── */
-      pdf.setFillColor(...NPS_BROWN);
-      pdf.rect(0, 0, W, HH, 'F');
-      // Marka aksanı: sol kenar şerit (COL/4 = 8.75mm ≈ 9mm)
-      pdf.setFillColor(br,bg,bb);
-      pdf.rect(0, 0, 9, HH, 'F');
-      // Baş harfler dairesi — marka rengi kutu içinde beyaz daire
-      const initials=HOTEL.name.split(/\s+/).filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase();
-      pdf.setFillColor(255,255,255);
-      pdf.circle(22, HH/2, 10, 'F');
-      pdf.setTextColor(...NPS_BROWN);
-      pdf.setFontSize(11); pdf.setFont('helvetica','bold');
-      pdf.text(initials, 22-pdf.getTextWidth(initials)/2, HH/2+4);
-      // Otel adı — NPS Unigrid: başlık = en büyük tip, beyaz bold
-      pdf.setTextColor(255,255,255);
-      pdf.setFontSize(18); pdf.setFont('helvetica','bold');
-      pdf.text(_T(HOTEL.name).toUpperCase(), 38, HH/2+2.5);
-      // Alt başlık — 2. hiyerarşi katmanı, normal weight, %75 opasite tonu
-      pdf.setFontSize(8.5); pdf.setFont('helvetica','normal');
-      pdf.setTextColor(215,200,180);
-      pdf.text(_T(HOTEL.sub)+'  —  Yakin Cevre Rehberi', 38, HH/2+11);
-      // Sağ taraf: ince dikey ayırıcı + tarih (NPS: sağ blok ayrı sütun)
-      pdf.setDrawColor(100,80,60); pdf.setLineWidth(0.3);
-      pdf.line(W-COL, 4, W-COL, HH-4);
-      const _today=new Date().toLocaleDateString('tr-TR',{year:'numeric',month:'long'});
-      pdf.setFontSize(8); pdf.setFont('helvetica','normal'); pdf.setTextColor(215,200,180);
-      const tdw=pdf.getTextWidth(_T(_today));
-      pdf.text(_T(_today), W-COL/2-tdw/2, HH/2+1);
-      pdf.setFontSize(6.5); pdf.setTextColor(160,140,115);
-      const fmtTxt='Visitor Map';
-      pdf.text(fmtTxt, W-COL/2-pdf.getTextWidth(fmtTxt)/2, HH/2+8);
-
-      /* ── 3. HARİTA YAKALAMA ── */
-      const h2cCanvas=await html2canvas(mwrap,{
-        useCORS:true, allowTaint:false, scale:2,
-        logging:false, backgroundColor:'#b9d2e4',
-        ignoreElements:el=>el.id==='routeLabelSVG'
-      });
-
-      // Harita alanını tam doldur (aspect ratio koru, deniz rengi letterbox)
-      const canvAR=h2cCanvas.width/h2cCanvas.height;
-      const mapAR=MW/MH;
-      let imgW, imgH, imgOX=MAP_X, imgOY=MAP_Y;
-      if(canvAR>mapAR){ imgW=MW; imgH=MW/canvAR; imgOY=MAP_Y+(MH-imgH)/2; }
-      else            { imgH=MH; imgW=MH*canvAR;  imgOX=MAP_X+(MW-imgW)/2; }
-
-      pdf.setFillColor(185,212,228);
-      pdf.rect(MAP_X, MAP_Y, MW, MH, 'F');
-      pdf.addImage(h2cCanvas.toDataURL('image/png'),'PNG',imgOX,imgOY,imgW,imgH,'','FAST');
-
-      // [3] Harita/lejant ayırıcı çizgi — NPS Brown, 0.5pt
-      pdf.setDrawColor(...NPS_BROWN); pdf.setLineWidth(0.5);
-      pdf.line(MW, MAP_Y, MW, FOO_Y);
-
-      /* scale bar + north arrow: html2canvas tarafından mwrap içinden yakalandı */
-
-      /* ── HARİTA KREDİSİ © — sağ-alt, harita içi ── */
-      {
-        const attr='© Mapbox  ©  OpenStreetMap contributors';
-        pdf.setFontSize(5); pdf.setFont('helvetica','normal');
-        const aw=pdf.getTextWidth(attr);
-        pdf.setFillColor(255,255,255); pdf.setDrawColor(...NPS_MID); pdf.setLineWidth(0.1);
-        pdf.rect(imgOX+imgW-aw-6,imgOY+imgH-6,aw+5,6,'FD');
-        pdf.setTextColor(90,80,70);
-        pdf.text(attr,imgOX+imgW-aw-4,imgOY+imgH-1.5);
-      }
-
-      /* ════════════════════════════════════════════════════════════════
-         [4] LEJANT PANELİ — NPS Cream (#F7F3EC) zemin
-      ════════════════════════════════════════════════════════════════ */
-      pdf.setFillColor(...NPS_CREAM);
-      pdf.rect(LEG_X,LEG_Y,LW,MH,'F');
-
-      // Sol ince marka aksanı (3mm)
-      pdf.setFillColor(br,bg,bb);
-      pdf.rect(LEG_X,LEG_Y,3,MH,'F');
-
-      // Lejant başlık bandı: NPS Brown
-      pdf.setFillColor(...NPS_BROWN);
-      pdf.rect(LEG_X,LEG_Y,LW,13,'F');
-      pdf.setTextColor(255,255,255); pdf.setFontSize(10); pdf.setFont('helvetica','bold');
-      pdf.text('YAKIN CEVRE',LEG_X+LP,LEG_Y+9.5);
-
-      // İkinci şerit: NPS mid-tone (kahve)
-      pdf.setFillColor(...NPS_MID);
-      pdf.rect(LEG_X,LEG_Y+13,LW,6.5,'F');
-      pdf.setTextColor(245,240,230); pdf.setFontSize(6); pdf.setFont('helvetica','normal');
-      pdf.text('Otele uzaklik sirasina gore',LEG_X+LP,LEG_Y+17.5);
-
-      // ── POI Listesi ──
-      const visiblePois=enriched.filter(p=>_visSet.has(p.idx)).sort((a,b)=>a.dist-b.dist);
-      const showDesc=visiblePois.length<=18;
-      const ROW_H=showDesc?12:6.8;
-      const CAT_BLOCK_H=54;
-      const LIST_Y=LEG_Y+21.5;
-      const maxRows=Math.floor((MH-21.5-CAT_BLOCK_H)/ROW_H);
-
-      visiblePois.slice(0,maxRows).forEach((p,i)=>{
-        const y0=LIST_Y+i*ROW_H;
-        // Zebra: NPS cream alternating tones
-        pdf.setFillColor(...(i%2===0 ? NPS_CREAM : NPS_CREAM2));
-        pdf.rect(LEG_X+3,y0,LW-3,ROW_H-0.3,'F');
-
-        const [cr,cg,cb]=hexToRgb(p.color);
-        const circR=showDesc?3.2:2.8;
-        pdf.setFillColor(cr,cg,cb);
-        pdf.circle(LEG_X+LP+circR,y0+ROW_H/2,circR,'F');
-        pdf.setTextColor(255,255,255); pdf.setFontSize(showDesc?6.5:5.5); pdf.setFont('helvetica','bold');
-        const ns=String(i+1);
-        pdf.text(ns,LEG_X+LP+circR-pdf.getTextWidth(ns)/2,y0+ROW_H/2+1.5);
-
-        // Mesafe — NPS mid-tone, sağa hizalı
-        pdf.setFontSize(6.5); pdf.setFont('helvetica','normal');
-        const ds=fmtDist(routeData[p.idx]?.roadDist||p.dist);
-        const dw=pdf.getTextWidth(ds);
-        pdf.setTextColor(...NPS_MID);
-        pdf.text(ds,LEG_X+LW-5-dw,y0+ROW_H/2+1.5);
-
-        // POI adı — NPS: koyu, 8pt (tipografi hiyerarşisi gereği en belirgin)
-        pdf.setTextColor(25,18,10); pdf.setFontSize(showDesc?8:7.5); pdf.setFont('helvetica','bold');
-        const nameZone=LW-LP-circR*2-3-dw-8;
-        let nm=_T(p.name);
-        while(nm.length>2&&pdf.getTextWidth(nm)>nameZone) nm=nm.slice(0,-1);
-        if(nm!==_T(p.name)) nm=nm.slice(0,-2)+'..';
-        pdf.text(nm,LEG_X+LP+circR*2+3,y0+ROW_H/2+1.5);
-
-        // Açıklama — NPS: italik, 6pt, hiyerarşinin alt katmanı
-        if(showDesc&&p.desc){
-          pdf.setTextColor(...NPS_MID); pdf.setFontSize(6); pdf.setFont('helvetica','italic');
-          const dz=LW-LP-circR*2-8;
-          let d=_T(p.desc);
-          while(d.length>4&&pdf.getTextWidth(d)>dz) d=d.slice(0,-1);
-          if(d!==_T(p.desc)) d=d.slice(0,-2)+'..';
-          pdf.text(d,LEG_X+LP+circR*2+3,y0+ROW_H/2+7);
-        }
-      });
-
-      if(visiblePois.length>maxRows){
-        const rem=visiblePois.length-maxRows;
-        pdf.setTextColor(...NPS_MID); pdf.setFontSize(6.5); pdf.setFont('helvetica','italic');
-        pdf.text(`+${rem} yer daha...`,LEG_X+LP,LIST_Y+maxRows*ROW_H+4.5);
-      }
-
-      // Kategori bölümü — NPS Brown başlık
-      const CAT_Y=LEG_Y+MH-CAT_BLOCK_H+2;
-      pdf.setDrawColor(...NPS_MID); pdf.setLineWidth(0.3);
-      pdf.line(LEG_X+3,CAT_Y,LEG_X+LW,CAT_Y);
-      pdf.setFillColor(...NPS_BROWN);
-      pdf.rect(LEG_X,CAT_Y+1,LW,9,'F');
-      pdf.setTextColor(255,255,255); pdf.setFontSize(8); pdf.setFont('helvetica','bold');
-      pdf.text('KATEGORILER',LEG_X+LP,CAT_Y+7.5);
-
-      let catY=CAT_Y+16;
-      Object.entries(SMETA).forEach(([sup,m])=>{
-        if(!groups[sup]||catY>LEG_Y+MH-3) return;
-        const [cr,cg,cb]=hexToRgb(m.color);
-        pdf.setFillColor(cr,cg,cb);
-        pdf.circle(LEG_X+LP+3,catY-1.5,3,'F');
-        pdf.setDrawColor(...NPS_BROWN); pdf.setLineWidth(0.2);
-        pdf.circle(LEG_X+LP+3,catY-1.5,3,'S');
-        pdf.setTextColor(25,18,10); pdf.setFontSize(7.5); pdf.setFont('helvetica','normal');
-        pdf.text(_T(m.label),LEG_X+LP+9,catY);
-        catY+=6.5;
-      });
-
-      // Lejant dış çerçevesi
-      pdf.setDrawColor(...NPS_BROWN); pdf.setLineWidth(0.3);
-      pdf.rect(LEG_X,LEG_Y,LW,MH,'S');
-
-      /* ── [5] ALT FOOTER BANDI — full bleed, NPS Brown, FH=14mm ── */
-      pdf.setFillColor(...NPS_BROWN);
-      pdf.rect(0, FOO_Y, W, FH, 'F');
-      // Sol marka aksanı (header ile simetrik)
-      pdf.setFillColor(br,bg,bb);
-      pdf.rect(0, FOO_Y, 9, FH, 'F');
-      // Dikey ayırıcı (header ile eşlenmiş)
-      pdf.setDrawColor(100,80,60); pdf.setLineWidth(0.3);
-      pdf.line(W-COL, FOO_Y+3, W-COL, FOO_Y+FH-3);
-      // Sol: yasal uyarı
-      pdf.setTextColor(210,200,185); pdf.setFontSize(6); pdf.setFont('helvetica','normal');
-      pdf.text('Bu harita yalnizca tahmini mesafe bilgisi icin hazirlanmistir. Navigasyon amacli kullanilamaz.',
-        14, FOO_Y+FH/2+2);
-      // Sağ blok: veri kaynakları (header ile aynı sütunda)
-      const srcTxt='© Mapbox  |  © OpenStreetMap';
-      pdf.setTextColor(160,140,115); pdf.setFontSize(6);
-      pdf.text(srcTxt, W-COL/2-pdf.getTextWidth(srcTxt)/2, FOO_Y+FH/2+2);
-
-      pdf.save(`${_T(HOTEL.name).toLowerCase().replace(/[^a-z0-9]+/g,'-')}-rehber.pdf`);
-
-    }catch(e){ alert('PDF hatası: '+e.message); console.error(e); }
-    finally{
-      _pinLabels.forEach(el=>el.style.visibility='');
-      mwrap.classList.remove('downloading');
+  // O: @media print CSS'i (A1-K12) uygular — window.print() tek kaynaktan
+  // K2: Sabit İlçe kadrajına kilitle, sonra K4: font bekle, sonra yazdır
+  const df=_DISTRICT_FRAMES[_currentDistrict]||_DISTRICT_FRAMES['gokceada'];
+  const frame=df.pdf||df.drive;
+  map.fitBounds([[frame[0],frame[1]],[frame[2],frame[3]]],
+    {padding:70,duration:800,pitch:0,bearing:0});
+  map.once('idle',async()=>{
+    await document.fonts.ready;
+    window.print();
+    setTimeout(()=>{
       btn.disabled=false;
-      btn.innerHTML='<i class="fas fa-file-pdf"></i> PDF';
-    }
+      btn.innerHTML='<i class="fas fa-file-pdf"></i> Broşür İndir';
+    },500);
   });
 }
 
