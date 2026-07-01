@@ -129,7 +129,7 @@ body {
 /* ── Alt bilgi hücreleri ── */
 #pg-cells {
   grid-area:cells;
-  display:grid; grid-template-columns:repeat(9,1fr);
+  display:grid; grid-template-columns:repeat(5,1fr);
   border-top:2px solid #D8D0C4;
   background:#FAFAF7; overflow:hidden;
 }
@@ -142,6 +142,15 @@ body {
 .info-cell:last-child { border-right:none; }
 .info-cell:hover { background:#f5f2ee; }
 .cell-hdr { display:flex; align-items:center; gap:5px; margin-bottom:1px; flex-shrink:0; }
+/* J2: Rozet — ekranda küçük, baskıda büyük (print CSS'te override) */
+.cell-num {
+  min-width:16px; height:16px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:8px; font-weight:900; color:#fff;
+  background:#FE5000; flex-shrink:0;
+}
+.cell-num:empty { display:none; }
+.cell-body { display:flex; flex-direction:column; gap:2px; flex:1; min-width:0; }
 .cell-ico {
   width:20px; height:20px; border-radius:50%;
   display:flex; align-items:center; justify-content:center;
@@ -762,7 +771,7 @@ body.map-pick-mode #loc-pick-hint {
       "head head"
       "map  legend"
       "cells logo" !important;
-    gap:0 !important;
+    gap:4mm !important;
     overflow:hidden !important;
     background:#fff !important;
     font-family:var(--map-font) !important;
@@ -842,20 +851,49 @@ body.map-pick-mode #loc-pick-hint {
   }
   #legend-add { display:none !important; }
 
-  /* ── C2: Alt şerit hücreleri — modüler kolonlar ── */
+  /* ── J1: Alt şerit — 5 kolonlu NPS hücreleri ── */
   #pg-cells {
-    grid-template-columns:repeat(auto-fill, minmax(28mm,1fr)) !important;
+    display:grid !important;
+    grid-template-columns: repeat(5, 1fr) !important;
+    gap: var(--mod) !important;          /* 6.35mm */
+    padding: var(--mod) !important;
+    align-items:start !important;
     border-top:1.5px solid #D8D0C4 !important;
     overflow:hidden !important;
+    background:#FAFAF7 !important;
   }
+
+  /* ── J2: Hücre iç yapısı — rozet | ad + açıklama ── */
   .info-cell {
-    padding:2mm 1.5mm !important;
-    border-right:1px solid #D8D0C4 !important;
+    display:grid !important;
+    grid-template-columns: 10mm 1fr !important;
+    gap:3mm !important;
+    padding:0 !important;
+    border-right:none !important;
+    background:transparent !important;
   }
-  .cell-name { font-size:9pt !important; font-weight:800 !important; }
+  .cell-num {
+    width:10mm !important; height:10mm !important;
+    border-radius:50% !important;
+    background:#FE5000 !important; color:#fff !important;
+    font-size:14pt !important; font-weight:900 !important;
+    font-family:var(--map-font) !important;
+    display:flex !important; align-items:center !important; justify-content:center !important;
+    align-self:start !important; flex-shrink:0 !important;
+  }
+  .cell-num:empty { background:#ccc !important; }
+  .cell-body { display:flex !important; flex-direction:column !important; gap:1mm !important; }
+  .cell-hdr { display:flex !important; align-items:center !important; gap:2mm !important; }
+  .cell-ico { display:none !important; }   /* print'te rozet num zaten var */
+  .cell-name {
+    font-size:13pt !important; font-weight:800 !important; line-height:1.15 !important;
+    color:#111 !important; white-space:normal !important;
+    font-family:var(--map-font) !important;
+  }
   .cell-desc {
-    font-size:8pt !important; line-height:1.35 !important;
-    overflow:hidden !important;
+    font-size:10pt !important; line-height:14pt !important;
+    color:#000 !important; overflow:hidden !important;
+    font-family:var(--map-font) !important;
   }
   .cell-desc[contenteditable] { outline:none !important; }
 
@@ -878,25 +916,43 @@ body.map-pick-mode #loc-pick-hint {
   }
   #logo-img { max-height:20mm !important; max-width:90% !important; }
   #logo-hint { display:none !important; }
+  /* K9: QR kod — baskıda görünür */
+  #qr-code { display:block !important; margin-top:3mm !important; text-align:center !important; }
+  #qr-code img { width:20mm !important; height:20mm !important; }
+  /* K8: Künye / edition satırı */
   #logo-credit {
     display:block !important;
-    font-size:8pt !important; color:#808080 !important;
+    font-size:7pt !important; color:#808080 !important;
     text-align:center !important; font-family:var(--map-font) !important;
-    margin-top:auto !important;
+    margin-top:auto !important; line-height:1.4 !important;
   }
 
   /* ── H1-H2: Ekran öğelerini gizle ── */
   #loc-overlay, #loc-pick-hint, #nps-toast,
-  #map-search, .mapboxgl-ctrl-bottom-left,
-  .mapboxgl-ctrl-bottom-right,
+  #map-search,
   .mapboxgl-ctrl-logo,
   #zoom-sel, .hotel-edit-hint,
   #loc-panel, #layer-panel,
-  [class*="agent-"], [class*="claude-"] { display:none !important; }
+  /* H2: Agent/Claude overlay, glow border, phantom cursor */
+  [class*="agent-"], [class*="claude-"],
+  [class*="glow-"], [class*="phantom-"],
+  .mapboxgl-ctrl-zoom-in, .mapboxgl-ctrl-zoom-out,
+  .mapboxgl-ctrl-compass { display:none !important; }
 
-  /* ── Ölçek çubuğu + kuzey oku baskıda görünür kalsın ── */
+  /* ── Ölçek çubuğu baskıda görünür kalsın ── */
   .mapboxgl-ctrl-scale { display:block !important; }
-  #mwrap.downloading .mapboxgl-ctrl-compass { display:block !important; }
+
+  /* ── K6: Attribution GÖRÜNÜR olmalı (Mapbox + OSM lisans zorunluluğu) ── */
+  /* Bottom-right/left konteynerler gizlenmez; sadece ctrl düğmeleri gizlendi */
+  .mapboxgl-ctrl-attrib {
+    display:block !important;
+    font-size:6pt !important;
+    color:#555 !important;
+    background:rgba(255,255,255,.75) !important;
+    padding:2px 5px !important;
+  }
+  .mapboxgl-ctrl-attrib-button { display:none !important; }
+  .mapboxgl-ctrl-attrib-inner a { font-size:6pt !important; color:#555 !important; }
 }
 
 @media print { #map-search { display:none !important; } }
@@ -982,8 +1038,13 @@ body.map-pick-mode #loc-pick-hint {
     <i class="fas fa-image" style="font-size:22px;margin-bottom:3px"></i>
     Logo ekle
   </div>
-  <!-- E2: NPS producer credit — sadece baskıda görünür -->
-  <div id="logo-credit" style="display:none">muhit.in · GÖKÇEADA</div>
+  <!-- K9: QR kod — baskıda görünür (dijitale köprü) -->
+  <div id="qr-code" style="display:none">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https%3A%2F%2Fmuhit.in&format=png&color=1A6B4A"
+         alt="muhit.in" loading="eager">
+  </div>
+  <!-- K8: Künye + E2: NPS producer credit — sadece baskıda görünür -->
+  <div id="logo-credit" style="display:none">GÖKÇEADA Kültür Mirası<br>Haziran 2026 · v1.0<br>© muhit.in · © Mapbox · © OSM</div>
 </div>
 
 <!-- Eski bar/body/side (gizli, JS uyumluluk için) -->
@@ -2530,33 +2591,47 @@ function _getCellDesc(name){
 function buildInfoCells(){
   const container=document.getElementById('pg-cells');
   if(!container) return;
-  // Görünür POI'lar → mesafeye göre sırala, ilk 9
+  // J1: Görünür POI'lar → mesafeye göre sırala, ilk 5 (5-kolon NPS layout)
   const cands=enriched
+    .filter(p=>!p.hidden && p.num!=null)
+    .sort((a,b)=>(a.num||99)-(b.num||99))
+    .slice(0,5);
+
+  // Eğer num atanmamışsa (hotel seçilmemiş), mesafeye göre al
+  const src=cands.length>=1 ? cands : enriched
     .filter(p=>!p.hidden)
     .sort((a,b)=>(a.dist||9999)-(b.dist||9999))
-    .slice(0,9);
+    .slice(0,5);
 
-  const cells=cands.map(p=>{
+  const cells=src.map((p,i)=>{
     const meta=SMETA[p.sup]||{fa:'fa-map-pin',color:'#888'};
     const nm=(p.name||'').replace(/</g,'&lt;');
     const desc=_getCellDesc(p.name).replace(/</g,'&lt;');
+    const badge=p.num!=null ? p.num : (i+1);
     return `<div class="info-cell">
-      <div class="cell-hdr">
-        <div class="cell-ico" style="background:${meta.color}"><i class="fas ${meta.fa}"></i></div>
-        <div class="cell-name">${nm}</div>
+      <div class="cell-num">${badge}</div>
+      <div class="cell-body">
+        <div class="cell-hdr">
+          <div class="cell-ico" style="background:${meta.color}"><i class="fas ${meta.fa}"></i></div>
+          <div class="cell-name">${nm}</div>
+        </div>
+        <div class="cell-desc" contenteditable="true" spellcheck="false">${desc}</div>
       </div>
-      <div class="cell-desc" contenteditable="true" spellcheck="false">${desc}</div>
     </div>`;
   });
 
-  // Boş hücreler ekle (9'a tamamla)
-  while(cells.length<9){
+  // Boş hücreler ekle (5'e tamamla)
+  while(cells.length<5){
+    const n=cells.length+1;
     cells.push(`<div class="info-cell" style="opacity:.35">
-      <div class="cell-hdr">
-        <div class="cell-ico" style="background:#ccc"><i class="fas fa-plus"></i></div>
-        <div class="cell-name" style="color:#aaa">Yer ekleyin</div>
+      <div class="cell-num" style="background:#ccc">${n}</div>
+      <div class="cell-body">
+        <div class="cell-hdr">
+          <div class="cell-ico" style="background:#ccc"><i class="fas fa-plus"></i></div>
+          <div class="cell-name" style="color:#aaa">Yer ekleyin</div>
+        </div>
+        <div class="cell-desc" contenteditable="true" spellcheck="false"></div>
       </div>
-      <div class="cell-desc" contenteditable="true" spellcheck="false"></div>
     </div>`);
   }
   container.innerHTML=cells.join('');
@@ -2944,6 +3019,20 @@ async function downloadImage(){
   btn.disabled=false;
   btn.innerHTML='<i class="fas fa-image"></i> İndir';
 }
+
+/* ══════════════════════════════════════════════════════════════
+   K2: Print'e girmeden önce haritayı sabit İlçe kadrajına kilitle
+   K4: Font yüklenmesini bekle (best-effort)
+══════════════════════════════════════════════════════════════ */
+window.addEventListener('beforeprint', function(){
+  // K2: Sabit kadraj — kullanıcının pan/zoom durumu yok sayılır
+  if(typeof setZoomMode === 'function') setZoomMode('ilce');
+  // K4: Font yüklenmesi (browsers normalize before print anyway)
+  if(document && document.fonts) document.fonts.ready;
+  // Hücreleri ve lejanttı yenile
+  if(typeof buildInfoCells === 'function') buildInfoCells();
+  if(typeof buildLegend === 'function') buildLegend();
+});
 </script>
 </body>
 </html>
