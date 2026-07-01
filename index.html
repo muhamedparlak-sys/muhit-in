@@ -63,13 +63,13 @@ body {
   box-shadow:0 2px 12px rgba(0,0,0,.4);
   border-bottom:3px solid rgba(255,255,255,.2);
 }
-#zoom-sel {
+#zoom-sel, #format-sel {
   background:rgba(255,255,255,.15); border:1.5px solid rgba(255,255,255,.4);
   color:#fff; border-radius:6px; padding:5px 10px;
   font-size:12px; font-weight:700; font-family:inherit; cursor:pointer;
   flex-shrink:0;
 }
-#zoom-sel option { color:#333; background:#fff; }
+#zoom-sel option, #format-sel option { color:#333; background:#fff; }
 #hotel-name-btn {
   flex:1; text-align:center; color:#fff; font-size:21px; font-weight:800;
   cursor:pointer; letter-spacing:.5px; transition:opacity .15s;
@@ -170,19 +170,28 @@ body {
   overflow:auto;
 }
 
-/* ── Logo köşesi ── */
+/* ── Otorite köşesi (L2) ── */
 #pg-logo {
   grid-area:logo;
   background:#FAFAF7; border-left:2px solid #D8D0C4; border-top:2px solid #D8D0C4;
-  display:flex; align-items:center; justify-content:center;
-  cursor:pointer; overflow:hidden; position:relative;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  overflow:hidden; position:relative; gap:4px;
 }
-#pg-logo:hover #logo-hint { opacity:.7; }
-#logo-img { max-width:90%; max-height:90%; object-fit:contain; display:none; }
-#logo-hint {
-  display:flex; flex-direction:column; align-items:center; gap:4px;
-  color:#ccc; font-size:10px; font-weight:700; transition:opacity .2s;
-  pointer-events:none;
+#logo-screen-hint {
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+}
+/* ── L1: İşletme logo — toolbar sağ (ekranda) ── */
+#biz-logo-wrap {
+  display:flex; align-items:center; gap:6px;
+  cursor:pointer; margin-left:auto;
+  border:1.5px dashed rgba(255,255,255,.5); border-radius:6px;
+  padding:4px 10px; min-width:80px; justify-content:center;
+}
+#biz-logo-wrap:hover { background:rgba(255,255,255,.15); }
+#biz-logo-img { max-height:28px; max-width:120px; object-fit:contain; }
+#biz-logo-hint {
+  display:flex; align-items:center; gap:5px;
+  color:rgba(255,255,255,.8); font-size:11px; font-weight:700; pointer-events:none;
 }
 #logo-input { display:none; }
 
@@ -793,6 +802,7 @@ body.map-pick-mode #loc-pick-hint {
   /* screen-only öğeleri gizle */
   #pg-header .tb,
   #zoom-sel,
+  #format-sel,
   .hotel-edit-hint,
   #hotel-name-btn .edit-hint { display:none !important; }
   /* hotel-name-btn → print'te pasif yer tutucu; print-masthead onu doldurur */
@@ -914,8 +924,15 @@ body.map-pick-mode #loc-pick-hint {
     gap:2mm !important;
     padding:var(--mod) !important;
   }
-  #logo-img { max-height:20mm !important; max-width:90% !important; }
-  #logo-hint { display:none !important; }
+  /* L1: İşletme logosu — baskıda masthead sağında */
+  #biz-logo-wrap {
+    display:flex !important; align-items:center !important; justify-content:center !important;
+    margin-left:auto !important; border:none !important; padding:0 !important;
+    max-height:20mm !important; max-width:40mm !important;
+  }
+  #biz-logo-img { max-height:20mm !important; max-width:40mm !important; object-fit:contain !important; }
+  #biz-logo-hint { display:none !important; }
+  #logo-screen-hint { display:none !important; }
   /* K9: QR kod — baskıda görünür */
   #qr-code { display:block !important; margin-top:3mm !important; text-align:center !important; }
   #qr-code img { width:20mm !important; height:20mm !important; }
@@ -996,10 +1013,22 @@ body.map-pick-mode #loc-pick-hint {
   <button class="tb" id="btn-pdf" onclick="downloadPDF()">
     <i class="fas fa-file-pdf"></i> Broşür İndir
   </button>
+  <!-- M4: Format seçici -->
+  <select id="format-sel" onchange="applyFormatPreset(this.value)" title="Baskı formatı seç">
+    <option value="a3l" selected>📄 A3 Yatay</option>
+    <option value="a4p">📄 A4 Dikey</option>
+    <option value="a4l">📄 A4 Yatay</option>
+  </select>
   <!-- Sadece baskıda görünür: NPS Masthead title-block (B1) -->
   <div id="print-masthead" style="display:none">
     <div class="pm-title">GÖKÇEADA</div>
     <div class="pm-sub">Kültür Mirası &amp; Turizm Haritası</div>
+  </div>
+  <!-- L1: İşletme logo slotu — masthead sağ (print) & toolbar sağ (screen) -->
+  <div id="biz-logo-wrap" title="İşletme logonuzu yükleyin">
+    <input type="file" id="logo-input" accept="image/*,image/svg+xml" onchange="loadLogo(this)" style="display:none">
+    <img id="biz-logo-img" alt="İşletme Logosu" style="display:none">
+    <span id="biz-logo-hint"><i class="fas fa-image"></i> Logo yükle</span>
   </div>
 </div>
 
@@ -1030,21 +1059,20 @@ body.map-pick-mode #loc-pick-hint {
   <!-- JS tarafından buildInfoCells() ile doldurulur -->
 </div>
 
-<!-- Logo köşesi (alt sağ) -->
-<div id="pg-logo" onclick="document.getElementById('logo-input').click()">
-  <input type="file" id="logo-input" accept="image/*" onchange="loadLogo(this)">
-  <img id="logo-img" alt="Otel Logosu">
-  <div id="logo-hint">
-    <i class="fas fa-image" style="font-size:22px;margin-bottom:3px"></i>
-    Logo ekle
+<!-- L2: Otorite köşesi (alt sağ) — KİLİTLİ, işletme değiştiremez -->
+<div id="pg-logo">
+  <!-- Ekranda: logo yükleme ipucu + önizleme alanı -->
+  <div id="logo-screen-hint">
+    <i class="fas fa-map-location-dot" style="font-size:20px;color:#1A6B4A;margin-bottom:4px"></i>
+    <div style="font-size:9px;color:#999;line-height:1.4">İl Kültür ve<br>Turizm Müd.</div>
   </div>
   <!-- K9: QR kod — baskıda görünür (dijitale köprü) -->
   <div id="qr-code" style="display:none">
     <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https%3A%2F%2Fmuhit.in&format=png&color=1A6B4A"
          alt="muhit.in" loading="eager">
   </div>
-  <!-- K8: Künye + E2: NPS producer credit — sadece baskıda görünür -->
-  <div id="logo-credit" style="display:none">GÖKÇEADA Kültür Mirası<br>Haziran 2026 · v1.0<br>© muhit.in · © Mapbox · © OSM</div>
+  <!-- K8/L2: Künye + otorite — sadece baskıda görünür -->
+  <div id="logo-credit" style="display:none">GÖKÇEADA Kültür Mirası<br>İl Kültür ve Turizm Müd. işbirliğiyle<br>Haziran 2026 · v1.0 · ©muhit.in<br>© Mapbox · © OpenStreetMap</div>
 </div>
 
 <!-- Eski bar/body/side (gizli, JS uyumluluk için) -->
@@ -2217,21 +2245,28 @@ function _norm(s){
     .replace(/ö/g,'o').replace(/ü/g,'u').replace(/ç/g,'c');
 }
 
-/* ── Bakanlık kayıtlı işletmeler arasında yerel arama ── */
+/* ── Bakanlık kayıtlı işletmeler arasında yerel arama — TÜM Çanakkale ── */
 function _searchLocalBiz(q){
   const qn=_norm(q);
-  const dk=(_currentDistrict&&_currentDistrict!=='il')?_currentDistrict:null;
-  let hits=BIZ.filter(b=>{
-    if(dk && b.district!==dk) return false;
-    return _norm(b.name).includes(qn);
+  const curDist=_currentDistrict&&_currentDistrict!=='il'?_currentDistrict:null;
+
+  // İlçe filtresi YOK — tüm Çanakkale tesislerinde ara
+  let hits=BIZ.filter(b=>_norm(b.name).includes(qn));
+
+  // Mevcut ilçeyi önce göster, sonra diğerleri alfabetik
+  hits.sort((a,b)=>{
+    const aP=curDist&&a.district===curDist?0:1;
+    const bP=curDist&&b.district===curDist?0:1;
+    if(aP!==bP) return aP-bP;
+    return (a.name||'').localeCompare(b.name||'','tr');
   });
-  hits=hits.slice(0,20);
+  hits=hits.slice(0,30);
 
   if(!hits.length){
     _setLocListHtml(`<div style="padding:24px;text-align:center;color:#bbb;font-size:13px">
-      "<b>${q}</b>" için kayıtlı işletme bulunamadı<br>
+      "<b>${q}</b>" için Çanakkale genelinde kayıtlı işletme bulunamadı.<br>
       <span style="font-size:11px;color:#ccc;margin-top:6px;display:block">
-        Farklı bir kelime deneyin veya ilçe seçimini değiştirin.</span></div>`);
+        Farklı bir kelime deneyin.</span></div>`);
     return;
   }
 
@@ -2240,12 +2275,14 @@ function _searchLocalBiz(q){
     const cls=b.class&&b.class!=='null'&&b.class!=='(Sınıfı Yok)'?b.class:'';
     const sub=(b.type||'İşletme')+(cls?' · '+cls:'');
     const safeName=(b.name||'').replace(/'/g,'&#39;').replace(/"/g,'&quot;');
-    const districtLabel=!dk?` <span style="font-size:9px;background:#eee;color:#888;
-      border-radius:3px;padding:1px 4px;margin-left:4px">${b.district}</span>`:'';
+    const isCur=curDist&&b.district===curDist;
+    const distTag=`<span style="font-size:9px;background:${isCur?'#e8f4ef':'#eee'};
+      color:${isCur?'#1A6B4A':'#888'};border-radius:3px;padding:1px 4px;margin-left:4px;
+      font-weight:${isCur?700:400}">${b.district}</span>`;
     return `<div class="loc-item" onclick="applyOvpLocation(${b.lat},${b.lon},'${safeName}','#5D4037','fa-hotel')">
       <div class="loc-ico" style="background:#5D4037"><i class="fas fa-hotel"></i></div>
       <div class="loc-info">
-        <div class="loc-name">${b.name}${districtLabel}</div>
+        <div class="loc-name">${b.name}${distTag}</div>
         <div class="loc-sub">${sub}</div>
       </div>
       <div class="loc-dist">${dist!==null?fmtDist(dist):'–'}</div>
@@ -2642,15 +2679,57 @@ function buildInfoCells(){
 ══════════════════════════════════════════════════════════════ */
 function loadLogo(input){
   if(!input.files||!input.files[0]) return;
+  const file=input.files[0];
   const reader=new FileReader();
   reader.onload=e=>{
-    const img=document.getElementById('logo-img');
-    const hint=document.getElementById('logo-hint');
-    img.src=e.target.result;
-    img.style.display='block';
-    if(hint) hint.style.display='none';
+    const tmp=new Image();
+    tmp.onload=()=>{
+      if(tmp.naturalWidth<300){
+        if(!confirm('Logo çözünürlüğü düşük ('+tmp.naturalWidth+'px). Yine de kullanmak ister misiniz?')) return;
+      }
+      const img=document.getElementById('biz-logo-img');
+      const hint=document.getElementById('biz-logo-hint');
+      img.src=e.target.result;
+      img.style.display='block';
+      if(hint) hint.style.display='none';
+    };
+    tmp.src=e.target.result;
   };
-  reader.readAsDataURL(input.files[0]);
+  reader.readAsDataURL(file);
+}
+/* M1: Drag-drop + tıklama — #biz-logo-wrap */
+document.addEventListener('DOMContentLoaded',function(){
+  const wrap=document.getElementById('biz-logo-wrap');
+  if(!wrap) return;
+  wrap.addEventListener('click',()=>document.getElementById('logo-input').click());
+  wrap.addEventListener('dragover',e=>{e.preventDefault();wrap.style.background='rgba(255,255,255,.25)';});
+  wrap.addEventListener('dragleave',()=>{wrap.style.background='';});
+  wrap.addEventListener('drop',e=>{
+    e.preventDefault(); wrap.style.background='';
+    const f=e.dataTransfer.files[0];
+    if(f&&f.type.startsWith('image/')){
+      const dt=new DataTransfer(); dt.items.add(f);
+      const inp=document.getElementById('logo-input');
+      inp.files=dt.files; loadLogo(inp);
+    }
+  });
+});
+
+/* ══════════════════════════════════════════════════════════════
+   M4: Format Preset — @page boyutu ve grid satırını değiştir
+══════════════════════════════════════════════════════════════ */
+const _FMT={
+  a3l:{ page:'A3 landscape', w:'400mm', h:'277mm', head:'30mm', bot:'34mm', right:'62mm' },
+  a4p:{ page:'A4 portrait',  w:'190mm', h:'267mm', head:'24mm', bot:'28mm', right:'52mm' },
+  a4l:{ page:'A4 landscape', w:'277mm', h:'190mm', head:'24mm', bot:'28mm', right:'52mm' }
+};
+let _fmtStyle=null;
+function applyFormatPreset(key){
+  const f=_FMT[key]||_FMT.a3l;
+  if(_fmtStyle) _fmtStyle.remove();
+  _fmtStyle=document.createElement('style');
+  _fmtStyle.textContent=`@media print{@page{size:${f.page};margin:10mm}body{width:${f.w}!important;height:${f.h}!important;grid-template-rows:${f.head} 1fr ${f.bot}!important;grid-template-columns:1fr ${f.right}!important}}`;
+  document.head.appendChild(_fmtStyle);
 }
 
 /* ══════════════════════════════════════════════════════════════
