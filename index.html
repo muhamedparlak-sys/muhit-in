@@ -91,16 +91,25 @@ body {
   border-bottom:1px solid #E8E2D8; flex-shrink:0;
 }
 .legend-item {
-  display:flex; align-items:center; gap:7px;
-  padding:4px 0; font-size:11px; color:#333; font-weight:600;
+  display:flex; align-items:center; gap:5px;
+  padding:4px 0; font-size:10.5px; color:#333; font-weight:600;
   border-bottom:1px solid #f2ede6; flex-shrink:0;
 }
-.legend-ico {
-  width:22px; height:22px; border-radius:50%;
+.legend-num {
+  min-width:16px; height:16px; border-radius:50%;
   display:flex; align-items:center; justify-content:center;
-  font-size:9px; color:#fff; flex-shrink:0;
+  font-size:8.5px; font-weight:900; color:#fff; flex-shrink:0;
+}
+.legend-ico {
+  width:20px; height:20px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:8.5px; color:#fff; flex-shrink:0;
 }
 .legend-name { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.legend-dist {
+  font-size:9.5px; color:#999; font-weight:600;
+  white-space:nowrap; flex-shrink:0; margin-left:2px;
+}
 .legend-sp { flex:1; }
 #legend-add {
   margin-top:auto; padding:7px 6px; font-size:10px; color:var(--brand);
@@ -1297,12 +1306,14 @@ function renumberVisible(){
   // Önce hepsini sıfırla
   enriched.forEach(p=>{ p.num=null; });
   visible.forEach((p,i)=>{ p.num=i+1; });
-  // DOM güncelle
+  // DOM güncelle — pin üzerindeki numara rozetleri
   document.querySelectorAll('[data-num-for]').forEach(el=>{
     const idx=+el.dataset.numFor;
     const p=enriched.find(x=>x.idx===idx);
     el.textContent=p&&p.num!=null ? p.num : '';
   });
+  // Lejant — numara ve mesafelerle birlikte yenile
+  buildLegend();
 }
 
 /* Güzergah çizgilerini Mapbox GL source'una yaz (HTML marker ALTI garantili) */
@@ -2305,17 +2316,19 @@ function setZoomMode(mode){
 function buildLegend(){
   const list=document.getElementById('legend-list');
   if(!list) return;
-  const visible=enriched.filter(p=>_visSet.has(p.idx));
-  const sorted=[...visible].sort((a,b)=>{
-    const sa=(a.sup||''), sb=(b.sup||'');
-    return sa.localeCompare(sb)||a.name.localeCompare(b.name,'tr');
-  });
-  list.innerHTML=sorted.slice(0,22).map(p=>{
+  // Sadece görünür ve numaralandırılmış POI'lar — haritadaki pin numarasıyla eşleşir
+  const visible=enriched.filter(p=>_visSet.has(p.idx) && p.num!=null);
+  // Pin numarasına göre sırala (= mesafeye göre, renumberVisible ile senkron)
+  const sorted=[...visible].sort((a,b)=>(a.num||999)-(b.num||999));
+  list.innerHTML=sorted.map(p=>{
     const meta=SMETA[p.sup]||{fa:'fa-map-pin',color:'#888'};
     const nm=(p.name||'').replace(/</g,'&lt;');
+    const dist=_distLabel(p.dist);
     return `<div class="legend-item">
+      <span class="legend-num" style="background:${meta.color}">${p.num}</span>
       <div class="legend-ico" style="background:${meta.color}"><i class="fas ${meta.fa}"></i></div>
       <span class="legend-name" title="${nm}">${nm}</span>
+      <span class="legend-dist">${dist}</span>
     </div>`;
   }).join('')||'<div style="color:#ccc;font-size:10px;padding:8px 0">Haritada yer yok.</div>';
 }
