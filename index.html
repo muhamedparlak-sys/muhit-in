@@ -651,18 +651,10 @@ body {
 
 /* ── Attribution & Scale küçük/soluk ── */
 .mapboxgl-ctrl-attrib-button { width:16px !important; height:16px !important; }
-#ktb-badge {
-  position:absolute; bottom:28px; right:8px;
-  display:flex; flex-direction:column; align-items:center; gap:3px;
-  z-index:8; pointer-events:none;
-  filter:drop-shadow(0 1px 4px rgba(0,0,0,.3));
-}
-#ktb-logo { width:64px; height:auto; object-fit:contain; }
+#ktb-logo { width:80px; height:auto; object-fit:contain; }
 #ktb-label {
-  font-size:7px; font-weight:700; color:#DC0D15;
+  font-size:8px; font-weight:700; color:#DC0D15;
   text-align:center; line-height:1.35;
-  text-shadow:0 0 4px #fff, 0 0 4px #fff;
-  white-space:nowrap;
 }
 .mapboxgl-ctrl-attrib.mapboxgl-compact { opacity:.45; transition:opacity .2s; }
 .mapboxgl-ctrl-attrib.mapboxgl-compact:hover { opacity:1; }
@@ -991,11 +983,6 @@ body.map-pick-mode #loc-pick-hint {
     max-height:20mm !important; max-width:40mm !important;
   }
   #biz-logo-img { max-height:20mm !important; max-width:40mm !important; object-fit:contain !important; display:block !important; }
-  /* KTB badge: print'te harita köşesinde sabit */
-  #ktb-badge {
-    position:absolute !important; bottom:4mm !important; right:4mm !important;
-    filter:none !important;
-  }
   #ktb-logo { width:18mm !important; }
   #ktb-label { font-size:5pt !important; }
   #biz-logo-hint, #logo-screen-hint { display:none !important; }
@@ -1102,10 +1089,6 @@ body.map-pick-mode #loc-pick-hint {
 <!-- Harita -->
 <div id="mwrap">
   <div id="map"></div>
-  <div id="ktb-badge">
-    <img src="https://www.ktb.gov.tr/images/logorenkli.svg" id="ktb-logo" alt="KTB">
-    <div id="ktb-label">Çanakkale İl Kültür ve<br>Turizm Müdürlüğü</div>
-  </div>
   <!-- PDF scale bar — sadece .downloading'de görünür, yalnızca km -->
   <div id="pdf-scalebar">
     <div class="sb-row">
@@ -1148,10 +1131,10 @@ body.map-pick-mode #loc-pick-hint {
 
 <!-- L2: Otorite köşesi (alt sağ) — KİLİTLİ, işletme değiştiremez -->
 <div id="pg-logo">
-  <!-- Ekranda: logo yükleme ipucu + önizleme alanı -->
+  <!-- KTB / İl Kültür ve Turizm Müdürlüğü logosu -->
   <div id="logo-screen-hint">
-    <i class="fas fa-map-location-dot" style="font-size:20px;color:#1A6B4A;margin-bottom:4px"></i>
-    <div style="font-size:9px;color:#999;line-height:1.4">İl Kültür ve<br>Turizm Müd.</div>
+    <img src="https://www.ktb.gov.tr/images/logorenkli.svg" id="ktb-logo" alt="KTB">
+    <div id="ktb-label">Çanakkale İl Kültür ve<br>Turizm Müdürlüğü</div>
   </div>
   <!-- K9: QR kod — baskıda görünür (dijitale köprü) -->
   <div id="qr-code" style="display:none">
