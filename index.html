@@ -651,6 +651,19 @@ body {
 
 /* ── Attribution & Scale küçük/soluk ── */
 .mapboxgl-ctrl-attrib-button { width:16px !important; height:16px !important; }
+#ktb-badge {
+  position:absolute; bottom:28px; right:8px;
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+  z-index:8; pointer-events:none;
+  filter:drop-shadow(0 1px 4px rgba(0,0,0,.3));
+}
+#ktb-logo { width:64px; height:auto; object-fit:contain; }
+#ktb-label {
+  font-size:7px; font-weight:700; color:#DC0D15;
+  text-align:center; line-height:1.35;
+  text-shadow:0 0 4px #fff, 0 0 4px #fff;
+  white-space:nowrap;
+}
 .mapboxgl-ctrl-attrib.mapboxgl-compact { opacity:.45; transition:opacity .2s; }
 .mapboxgl-ctrl-attrib.mapboxgl-compact:hover { opacity:1; }
 .mapboxgl-ctrl-attrib a { font-size:8px !important; }
@@ -977,8 +990,15 @@ body.map-pick-mode #loc-pick-hint {
     margin-left:auto !important; border:none !important; padding:0 !important;
     max-height:20mm !important; max-width:40mm !important;
   }
-  #biz-logo-img { max-height:20mm !important; max-width:40mm !important; object-fit:contain !important; }
-  #biz-logo-hint { display:none !important; }
+  #biz-logo-img { max-height:20mm !important; max-width:40mm !important; object-fit:contain !important; display:block !important; }
+  /* KTB badge: print'te harita köşesinde sabit */
+  #ktb-badge {
+    position:absolute !important; bottom:4mm !important; right:4mm !important;
+    filter:none !important;
+  }
+  #ktb-logo { width:18mm !important; }
+  #ktb-label { font-size:5pt !important; }
+  #biz-logo-hint, #logo-screen-hint { display:none !important; }
   #logo-screen-hint { display:none !important; }
   /* K9: QR kod — baskıda görünür */
   #qr-code { display:block !important; margin-top:3mm !important; text-align:center !important; }
@@ -1069,7 +1089,7 @@ body.map-pick-mode #loc-pick-hint {
   <!-- Sadece baskıda görünür: NPS Masthead title-block (B1) -->
   <div id="print-masthead" style="display:none">
     <div class="pm-title">GÖKÇEADA</div>
-    <div class="pm-sub">Kültür Mirası &amp; Turizm Haritası</div>
+    <div class="pm-sub" id="pm-sub-el">Kültür Mirası &amp; Turizm Haritası</div>
   </div>
   <!-- L1: İşletme logo slotu — masthead sağ (print) & toolbar sağ (screen) -->
   <div id="biz-logo-wrap" title="İşletme logonuzu yükleyin">
@@ -1082,6 +1102,10 @@ body.map-pick-mode #loc-pick-hint {
 <!-- Harita -->
 <div id="mwrap">
   <div id="map"></div>
+  <div id="ktb-badge">
+    <img src="https://www.ktb.gov.tr/images/logorenkli.svg" id="ktb-logo" alt="KTB">
+    <div id="ktb-label">Çanakkale İl Kültür ve<br>Turizm Müdürlüğü</div>
+  </div>
   <!-- PDF scale bar — sadece .downloading'de görünür, yalnızca km -->
   <div id="pdf-scalebar">
     <div class="sb-row">
@@ -1590,6 +1614,7 @@ function _initMap(){
     setMode('drive');
     buildLegend();   // lejant ilk doldurmayı harita hazır olunca yap
     buildInfoCells();
+    _updateMastheadTitle(); // broşür başlığını ayarla
   });
 }
 
@@ -2454,6 +2479,7 @@ function applyMyLocation(idx){
   // Broşür: lejant + hücreleri güncelle
   setTimeout(()=>{ buildLegend(); buildInfoCells(); }, 400);
 
+  _updateMastheadTitle(); // otel adını broşür başlığına yansıt
   showToast(`📍 Konum: ${p.name}`);
 }
 
@@ -2651,6 +2677,17 @@ function _updateMastheadTitle(){
   const distLabel=(_currentDistrict==='gokceada'?'GÖKÇEADA':(_currentDistrict||'GÖKÇEADA').toUpperCase());
   const labels={il:'ÇANAKKALE',ilce:distLabel,yuruyus:'YAKIN ÇEVRE'};
   titleEl.textContent=labels[_scopeMode]||distLabel;
+
+  // pm-sub: otel/işletme adı
+  const subEl=document.getElementById('pm-sub-el');
+  if(!subEl) return;
+  const hotelEl=document.getElementById('bar-brand');
+  const hotelName=hotelEl?hotelEl.textContent.trim():'';
+  if(hotelName && hotelName!=='muhit.in'){
+    subEl.textContent=hotelName+' · Kültür Mirası & Turizm Haritası';
+  } else {
+    subEl.textContent='Kültür Mirası & Turizm Haritası';
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -2987,9 +3024,25 @@ function downloadPDF(){
   const btn=document.getElementById('btn-pdf');
   btn.disabled=true;
   btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Hazırlanıyor...';
+  _updateMastheadTitle();
   buildInfoCells();
   buildLegend();
-  map.jumpTo(PRINT_VIEW);
+  // Kapsama göre harita kadrajı (hardcoded değil)
+  const df=_DISTRICT_FRAMES[_currentDistrict]||_DISTRICT_FRAMES['gokceada']||{};
+  const OPT={duration:0, padding:{top:30,bottom:30,left:30,right:30}};
+  if(_scopeMode==='il'){
+    const f=(_DISTRICT_FRAMES['il']||{}).drive;
+    if(f) map.fitBounds([[f[0],f[1]],[f[2],f[3]]],{...OPT,maxZoom:9});
+    else map.jumpTo(PRINT_VIEW);
+  } else if(_scopeMode==='yuruyus'){
+    const f=df.walk||df.drive;
+    if(f) map.fitBounds([[f[0],f[1]],[f[2],f[3]]],{...OPT,maxZoom:15});
+    else map.jumpTo(PRINT_VIEW);
+  } else {
+    const f=df.drive;
+    if(f) map.fitBounds([[f[0],f[1]],[f[2],f[3]]],{...OPT,maxZoom:13});
+    else map.jumpTo(PRINT_VIEW);
+  }
   map.once('idle',async()=>{
     await document.fonts.ready;
     window.print();
