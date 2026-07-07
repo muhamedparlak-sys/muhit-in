@@ -2707,10 +2707,12 @@ function buildLegend(){
 
 function _legendRemove(idx){
   _legendRemoved.add(idx);
+  setVis(idx,false);
   buildLegend();
   buildInfoCells();
 }
 function _legendReset(){
+  _legendRemoved.forEach(idx=>setVis(idx,true));
   _legendRemoved.clear();
   buildLegend();
   buildInfoCells();
@@ -2812,6 +2814,7 @@ function _onMapPinClick(e){
 }
 function _legendAdd(idx){
   _legendRemoved.delete(idx);
+  setVis(idx,true);
   buildLegend();
   buildInfoCells();
 }
