@@ -47,6 +47,7 @@ html {
   justify-content:center;
   align-items:center;
   min-height:100vh;
+  overflow:auto;
   margin:0; padding:12px; box-sizing:border-box;
 }
 body {
@@ -2958,14 +2959,12 @@ const _origApplyMyLocation=typeof applyMyLocation==='function'?applyMyLocation:n
 const PRINT_VIEW={center:[25.905,40.192],zoom:11,bearing:0,pitch:0};
 
 function _fitA4Page(){
-  // Viewport'u A4 oranında doldur (1:1.414 landscape)
-  // CSS mm ekranda fiziksel mm değil — bu fonksiyon body'yi
-  // her zaman viewport'a sığacak şekilde ölçekler.
-  const A4_RATIO=297/210; // landscape
+  const A4_RATIO=297/210;
   const vw=window.innerWidth-24, vh=window.innerHeight-24;
-  const cssW=297*3.7795, cssH=210*3.7795; // body CSS boyutu
+  const cssW=297*3.7795, cssH=210*3.7795;
   const scale=vw/vh>A4_RATIO ? vh/cssH : vw/cssW;
-  document.body.style.zoom=scale;
+  // Sığıyorsa zoom; sığmıyorsa 1:1 bırak scrollbar çıksın
+  document.body.style.zoom=scale<1?scale:1;
   if(typeof map!=='undefined') setTimeout(()=>map.resize(),150);
 }
 window.addEventListener('resize',_fitA4Page);
