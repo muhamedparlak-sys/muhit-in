@@ -45,9 +45,10 @@ html {
   background:#666;
   display:flex;
   justify-content:center;
-  align-items:center;
+  align-items:flex-start;
   min-height:100vh;
-  margin:0; padding:12px; box-sizing:border-box;
+  overflow:auto;
+  margin:0; padding:16px; box-sizing:border-box;
 }
 body {
   font-family:'Nunito Sans',sans-serif;
@@ -2958,14 +2959,9 @@ const _origApplyMyLocation=typeof applyMyLocation==='function'?applyMyLocation:n
 const PRINT_VIEW={center:[25.905,40.192],zoom:11,bearing:0,pitch:0};
 
 function _fitA4Page(){
-  // Viewport'u A4 oranında doldur (1:1.414 landscape)
-  // CSS mm ekranda fiziksel mm değil — bu fonksiyon body'yi
-  // her zaman viewport'a sığacak şekilde ölçekler.
-  const A4_RATIO=297/210; // landscape
-  const vw=window.innerWidth-24, vh=window.innerHeight-24;
-  const cssW=297*3.7795, cssH=210*3.7795; // body CSS boyutu
-  const scale=vw/vh>A4_RATIO ? vh/cssH : vw/cssW;
-  document.body.style.zoom=scale;
+  // CSS mm birimi tarayıcıda fiziksel mm'ye en yakın birim.
+  // JS zoom uygulamıyoruz — ekranda 297x210mm CSS = monitöre göre yaklaşık A4.
+  // Gerçek A4 yalnızca baskıda garantili (@page A4 landscape).
   if(typeof map!=='undefined') setTimeout(()=>map.resize(),150);
 }
 window.addEventListener('resize',_fitA4Page);
