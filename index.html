@@ -40,19 +40,29 @@
 }
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
 
-/* ── A3 Broşür Grid ── */
+/* ── A4 Landscape Grid (297×210mm) ── */
+html {
+  background:#666;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  margin:0; padding:12px; box-sizing:border-box;
+}
 body {
   font-family:'Nunito Sans',sans-serif;
-  height:100vh; overflow:hidden;
+  width:297mm; height:210mm;
+  overflow:hidden; flex-shrink:0;
   display:grid;
   grid-template-areas:
     "header  header"
     "map     legend"
     "cells   logo";
-  /* A3 landscape oranları (297mm): header ~8%, alt satır ~14%, kalan harita */
-  grid-template-columns: 1fr 240px;
-  grid-template-rows: 8vh 1fr 14vh;
+  /* A4 landscape: header 18mm, footer 42mm, legend 62mm */
+  grid-template-columns: 1fr 62mm;
+  grid-template-rows: 18mm 1fr 42mm;
   background:#f0ede8;
+  box-shadow:0 4px 24px rgba(0,0,0,.5);
 }
 
 /* ── Header ── */
@@ -812,7 +822,7 @@ body.map-pick-mode #loc-pick-hint {
 ══════════════════════════════════════════════════════════════ */
 @media print {
   /* ── A1: Sayfa ve kenar boşluğu ── */
-  @page { size:A3 landscape; margin:10mm; }
+  @page { size:A4 landscape; margin:8mm; }
 
   /* ── H3: Renk koruması — yeşil masthead ve marker renkleri solmasın ── */
   * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
@@ -832,6 +842,8 @@ body.map-pick-mode #loc-pick-hint {
     background:#fff !important;
     font-family:var(--map-font) !important;
   }
+  html { background:white !important; padding:0 !important; display:block !important; }
+  body { zoom:1 !important; width:297mm !important; height:210mm !important; box-shadow:none !important; }
   #pg-header { grid-area:head !important; }
   #mwrap     { grid-area:map  !important; position:relative !important; }
   #pg-legend { grid-area:legend !important; }
@@ -1585,9 +1597,10 @@ function _initMap(){
   setMode('drive');
   map.once('idle', ()=>{
     setMode('drive');
-    buildLegend();   // lejant ilk doldurmayı harita hazır olunca yap
+    buildLegend();
     buildInfoCells();
-    _updateMastheadTitle(); // broşür başlığını ayarla
+    _updateMastheadTitle();
+    _fitA4Page();   // sayfa küçük ekranda zoom
   });
 }
 
@@ -2944,6 +2957,17 @@ const _origApplyMyLocation=typeof applyMyLocation==='function'?applyMyLocation:n
 // §1.3: Deterministik baskı kadrajı — Gökçeada tam ada görünümü
 const PRINT_VIEW={center:[25.905,40.192],zoom:11,bearing:0,pitch:0};
 
+function _fitA4Page(){
+  // A4 landscape = 297mm x 210mm → px'e çevir (1mm ≈ 3.7795px)
+  const pw=297*3.7795, ph=210*3.7795;
+  const vw=window.innerWidth-24, vh=window.innerHeight-24; // padding
+  const scale=Math.min(vw/pw, vh/ph);
+  document.body.style.zoom=scale<1?scale:1;
+  // Mapbox canvas boyutunu güncelle
+  if(typeof map!=='undefined') setTimeout(()=>map.resize(),150);
+}
+window.addEventListener('resize',_fitA4Page);
+
 function downloadPDF(){
   const btn=document.getElementById('btn-pdf');
   btn.disabled=true;
@@ -2951,30 +2975,20 @@ function downloadPDF(){
   _updateMastheadTitle();
   buildInfoCells();
   buildLegend();
-  // Kapsama göre harita kadrajı (hardcoded değil)
-  const df=_DISTRICT_FRAMES[_currentDistrict]||_DISTRICT_FRAMES['gokceada']||{};
-  const OPT={duration:0, padding:{top:30,bottom:30,left:30,right:30}};
-  if(_scopeMode==='il'){
-    const f=(_DISTRICT_FRAMES['il']||{}).drive;
-    if(f) map.fitBounds([[f[0],f[1]],[f[2],f[3]]],{...OPT,maxZoom:9});
-    else map.jumpTo(PRINT_VIEW);
-  } else if(_scopeMode==='yuruyus'){
-    const f=df.walk||df.drive;
-    if(f) map.fitBounds([[f[0],f[1]],[f[2],f[3]]],{...OPT,maxZoom:15});
-    else map.jumpTo(PRINT_VIEW);
-  } else {
-    const f=df.drive;
-    if(f) map.fitBounds([[f[0],f[1]],[f[2],f[3]]],{...OPT,maxZoom:13});
-    else map.jumpTo(PRINT_VIEW);
-  }
-  map.once('idle',async()=>{
+  // Haritayı olduğu yerde bırak — kullanıcının seçtiği görünüm basılır
+  const _doPrint=async()=>{
     await document.fonts.ready;
     window.print();
     setTimeout(()=>{
       btn.disabled=false;
       btn.innerHTML='<i class="fas fa-file-pdf"></i> Broşür İndir';
     },500);
-  });
+  };
+  if(map.isStyleLoaded()&&!map.isMoving()&&!map.isZooming()&&!map.isRotating()){
+    _doPrint();
+  } else {
+    map.once('idle',_doPrint);
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════
