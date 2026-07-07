@@ -2647,7 +2647,7 @@ function _updateMastheadTitle(){
   const titleEl=document.querySelector('.pm-title');
   if(!titleEl) return;
   const distLabel=(_currentDistrict==='gokceada'?'GÖKÇEADA':(_currentDistrict||'GÖKÇEADA').toUpperCase());
-  const labels={il:'ÇANAKKALE',ilce:distLabel,yuruyus:'YAKIN ÇEVRE'};
+  const labels={il:'ÇANAKKALE',ilce:distLabel,yuruyus:distLabel};
   titleEl.textContent=labels[_scopeMode]||distLabel;
 
   // pm-sub: otel/işletme adı
