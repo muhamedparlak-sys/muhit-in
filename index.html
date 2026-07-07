@@ -825,41 +825,42 @@ body.map-pick-mode #loc-pick-hint {
 ══════════════════════════════════════════════════════════════ */
 @media print {
   /* ── A1: Sayfa ve kenar boşluğu ── */
-  @page { size:A4 landscape; margin:8mm; }
+  @page { size:A4 landscape; margin:0; }
 
   /* ── H3: Renk koruması — yeşil masthead ve marker renkleri solmasın ── */
   * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
 
-  /* ── A2: Grid — 400×277mm içerik alanına otur ── */
+  /* ── A2: Grid — tam A4 landscape sayfa alanı ── */
+  html { background:white !important; padding:0 !important; display:block !important; margin:0 !important; }
   body {
     display:grid !important;
-    width:400mm !important; height:277mm !important;
+    width:297mm !important; height:210mm !important;
     grid-template-columns: 1fr 62mm !important;
-    grid-template-rows: 30mm 1fr 34mm !important;
+    grid-template-rows: 18mm 1fr 42mm !important;
     grid-template-areas:
-      "head head"
-      "map  legend"
-      "cells logo" !important;
-    gap:4mm !important;
+      "header header"
+      "map    legend"
+      "cells  logo" !important;
+    gap:0 !important;
     overflow:hidden !important;
     background:#fff !important;
     font-family:var(--map-font) !important;
+    zoom:1 !important; box-shadow:none !important;
+    margin:0 !important; padding:0 !important;
   }
-  html { background:white !important; padding:0 !important; display:block !important; }
-  body { zoom:1 !important; width:297mm !important; height:210mm !important; box-shadow:none !important; }
-  #pg-header { grid-area:head !important; }
+  #pg-header { grid-area:header !important; }
   #mwrap     { grid-area:map  !important; position:relative !important; }
   #pg-legend { grid-area:legend !important; }
   #pg-cells  { grid-area:cells !important; }
   #pg-logo   { grid-area:logo  !important; }
 
-  /* ── B1: Masthead 30mm — NPS title-block ── */
+  /* ── B1: Masthead — NPS title-block ── */
   #pg-header {
-    height:30mm !important;
     background:var(--masthead-bg) !important;
     display:flex !important; align-items:center !important;
-    padding:0 calc(var(--mod)*1.26) !important; /* ≈8mm */
+    padding:0 8mm !important;
     box-shadow:none !important; border-bottom:none !important;
+    overflow:hidden !important;
   }
   /* screen-only öğeleri gizle */
   #pg-header .tb,
@@ -2701,7 +2702,7 @@ function buildLegend(){
   scoped=scoped.sort((a,b)=>
     _myLocReady ? (a.dist||99999)-(b.dist||99999)
                 : (a.name||'').localeCompare(b.name||'','tr')
-  ).slice(0,20);
+  ).slice(0,14);
 
   list.innerHTML=scoped.map((p,i)=>{
     const num=i+1;
