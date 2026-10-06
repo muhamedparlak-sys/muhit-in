@@ -1024,7 +1024,7 @@ const SUIT = {
   'trojan-horse':{out:1, sun:1, eve:1, min:20}, 'c-saat':{out:1, eve:1, min:15}, 'c-cimenlik':{out:1, hrs:1, min:45},
   'naval-museum':{in:1, min:60}, 'city-museum':{in:1, min:40}, 'ceramic-museum':{in:1, min:30}, 'aynali-bazaar':{in:1, min:30},
   'troy-museum':{in:1, far:1, min:180},
-  'g:troy':{out:1, far:1, min:240}, 'g:castles':{out:1, far:1, min:240}, 'g:nature':{out:1, sea:1, far:1, min:240},
+  'troy-site':{out:1, hrs:1, far:1, min:240}, 'g:castles':{out:1, far:1, min:240}, 'g:nature':{out:1, sea:1, far:1, min:240},
   'g:memorials':{out:1, far:1, min:360, tour:'10:00', via:'agencies'}, 'g:villages':{out:1, far:1, min:300}, 'g:ancient':{out:1, far:1, min:420}
 };
 /* ---- ready-made routes: a walk through several places in a fixed order.
@@ -1043,12 +1043,12 @@ const HOME = [
   {cat:'near',      tiles:['n:pharmacy','n:taxi','n:busstop']},
   {cat:'sights',    title:'routes', cards:['r:centre']},
   {cat:'sights',    tiles:['trojan-horse','aynali-bazaar','c-saat','naval-museum','c-cimenlik','city-museum','ceramic-museum','synagogue','mosque']},
-  {cat:'far',       tiles:['g:troy','g:memorials','g:ancient','g:castles','g:nature','g:villages']},
+  {cat:'far',       tiles:['troy-site','troy-museum','g:memorials','g:ancient','g:castles','g:nature','g:villages','g:islands','g:districts']},
   {cat:'services',  tiles:['atm','toilet','pharmacy','hospital','exchange','ptt']},
-  {cat:'transport', tiles:['otogar','g:bus','g:buscos','g:ferry','airport','agencies','g:districts','g:islands','g:cities']}
+  {cat:'transport', tiles:['otogar','g:bus','g:ferry','airport','agencies','g:cities']}      /* the bus companies are linked from the Otogar */
 ];
 /* the pictures shown under "How do I get to ...?" before anything is typed: keep 3, 6 or 9 */
-const POPULAR = ['otogar','airport','eceabat-ferry','g:troy','g:memorials','g:islands'];
+const POPULAR = ['otogar','airport','eceabat-ferry','troy-site','troy-museum','troy-minibus','g:memorials','g:islands','agencies'];
 const BUSCO = ['Intercity coach company. The buttons below find its ticket offices on the map; coaches leave from the Otogar.','Şehirlerarası otobüs firması. Aşağıdaki düğmeler yazıhanelerini haritada bulur; otobüsler otogardan kalkar.','Fernbusunternehmen. Die Schaltflächen unten finden seine Büros auf der Karte; die Busse fahren am Otogar ab.','Compagnie d’autocars. Les boutons ci-dessous trouvent ses agences sur la carte ; les autocars partent de l’Otogar.','Empresa de autobuses interurbanos. Los botones de abajo encuentran sus oficinas en el mapa; los autobuses salen del Otogar.'];
 const PLACES = [
  {id:'trojan-horse', icon:'horse', cat:'sights', kind:'pin', see:['r:centre'], lat:40.1520614, lng:26.4054584,
@@ -1070,7 +1070,7 @@ const PLACES = [
   name:['Mekor Hayim Synagogue','Mekor Hayim Sinagogu (Havra)','Synagoge Mekor Hayim','Synagogue Mekor Hayim','Sinagoga Mekor Hayim'],
   label:['Syna­gogue','Sinagog','Synagoge','Syna­gogue','Sinagoga'],
   desc:['Çanakkale’s historic synagogue in the old town. A visit may need to be arranged in advance; ask at our desk.','Eski şehirdeki tarihî sinagog. Ziyaret için önceden izin gerekebilir; danışma masamıza sorun.','Die historische Synagoge von Çanakkale in der Altstadt. Für einen Besuch kann eine Voranmeldung nötig sein; fragen Sie an unserem Schalter.','La synagogue historique de Çanakkale, dans la vieille ville. Une autorisation préalable peut être nécessaire pour la visite ; renseignez-vous à notre comptoir.','La sinagoga histórica de Çanakkale, en el casco antiguo. Puede ser necesario concertar la visita con antelación; pregunte en nuestro mostrador.']},
- {id:'troy-museum', icon:'columns', group:'troy', cat:'far', kind:'pin', road:30100, driveMin:32, lat:39.9553931, lng:26.2493621,
+ {id:'troy-museum', icon:'columns', group:'troy', cat:'far', kind:'pin', see:['troy-site'], road:30100, driveMin:32, lat:39.9553931, lng:26.2493621,
   more:[{mode:'bus', from:'troy-minibus', min:'', cost:'ask', title:['Minibus','Minibüs','Minibus','Minibus','Minibús'], steps:[
    ['Walk to the minibus stop for Troy (see it under Buses).','Take the Troy minibus. Ask at our desk for today’s times and the fare.','Get off at the Troy Museum.'],
    ['Troya minibüs durağına yürüyün (Otobüs başlığı altında görebilirsiniz).','Troya minibüsüne binin. Günün saatlerini ve ücreti danışma masamıza sorun.','Troya Müzesi’nde inin.'],
@@ -1078,7 +1078,17 @@ const PLACES = [
    ['Marchez jusqu’à l’arrêt des minibus pour Troie (voir la rubrique Bus).','Prenez le minibus de Troie. Demandez les horaires du jour et le tarif à notre comptoir.','Descendez au musée de Troie.'],
    ['Camine hasta la parada de minibuses a Troya (véala en Autobuses).','Tome el minibús de Troya. Pregunte en nuestro mostrador por los horarios del día y la tarifa.','Baje en el Museo de Troya.']]}],
   name:['Troy Museum','Troya Müzesi','Troja-Museum','Musée de Troie','Museo de Troya'],
-  desc:['Museum of the finds from ancient Troy, outside the city next to the archaeological site.','Antik Troya buluntularının müzesi; şehir dışında, ören yerinin yanındadır.','Museum mit den Funden aus dem antiken Troja, außerhalb der Stadt neben der Ausgrabungsstätte.','Musée des découvertes de l’antique Troie, hors de la ville, près du site archéologique.','Museo de los hallazgos de la antigua Troya, fuera de la ciudad, junto al yacimiento.']},
+  desc:['Museum of the finds from ancient Troy, outside the city, about 1 km from the archaeological site. The museum and the site are separate places.','Antik Troya buluntularının müzesi; şehir dışında, ören yerine yaklaşık 1 km uzaklıktadır. Müze ve ören yeri ayrı yerlerdir.','Museum mit den Funden aus dem antiken Troja, außerhalb der Stadt, etwa 1 km von der Ausgrabungsstätte entfernt. Museum und Ausgrabungsstätte sind getrennte Orte.','Musée des découvertes de l’antique Troie, hors de la ville, à environ 1 km du site archéologique. Le musée et le site sont deux lieux distincts.','Museo de los hallazgos de la antigua Troya, fuera de la ciudad, a cerca de 1 km del yacimiento. El museo y el yacimiento son lugares distintos.']},
+ {id:'troy-site', icon:'arch', group:'troy', cat:'far', kind:'pin', see:['troy-museum'], kw:'truva troia troja unesco antik kent ören yeri harabe ruins ruinen ruines ruinas', road:31000, driveMin:34, lat:39.9575, lng:26.2389,
+  more:[{mode:'bus', from:'troy-minibus', min:'', cost:'ask', title:['Minibus','Minibüs','Minibus','Minibus','Minibús'], steps:[
+   ['Walk to the minibus stop for Troy (see it under Buses).','Take the Troy minibus. Ask at our desk for today’s times and the fare.','Get off at the archaeological site of Troy.'],
+   ['Troya minibüs durağına yürüyün (Otobüs başlığı altında görebilirsiniz).','Troya minibüsüne binin. Günün saatlerini ve ücreti danışma masamıza sorun.','Troya Ören Yeri’nde inin.'],
+   ['Gehen Sie zur Minibus-Haltestelle nach Troja (siehe unter Busse).','Nehmen Sie den Troja-Minibus. Abfahrtszeiten und Fahrpreis erfahren Sie an unserem Schalter.','Steigen Sie an der Ausgrabungsstätte Troja aus.'],
+   ['Marchez jusqu’à l’arrêt des minibus pour Troie (voir la rubrique Bus).','Prenez le minibus de Troie. Demandez les horaires du jour et le tarif à notre comptoir.','Descendez au site archéologique de Troie.'],
+   ['Camine hasta la parada de minibuses a Troya (véala en Autobuses).','Tome el minibús de Troya. Pregunte en nuestro mostrador por los horarios del día y la tarifa.','Baje en el yacimiento arqueológico de Troya.']]}],
+  name:['Archaeological Site of Troy','Troya Ören Yeri','Ausgrabungsstätte Troja','Site archéologique de Troie','Yacimiento arqueológico de Troya'],
+  label:['Troy site','Troya Ören Yeri','Aus­grabung Troja','Site de Troie','Yacimiento de Troya'],
+  desc:['The ruins of ancient Troy, a UNESCO World Heritage Site. About 1 km from the Troy Museum; the two are separate places.','Antik Troya kentinin kalıntıları; UNESCO Dünya Mirası. Troya Müzesi’ne yaklaşık 1 km uzaklıktadır; ikisi ayrı yerlerdir.','Die Ruinen des antiken Troja, UNESCO-Welterbe. Etwa 1 km vom Troja-Museum entfernt; es sind zwei getrennte Orte.','Les ruines de l’antique Troie, inscrites au patrimoine mondial de l’UNESCO. À environ 1 km du musée de Troie ; ce sont deux lieux distincts.','Las ruinas de la antigua Troya, Patrimonio Mundial de la UNESCO. A cerca de 1 km del Museo de Troya; son dos lugares distintos.']},
 
  {id:'eceabat-ferry', icon:'ferry', group:'ferry', cat:'transport', kind:'pin', lat:40.1504756, lng:26.4024052,
   label:['Eceabat ferry','Eceabat feribotu','Fähre Eceabat','Ferry Eceabat','Ferri Eceabat'], more:[{mode:'ferry', min:'25–30', cost:'40 TL', steps:[
@@ -1235,7 +1245,6 @@ const PLACES = [
    via : the district or place it is reached from (a place id), 'walk' for the centre within walking distance, or 'centre' for the rest of the city.
    The page opens a search for the place in the visitor's maps app and links to "how to get to <via>". */
 const EXTRA = [
- ['troy-site','troy','troy-museum','arch','Troya Ören Yeri','Archaeological Site of Troy','truva troia troja unesco antik kent','Troya Ören Yeri'],
  /* Gallipoli peninsula: memorials, cemeteries and war museums */
  ['m-abide','memorials','eceabat','memorial','Çanakkale Şehitler Abidesi','Çanakkale Martyrs’ Memorial','şehitlik abide morto hisarlık'],
  ['m-57','memorials','eceabat','memorial','57. Piyade Alayı Şehitliği','57th Infantry Regiment Memorial','şehitlik 57 alay'],
@@ -1622,7 +1631,11 @@ const XL_ROWS = {
 'Çanakkale’s historic synagogue in the old town. A visit may need to be arranged in advance; ask at our desk.':['Историческата синагога на Чанаккале в стария град. За посещение може да е нужна предварителна уговорка; попитайте на нашето гише.','Историческая синагога Чанаккале в старом городе. Для посещения может потребоваться предварительная договорённость; уточните на нашей стойке.','Η ιστορική συναγωγή του Τσανάκκαλε στην παλιά πόλη. Για την επίσκεψη ίσως χρειάζεται προηγούμενη συνεννόηση· ρωτήστε στο γκισέ μας.','الكنيس التاريخي في البلدة القديمة بجناق قلعة. قد تتطلب الزيارة ترتيبًا مسبقًا؛ اسأل في مكتبنا.'],
 'Minibus':['Минибус','Маршрутка','Μίνι μπας','حافلة صغيرة'],
 'Troy Museum':['Музей на Троя','Музей Трои','Μουσείο Τροίας','متحف طروادة'],
-'Museum of the finds from ancient Troy, outside the city next to the archaeological site.':['Музей с находките от древна Троя, извън града, до археологическия обект.','Музей находок древней Трои, за городом, рядом с местом раскопок.','Μουσείο με τα ευρήματα της αρχαίας Τροίας, έξω από την πόλη, δίπλα στον αρχαιολογικό χώρο.','متحف يضم مكتشفات طروادة القديمة، خارج المدينة بجوار الموقع الأثري.'],
+'Museum of the finds from ancient Troy, outside the city, about 1 km from the archaeological site. The museum and the site are separate places.':['Музей с находките от древна Троя, извън града, на около 1 км от археологическия обект. Музеят и обектът са отделни места.','Музей находок из древней Трои, за городом, примерно в 1 км от археологического памятника. Музей и памятник — разные места.','Μουσείο με τα ευρήματα της αρχαίας Τροίας, εκτός πόλης, περίπου 1 χλμ. από τον αρχαιολογικό χώρο. Το μουσείο και ο αρχαιολογικός χώρος είναι ξεχωριστοί χώροι.','متحف مكتشفات طروادة القديمة، خارج المدينة، على بُعد نحو كيلومتر واحد من الموقع الأثري. المتحف والموقع مكانان منفصلان.'],
+'Archaeological Site of Troy':['Археологически обект Троя','Археологический памятник Троя','Αρχαιολογικός χώρος της Τροίας','موقع طروادة الأثري'],
+'Troy site':['Разкопки на Троя','Раскопки Трои','Αρχαία Τροία','موقع طروادة'],
+'The ruins of ancient Troy, a UNESCO World Heritage Site. About 1 km from the Troy Museum; the two are separate places.':['Руините на древна Троя, обект на световното наследство на ЮНЕСКО. На около 1 км от Музея на Троя; това са две отделни места.','Руины древней Трои, объект Всемирного наследия ЮНЕСКО. Примерно в 1 км от Музея Трои; это два разных места.','Τα ερείπια της αρχαίας Τροίας, μνημείο παγκόσμιας κληρονομιάς της UNESCO. Περίπου 1 χλμ. από το Μουσείο Τροίας· είναι δύο ξεχωριστοί χώροι.','أطلال طروادة القديمة، من مواقع التراث العالمي لليونسكو. تبعد نحو كيلومتر واحد عن متحف طروادة؛ وهما مكانان منفصلان.'],
+'Get off at the archaeological site of Troy.':['Слезте при археологическия обект Троя.','Выходите у археологического памятника Троя.','Κατεβείτε στον αρχαιολογικό χώρο της Τροίας.','انزل عند موقع طروادة الأثري.'],
 'Eceabat ferry':['Ферибот за Еджеабат','Паром в Эджеабат','Φέρι για Έτζεαμπατ','عبّارة إيجه آباد'],
 'Ferry to Eceabat':['Ферибот за Еджеабат','Паром в Эджеабат','Φέρι για Έτζεαμπατ','العبّارة إلى إيجه آباد'],
 'Ferries across the Dardanelles to Eceabat leave from this pier, next to our office.':['Фериботите през Дарданелите за Еджеабат тръгват от този кей, до нашия център.','Паромы через Дарданеллы в Эджеабат отправляются с этого причала, рядом с нашим центром.','Τα φέρι που διασχίζουν τα Δαρδανέλλια προς το Έτζεαμπατ αναχωρούν από αυτή την αποβάθρα, δίπλα στο γραφείο μας.','تنطلق العبّارات التي تعبر مضيق الدردنيل إلى إيجه آباد من هذا الرصيف المجاور لمكتبنا.'],
@@ -2236,7 +2249,7 @@ function tips(){ const t = UI[lang], W = WX, sun = sunTimes(), n = trNow(), now 
       else out.list.push({k, sc:.5, i, far:0, href, why:fillT(t.rTourNext, {t:s.tour})});
       return; }
     if (s.far){ if (!day || now + s.min > set + 30) return; why = t.rDay; if (now < 11 * 60) sc += 2;      /* a trip out of town is best started in the morning */
-      if (CAR === true) sc += 1; if (CAR === false && k !== 'g:troy' && k !== 'troy-museum') sc -= 2; }      /* without a car only Troy has its own minibus */
+      if (CAR === true) sc += 1; if (CAR === false && k !== 'troy-site' && k !== 'troy-museum') sc -= 2; }      /* without a car only Troy has its own minibus */
     if (s.in){ if (wet){ sc += 4; why = t.rIn; } else if (hot){ sc += 3; why = t.rHotIn; } else if (cold || windy){ sc += 3; why = t.rCold; } else sc += 1; }
     if (s.out){
       if (!day){ if (!s.eve) return; sc += 3; why = t.rEve; }
