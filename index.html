@@ -991,16 +991,43 @@ const GROUPS = {              /* a picture that opens several places. cat: its c
              q       what the maps app searches for when the page has no answer
              office  place id shown under "Nearest to our office"; officeQ: without such a place, a maps search around the office
              hoursOf place id whose opening hours and duty notice apply to the kind
-             list    optional places checked by the office, as [lat, lng, 'name']. A kind with a list is not looked up in OpenStreetMap. */
+             list    places of the kind, as [lat, lng, 'name']. A kind with a list is not looked up in OpenStreetMap. src:'osm' marks a list taken from OpenStreetMap.
+             maps    true: the page does not look for the nearest place itself; it opens a search around the visitor in the maps app */
+/* pharmacies of the city, from OpenStreetMap on 6 October 2026: [lat, lng, 'name']. The office can correct and extend this list. */
+const PHARMACIES = [
+ [40.09489,26.3949,'Çiğdem Eczanesi'],[40.09516,26.39377,'Boğaz Eczanesi'],[40.09571,26.39364,'Kepez Eczanesi'],[40.09635,26.39172,'Hale Eczanesi'],
+ [40.09642,26.39392,'Ada Eczanesi'],[40.09644,26.3915,'Betül Eczanesi'],[40.09659,26.39117,'Akın Eczanesi'],[40.09672,26.39089,'Yağmur Eczanesi'],
+ [40.09854,26.41501,'Batı Eczanesi'],[40.09857,26.41492,'Barbaros Eczanesi'],[40.09863,26.40089,'Alınteri Eczanesi'],[40.09866,26.41485,'Hale Eczanesi'],
+ [40.09875,26.41477,'Bilge Eczanesi'],[40.09882,26.4147,'Meltem Türker Eczanesi'],[40.0989,26.41465,'Evcim Eczanesi'],[40.09897,26.41451,'Lotus Eczanesi'],
+ [40.09998,26.39769,'Doğa Eczanesi'],[40.1015,26.39785,'Yeni Eczanesi'],[40.10437,26.40879,'Anafartalar Eczanesi'],[40.12317,26.4099,'On Sekiz Mart Eczanesi'],
+ [40.12473,26.41105,'17 Burda Eczanesi'],[40.13028,26.41193,'Sibel Eczanesi'],[40.1304,26.41082,'Göktürk Eczanesi'],[40.13171,26.4112,'Aydoğdu Eczanesi'],
+ [40.13188,26.41126,'Cadde Eczanesi'],[40.13227,26.40918,'Gökhan Eczanesi'],[40.13541,26.41284,'Gözde Eczanesi'],[40.13898,26.41822,'Ertuğrul 17 Eczanesi'],
+ [40.13936,26.41837,'Elifcan Eczanesi'],[40.1396,26.4185,'Onur Eczanesi'],[40.13974,26.40797,'Şenol Eczanesi'],[40.14174,26.40236,'Damla Eczanesi'],
+ [40.14266,26.40289,'Çetin Eczanesi'],[40.14279,26.40294,'Ata Eczanesi'],[40.14434,26.40721,'Cumhuriyet Eczanesi'],[40.14442,26.40769,'Halk Eczanesi'],
+ [40.14446,26.40717,'Bahar Eczanesi'],[40.14519,26.40378,'Deva Eczanesi'],[40.1454,26.40565,'Çarşı Eczanesi'],[40.14606,26.40426,'İdil Eczanesi'],
+ [40.1462,26.40618,'Narin Eczanesi'],[40.14626,26.40806,'Çanakkale Eczanesi'],[40.14634,26.40848,'Aslıhan Eczanesi'],[40.14667,26.40815,'Yaprak Eczanesi'],
+ [40.14691,26.40459,'Marmara Eczanesi'],[40.14693,26.40802,'Akbay Eczanesi'],[40.14713,26.40678,'Özhan Eczanesi'],[40.14713,26.40733,'Göker Eczanesi'],
+ [40.14727,26.40645,'Merkez Eczanesi'],[40.14737,26.40887,'Derya Eczanesi'],[40.14747,26.40503,'Yeditepe Eczanesi'],[40.14761,26.40828,'Defne Eczanesi'],
+ [40.14763,26.40793,'İlksin Eczanesi'],[40.14779,26.44491,'Elmas Eczanesi'],[40.14865,26.40638,'İrem Eczanesi'],[40.14894,26.40662,'Büşra Eczanesi'],
+ [40.14944,26.40662,'Orçun Eczanesi'],[40.14956,26.4067,'Elçin Eczanesi'],[40.1496,26.40673,'Yeşim Eczanesi'],[40.14967,26.40656,'Barbaros Eczanesi'],
+ [40.14976,26.40338,'Iskele Eczanesi'],[40.15029,26.41122,'Yaşam Eczanesi'],[40.15117,26.408,'Elçin Eczanesi'],[40.15129,26.41141,'Ege Aytap Eczanesi'],
+ [40.15131,26.41185,'Duran Eczanesi'],[40.15136,26.41174,'Troya Eczanesi'],[40.15138,26.40746,'Ertuğrul Eczanesi'],[40.15155,26.41131,'Köksal Eczanesi'],
+ [40.15176,26.4124,'Nil Eczanesi'],[40.15203,26.41023,'Hande Eczanesi'],[40.15206,26.40892,'Umut Eczanesi'],[40.15344,26.41498,'Nergis Eczanesi'],
+ [40.15444,26.41094,'Sağlık Eczanesi'],[40.15623,26.41008,'Ladin Eczanesi'],[40.15784,26.41906,'Deniz Eczanesi'],[40.15795,26.41893,'Deniz Eczanesi'],
+ [40.15914,26.41564,'Gazi Eczanesi'],[40.16014,26.42005,'Eczane 17'],[40.16038,26.4215,'Aydın Eczanesi'],[40.16493,26.41502,'Bulut Eczanesi'],
+ [40.16566,26.41935,'Çağrı Eczanesi'],[40.16567,26.41479,'Ebru Bal Eczanesi'],[40.16708,26.42102,'Özdemir Eczanesi'],[40.18103,26.36008,'Eylül Eczanesi'],
+ [40.18129,26.35894,'Eceabat Eczanesi'],[40.18132,26.35912,'Mert Eczanesi']
+];
 const NEAR = {
   area: [40.07, 26.35, 40.20, 26.48],      /* city centre, Kepez, the university campus and the Otogar */
   maxM: 2500,
   keepDays: 7,
   servers: ['https://overpass-api.de/api/interpreter', 'https://overpass.private.coffee/api/interpreter'],
   kinds: {
-    pharmacy: {icon:'pharmacy', cat:'services',  osm:'amenity=pharmacy', q:'Eczane',        office:'pharmacy', hoursOf:'pharmacy', list:[]},
-    taxi:     {icon:'taxi',     cat:'transport', osm:'amenity=taxi',     q:'Taksi durağı',  officeQ:'Taksi durağı Çanakkale Merkez', list:[]},
-    busstop:  {icon:'busstop',  cat:'transport', osm:'highway=bus_stop', q:'Otobüs durağı', office:'c9-stop', list:[]}
+    pharmacy: {icon:'pharmacy', cat:'services',  osm:'amenity=pharmacy', q:'Eczane',        office:'pharmacy', hoursOf:'pharmacy', list:PHARMACIES, src:'osm'},
+    /* OpenStreetMap knows only a few of the city's taxi ranks and bus stops, so these two are handed to the visitor's maps app until the office has its own lists */
+    taxi:     {icon:'taxi',     cat:'transport', osm:'amenity=taxi',     q:'Taksi durağı',  officeQ:'Taksi durağı Çanakkale Merkez', list:[], maps:true},
+    busstop:  {icon:'busstop',  cat:'transport', osm:'highway=bus_stop', q:'Otobüs durağı', office:'c9-stop', list:[], maps:true}
   }
 };
 /* ---- suggestions for right now: the first screen proposes up to three places that fit the time of day and the weather.
@@ -1173,6 +1200,13 @@ const PLACES = [
   name:['Currency exchange','Döviz bürosu (sarraf)','Geld­wechsel','Bureau de change','Cambio de divisas'],
   desc:['Jewellery shops (sarraf) in the centre also change money.','Merkezdeki sarraflar döviz de bozar.','Juweliere (Sarraf) im Zentrum wechseln auch Geld.','Les bijoutiers (sarraf) du centre changent aussi de l’argent.','Las joyerías (sarraf) del centro también cambian divisas.']},
  /* ---- districts of Çanakkale: how to get there from the city centre ---- */
+ /* texts given as [English, Turkish] are shown in English in the other languages until they are translated */
+ {id:'c-kilitbahir', icon:'castle', group:'castles', cat:'far', kind:'pin', ferry:true, car:false, vehicles:1, kw:'kale kilitbahir castle festung château castillo', lat:40.148, lng:26.3786,
+  more:[{mode:'ferry', go:'transit', min:'', cost:'ask', title:['Ferry + on foot','Feribot + yürüyüş'], steps:[
+   ['Walk to the pier of the Kilitbahir ferry. It is close to our office; ask at our desk where it is. This is not the Eceabat ferry.','Cross to Kilitbahir as a foot passenger. Check today’s sailings and the fare at the pier.','From the Kilitbahir pier walk to the castle: a few minutes.'],
+   ['Kilitbahir feribotunun iskelesine yürüyün. Büromuza yakındır; yerini danışma masamıza sorun. Bu, Eceabat feribotu değildir.','Kilitbahir’e yaya yolcu olarak geçin. Günün seferlerini ve ücreti iskelede teyit edin.','Kilitbahir iskelesinden kaleye yürüyün: birkaç dakika.']]}],
+  name:['Kilitbahir Castle','Kilitbahir Kalesi'],
+  desc:['The 15th-century castle on the European shore, opposite Çanakkale. A small ferry crosses from the centre to Kilitbahir; the castle is a short walk from its pier.','Çanakkale’nin karşısında, Avrupa yakasındaki 15. yüzyıl kalesi. Merkezden Kilitbahir’e küçük bir feribot geçer; kale, iskeleye kısa bir yürüyüş mesafesindedir.']},
  {id:'eceabat', icon:'town', group:'districts', cat:'transport', kind:'pin', name:'Eceabat', taxi:false, ferry:true, vehicles:1, road:5800, driveMin:30, lat:40.184286, lng:26.359394,
   more:[{mode:'ferry', from:'eceabat-ferry', min:'25–30', cost:'40 TL', title:['Ferry','Feribot','Fähre','Ferry','Ferri'], steps:[
    ['Walk to the ferry pier beside the office (about 1 min).','Buy a foot-passenger ticket at the pier: 40 TL.','The crossing takes about 25–30 minutes and lands in the centre of Eceabat.'],
@@ -1253,10 +1287,10 @@ const EXTRA = [
  ['m-anzac','memorials','eceabat','memorial','Anzak Koyu','Anzac Cove','anzac avustralya australia'],
  ['m-ariburnu','memorials','eceabat','memorial','Arıburnu Anıtı','Arıburnu Cemetery and Memorial','şehitlik ari burnu anzac'],
  ['m-lonepine','memorials','eceabat','memorial','Kanlısırt Anıtı','Lone Pine Memorial','şehitlik kanlısırt australia'],
- ['m-seyit','memorials','eceabat','memorial','Seyit Onbaşı Anıtı','Corporal Seyit Monument','kilitbahir'],
- ['m-mecidiye','memorials','eceabat','memorial','Mecidiye Tabyası','Mecidiye Bastion','şehitlik kilitbahir tabya'],
- ['m-namazgah','memorials','eceabat','memorial','Namazgâh Tabyası','Namazgâh Bastion','namazgah kilitbahir tabya'],
- ['m-havuzlar','memorials','eceabat','memorial','Havuzlar Şehitliği','Havuzlar Martyrs’ Cemetery','şehitlik kilitbahir'],
+ ['m-seyit','memorials','c-kilitbahir','memorial','Seyit Onbaşı Anıtı','Corporal Seyit Monument','kilitbahir'],
+ ['m-mecidiye','memorials','c-kilitbahir','memorial','Mecidiye Tabyası','Mecidiye Bastion','şehitlik kilitbahir tabya'],
+ ['m-namazgah','memorials','c-kilitbahir','memorial','Namazgâh Tabyası','Namazgâh Bastion','namazgah kilitbahir tabya'],
+ ['m-havuzlar','memorials','c-kilitbahir','memorial','Havuzlar Şehitliği','Havuzlar Martyrs’ Cemetery','şehitlik kilitbahir'],
  ['m-yahya','memorials','eceabat','memorial','Yahya Çavuş Şehitliği','Sergeant Yahya Memorial','şehitlik seddülbahir ertuğrul koyu'],
  ['m-helles','memorials','eceabat','memorial','Helles Anıtı','Helles Memorial','ingiliz british seddülbahir'],
  ['m-french','memorials','eceabat','memorial','Fransız Mezarlığı ve Anıtı','French Cemetery and Memorial','şehitlik french français morto','Fransız Mezarlığı Seddülbahir'],
@@ -1279,7 +1313,6 @@ const EXTRA = [
  ['a-dardanos','ancient','centre','arch','Dardanos Tümülüsü','Dardanos Tumulus',''],
  /* castles and landmarks */
  ['c-nusret','castles','walk','castle','Nusret Mayın Gemisi','Minelayer Nusret','gemi ship müze'],
- ['c-kilitbahir','castles','eceabat','castle','Kilitbahir Kalesi','Kilitbahir Castle','kale'],
  ['c-seddulbahir','castles','eceabat','castle','Seddülbahir Kalesi','Seddülbahir Castle','kale'],
  ['c-gelibolu','castles','gelibolu','castle','Gelibolu Kalesi ve Piri Reis Müzesi','Gelibolu Castle and Piri Reis Museum','kale müze museum'],
  ['c-mevlevi','castles','gelibolu','castle','Gelibolu Mevlevihanesi','Gelibolu Mevlevi Lodge','mevlevihane'],
@@ -1740,11 +1773,11 @@ Object.keys(XL_ROWS).forEach(k => { ['bg','ru','el','ar'].forEach((l, i) => { XL
 
 /* texts of "near me" */
 const UI_NEAR = {
-en:{near:'Near me', nearName:{pharmacy:'Pharmacy', taxi:'Taxi rank', busstop:'Bus stop'}, nearTitle:{pharmacy:'Nearest pharmacy', taxi:'Nearest taxi rank', busstop:'Nearest bus stop'},
+en:{near:'Near me', nearMaps:'Your maps app gives the most reliable answer here: the button below shows the nearest ones around you.', nearName:{pharmacy:'Pharmacy', taxi:'Taxi rank', busstop:'Bus stop'}, nearTitle:{pharmacy:'Nearest pharmacy', taxi:'Nearest taxi rank', busstop:'Nearest bus stop'},
   nearAsk:'Allow location access to see the one nearest to you. Your location is used only on this page and is not stored.', nearBtn:'Use my location', nearWait:'Finding your location…', nearLoad:'Looking for places near you…',
   nearDenied:'Location access was not given. Allow it in your browser settings and try again, or search in your maps app.', nearNone:'No place was found close to you. Your maps app can search around you.',
   nearYou:'You are here', nearMore:'Others nearby', nearOffice:'Nearest to our office', nearSrc:'Places come from OpenStreetMap and may be incomplete. Distances and times are estimates.', nearAgain:'Update my location'},
-tr:{near:'Yakınımda', nearName:{pharmacy:'Eczane', taxi:'Taksi durağı', busstop:'Otobüs durağı'}, nearTitle:{pharmacy:'En yakın eczane', taxi:'En yakın taksi durağı', busstop:'En yakın otobüs durağı'},
+tr:{near:'Yakınımda', nearMaps:'Bunun için en doğru sonucu harita uygulamanız verir: aşağıdaki düğme çevrenizdeki en yakın olanları gösterir.', nearName:{pharmacy:'Eczane', taxi:'Taksi durağı', busstop:'Otobüs durağı'}, nearTitle:{pharmacy:'En yakın eczane', taxi:'En yakın taksi durağı', busstop:'En yakın otobüs durağı'},
   nearAsk:'Size en yakın olanı görmek için konum erişimine izin verin. Konumunuz yalnızca bu sayfada kullanılır, kaydedilmez.', nearBtn:'Konumumu kullan', nearWait:'Konumunuz alınıyor…', nearLoad:'Yakınınızdaki yerler aranıyor…',
   nearDenied:'Konum izni verilmedi. Tarayıcı ayarlarından izin verip yeniden deneyin ya da harita uygulamanızda arayın.', nearNone:'Yakınınızda kayıtlı bir yer bulunamadı. Harita uygulamanız çevrenizde arayabilir.',
   nearYou:'Buradasınız', nearMore:'Yakındaki diğerleri', nearOffice:'Büroya en yakın', nearSrc:'Yerler OpenStreetMap verisidir; eksik olabilir. Mesafe ve süreler tahminidir.', nearAgain:'Konumumu güncelle'},
@@ -2287,7 +2320,7 @@ function locate(quiet){
 /* the places of the NEAR area, from the phone's store or from OpenStreetMap. NEARSTATE: 'idle', 'load', 'ok' or 'fail'. */
 let NEARDATA = null, NEARSTATE = 'idle', NEARFAIL = 0;
 function nearLoad(){ if (NEARSTATE !== 'idle') return;
-  const ks = Object.keys(NEAR.kinds).filter(k => !NEAR.kinds[k].list.length), sig = NEAR.area.join() + '|' + ks.map(k => NEAR.kinds[k].osm).join();
+  const ks = Object.keys(NEAR.kinds).filter(k => !NEAR.kinds[k].list.length && !NEAR.kinds[k].maps), sig = NEAR.area.join() + '|' + ks.map(k => NEAR.kinds[k].osm).join();
   if (!ks.length){ NEARDATA = {}; NEARSTATE = 'ok'; return; }
   try { const s = JSON.parse(localStorage.getItem('guide-near') || 'null');
     if (s && s.sig === sig && Date.now() - s.t < NEAR.keepDays * 864e5){ NEARDATA = s.d; NEARSTATE = 'ok'; return; } } catch(e){}
@@ -2314,6 +2347,7 @@ function renderNear(k){ const t = UI[lang], K = NEAR.kinds[k], a = NEAR.area, mi
   const maps = msg => '<p class="none">' + esc(msg) + '</p>' + cta(mine(nearLinks(K.q)), t.findIn), wait = msg => '<p class="none" role="status">' + esc(msg) + '</p>';
   const again = '<button type="button" class="btn" data-loc>' + ICONS.locate + '<span>' + esc(t.nearAgain) + '</span></button>';
   let top = '<div class="cat" style="--c:var(--near)"><i></i>' + esc(t.near) + '</div><h2>' + esc(t.nearTitle[k]) + '</h2>' + duty, low = '', best = null;
+  if (K.maps && !K.list.length){ $('#sheetTop').innerHTML = top + '<p>' + esc(t.nearMaps || UI.en.nearMaps) + '</p>' + cta(mine(nearLinks(K.q)), t.findIn); $('#sheet').innerHTML = linkRow(nearLinks(K.q), t.findIn) + office; return null; }
   if (!ME){
     if (LOC === 'wait') top += wait(t.nearWait);
     else { top += '<p>' + esc(LOC === 'denied' ? t.nearDenied : LOC === 'error' ? t.locErr + ' ' + t.nearAsk : t.nearAsk) + '</p><button type="button" class="btn primary cta" data-loc>' + ICONS.locate + '<span>' + esc(t.nearBtn) + '</span></button>';
@@ -2324,15 +2358,16 @@ function renderNear(k){ const t = UI[lang], K = NEAR.kinds[k], a = NEAR.area, mi
     if (!K.list.length) nearLoad();
     const pts = K.list.length ? K.list : NEARSTATE === 'ok' ? NEARDATA[k] || [] : null;
     if (!pts){ if (NEARSTATE === 'load') top += wait(t.nearLoad); else { top += maps(t.nearNone); low = linkRow(nearLinks(K.q), t.findIn) + again + office; } }
-    else { const ls = pts.map(p => ({lat:p[0], lng:p[1], name:p[2] || t.nearName[k].replace(/­/g, ''), m:metres(ME, {lat:p[0], lng:p[1]}) * RATES.detour})).sort((x, y) => x.m - y.m).filter(x => x.m <= NEAR.maxM).slice(0, 3);
+    else { const to = x => x.named && pts.filter(p => p[2] === x.name).length === 1 ? nameLinks(x.name + ', Çanakkale', 'walk') : mapLinks(x, 'walk');      /* two places of one name: by position */
+      const ls = pts.map(p => ({lat:p[0], lng:p[1], named:!!p[2], name:p[2] || t.nearName[k].replace(/­/g, ''), m:metres(ME, {lat:p[0], lng:p[1]}) * RATES.detour})).sort((x, y) => x.m - y.m).filter(x => x.m <= NEAR.maxM).slice(0, 3);
       const walk = x => Math.max(1, Math.round(x.m / RATES.walkMPerMin));
       if (!ls.length){ top += maps(t.nearNone); low = linkRow(nearLinks(K.q), t.findIn) + again + office; }
       else { best = ls[0];
         top += '<div class="best" style="--c:var(--' + K.cat + ')"><span class="ico">' + sized(K.icon, 24) + '</span><span class="txt"><small>' + esc(t.mWalk) + '</small><b>' + esc(best.name) + '</b></span><span class="val"><b>' + esc(t.mins.replace('{m}', walk(best))) + '</b><small>' + esc(approx(best.m)) + '</small></span></div>' +
-          cta(mine(mapLinks(best, 'walk')), t.start) + (H && H.hours && !closed ? '<div class="hours"><p>' + esc(fillT(t.dutyHours, {a:H.hours.from, b:H.hours.to})) + '</p>' + dutyList + '</div>' : '');
-        low = linkRow(mapLinks(best, 'walk'), t.openIn) +
-          (ls.length > 1 ? '<div class="how gap">' + esc(t.nearMore) + '</div><ul class="list">' + ls.slice(1).map(x => '<li><a class="card" style="--c:var(--' + K.cat + ')" target="_blank" rel="noopener" href="' + esc(mine(mapLinks(x, 'walk'))[1]) + '"><span class="big">' + sized(K.icon, 32) + '</span><span class="txt"><b>' + esc(x.name) + '</b><small>' + esc(approx(x.m) + ' · ' + t.homeWalk.replace('{m}', walk(x))) + '</small></span><span class="go">' + ICONS.chevron + '</span></a></li>').join('') + '</ul>' : '') +
-          '<p class="est" style="margin-top:14px">' + esc(K.list.length ? t.est : t.nearSrc) + '</p>' + again + office; } }
+          cta(mine(to(best)), t.start) + (H && H.hours && !closed ? '<div class="hours"><p>' + esc(fillT(t.dutyHours, {a:H.hours.from, b:H.hours.to})) + '</p>' + dutyList + '</div>' : '');
+        low = linkRow(to(best), t.openIn) +
+          (ls.length > 1 ? '<div class="how gap">' + esc(t.nearMore) + '</div><ul class="list">' + ls.slice(1).map(x => '<li><a class="card" style="--c:var(--' + K.cat + ')" target="_blank" rel="noopener" href="' + esc(mine(to(x))[1]) + '"><span class="big">' + sized(K.icon, 32) + '</span><span class="txt"><b>' + esc(x.name) + '</b><small>' + esc(approx(x.m) + ' · ' + t.homeWalk.replace('{m}', walk(x))) + '</small></span><span class="go">' + ICONS.chevron + '</span></a></li>').join('') + '</ul>' : '') +
+          '<p class="est" style="margin-top:14px">' + esc(K.list.length && K.src !== 'osm' ? t.est : t.nearSrc) + '</p>' + again + office; } }
   }
   $('#sheetTop').innerHTML = top; $('#sheet').innerHTML = low; return best; }
 function drawNear(k, best){ const K = NEAR.kinds[k], pts = [[ME.lat, ME.lng], [best.lat, best.lng]], up = best.lat >= ME.lat;      /* the two labels point away from each other */
@@ -2355,7 +2390,7 @@ function route(){
     renderRoute(R); drawRoute(R); scrollTo(0, 0); document.title = tx(R.name) + ' · ' + UI[lang].brand; return; }
   if (nk){      /* near me: the location is asked for once, when the visitor comes from a picture of the guide */
     $('#home').hidden = true; $('#cat').hidden = true; $('#place').hidden = false; document.title = UI[lang].nearTitle[nk] + ' · ' + UI[lang].brand;
-    if (!ME && LOC === 'idle' && !ASKED && trail.length > 1){ ASKED = true; scrollTo(0, 0); locate(); return; }
+    if (!ME && LOC === 'idle' && !ASKED && trail.length > 1 && !(NEAR.kinds[nk].maps && !NEAR.kinds[nk].list.length)){ ASKED = true; scrollTo(0, 0); locate(); return; }
     if (ME && Date.now() - ME.t > 120000){ ME.t = Date.now(); locate(true); }
     const best = renderNear(nk); $('#placeMap').hidden = !best; if (best) drawNear(nk, best);
     if (NEARSEEN !== location.hash){ NEARSEEN = location.hash; scrollTo(0, 0); } return; }
