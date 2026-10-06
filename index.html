@@ -700,8 +700,16 @@ button{font:inherit;color:inherit}
 button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 [hidden]{display:none!important}
 
-header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0 12px;border-bottom:1px solid var(--line)}
-header.top > div:first-child{min-width:0}
+/* the banner stays at the top of every screen; its left half leads back to the first screen */
+header.top{position:sticky;top:0;z-index:1200;display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 -16px;padding:6px 16px;background:var(--bg);border-bottom:1px solid var(--line)}
+header.top > :first-child{min-width:0}
+.homelink{display:flex;align-items:center;gap:10px;min-height:46px;text-decoration:none}
+.homeico{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--text);color:var(--bg)}
+.homelink .txt{min-width:0}
+.brand,.kicker{display:block}
+@media (max-width:520px){.brand{font-size:15px;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.kicker{display:none}
+  .homeico{width:40px;height:40px}.theme{width:42px;height:42px}.langsel{height:42px;max-width:112px;padding:0 30px 0 12px;background-position:right 11px center}
+  section .bar{position:static}}      /* on a phone only the banner stays in place */
 .brand{font-weight:700;font-size:19px;letter-spacing:-.2px;line-height:1.2}
 .kicker{margin-top:2px;font-size:13.5px;font-weight:700;letter-spacing:1.5px;color:var(--muted)}
 .controls{flex:none;display:flex;align-items:center;gap:8px}
@@ -772,8 +780,8 @@ h1{margin:16px 0 12px;font-size:clamp(29px,7.2vw,40px);line-height:1.15;letter-s
 .card.see{margin:10px 0;border-width:2px}
 .rows{margin-top:14px}
 
-.bar{position:sticky;top:0;z-index:1100;margin:0 -16px;padding:8px 16px;background:var(--bg);border-bottom:1px solid var(--line)}
-.backbtn{display:inline-flex;align-items:center;gap:6px;min-height:50px;padding:0 16px;padding-inline-start:10px;border-radius:25px;border:1px solid var(--line);background:var(--panel);font-weight:650;font-size:18.5px;text-decoration:none;cursor:pointer}
+.bar{position:sticky;top:var(--hh,59px);z-index:1100;margin:0 -16px;padding:6px 16px;background:var(--bg);border-bottom:1px solid var(--line)}
+.backbtn{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 16px;padding-inline-start:10px;border-radius:25px;border:1px solid var(--line);background:var(--panel);font-weight:650;font-size:18.5px;text-decoration:none;cursor:pointer}
 #sheetTop{padding:18px 0 8px}
 #sheetTop .facts{margin-bottom:12px}
 .rec{display:inline-block;margin-top:4px;padding:1px 9px;border-radius:11px;background:var(--c);color:var(--bg);font-size:14.5px;font-weight:700}
@@ -872,19 +880,19 @@ button.btn{width:100%;cursor:pointer}
 </head>
 <body>
 <div class="wrap">
+  <header class="top">
+    <a class="homelink" id="homelink" href="#/">
+      <span class="homeico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 11.5L12 4l8.5 7.5M6 9.8V20h12V9.8M10 20v-5.5h4V20"></path></svg></span>
+      <span class="txt"><span class="brand" data-i18n="brand"></span><span class="kicker" data-i18n="kicker"></span></span>
+    </a>
+    <div class="controls">
+      <button class="theme" id="theme" type="button">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      </button>
+      <select class="langsel" id="lang" aria-label="Language"></select>
+    </div>
+  </header>
   <section id="home">
-    <header class="top">
-      <div>
-        <div class="brand" data-i18n="brand"></div>
-        <div class="kicker" data-i18n="kicker"></div>
-      </div>
-      <div class="controls">
-        <button class="theme" id="theme" type="button">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
-        </button>
-        <select class="langsel" id="lang" aria-label="Language"></select>
-      </div>
-    </header>
     <h1 data-i18n="h1"></h1>
     <div class="ask" id="ask" role="tablist">
       <button type="button" class="askbtn" data-m="where" role="tab"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M15.8 8.2l-2.2 5.4-5.4 2.2 2.2-5.4z"></path></svg><span data-i18n="qWhere"></span></button>
@@ -951,6 +959,8 @@ button.btn{width:100%;cursor:pointer}
    noDist        : true hides distance, time and map (used for other cities)
    kw            : optional extra search words
    label         : optional short name for the map label
+   dolmus        : {from:'<place id of the stop>', ride:<minutes>} a dolmuş (shared minibus) goes there from a stop in town.
+                   The page offers two ways, on foot to the stop and by taxi to the stop, and shows how far the stop is.
    goes          : for a bus stop, where its buses go: [{to:[...], lines:'Ç7, ÇT3', id:'<place id, optional>'}]
    all           : optional {q, btn:[...], note:[...]} for a place of which there are many kinds (ATMs of different banks):
                    a button that shows all of them around the visitor in the maps app, searching for q
@@ -1029,6 +1039,19 @@ const PHARMACIES = [
  [40.16566,26.41935,'Çağrı Eczanesi'],[40.16567,26.41479,'Ebru Bal Eczanesi'],[40.16708,26.42102,'Özdemir Eczanesi'],[40.18103,26.36008,'Eylül Eczanesi'],
  [40.18129,26.35894,'Eceabat Eczanesi'],[40.18132,26.35912,'Mert Eczanesi']
 ];
+/* mosques of the city, from OpenStreetMap on 6 October 2026: [lat, lng, 'name'] (a mosque without a name of its own has ''). */
+const MOSQUES = [
+ [40.07948,26.36952,''],[40.08425,26.42013,''],[40.08585,26.45388,''],[40.09455,26.39958,''],
+ [40.09464,26.39511,''],[40.10055,26.39173,''],[40.10103,26.39827,''],[40.10395,26.4098,''],
+ [40.10905,26.40668,''],[40.1102,26.40952,'Hatime Ana Ulu Camii'],[40.11148,26.41775,'Turan Mildon Camii'],[40.11491,26.41731,''],
+ [40.12488,26.41475,''],[40.12531,26.42098,'Tacettin Aslan Camii'],[40.1336,26.47957,''],[40.13795,26.40512,''],
+ [40.13984,26.41814,'Dumlupınar Camii'],[40.14197,26.41269,'Anafartalar Cami'],[40.14262,26.40488,''],[40.14504,26.40506,'Kurşunlu Cami'],
+ [40.1455,26.43909,'Conk Bayırı Camii'],[40.14561,26.41186,'Arslanca Cami'],[40.14584,26.40344,'Tıflı Camii'],[40.14635,26.46022,''],
+ [40.1466,26.40123,'Fatih Camii'],[40.14736,26.42689,'Hüseyin Özcan Cami'],[40.14783,26.42076,'Mecidiye Cami'],[40.1486,26.41567,'Orta Cami'],
+ [40.14862,26.40057,'Yalı Camii'],[40.15382,26.41593,'Kocatepe Cami'],[40.15663,26.41002,'Necip Paşa Cami'],[40.15985,26.41575,'Şehitler Cami'],
+ [40.16532,26.41375,'Seyit Onbaşı Cami'],[40.16905,26.45074,''],[40.1661,26.42039,'Yahya Çavuş Camii'],[40.17113,26.3671,'57. Alay Camii'],
+ [40.18294,26.35976,'Şehitler Camii']
+];
 const NEAR = {
   area: [40.07, 26.35, 40.20, 26.48],      /* city centre, Kepez, the university campus and the Otogar */
   maxM: 2500,
@@ -1036,6 +1059,7 @@ const NEAR = {
   servers: ['https://overpass-api.de/api/interpreter', 'https://overpass.private.coffee/api/interpreter'],
   kinds: {
     pharmacy: {icon:'pharmacy', cat:'services',  osm:'amenity=pharmacy', q:'Eczane',        office:'pharmacy', hoursOf:'pharmacy', list:PHARMACIES, src:'osm'},
+    mosque:   {icon:'mosque',   cat:'sights',    osm:'amenity=place_of_worship', q:'Cami', office:'mosque', list:MOSQUES, src:'osm'},
     /* OpenStreetMap knows only a few of the city's taxi ranks and bus stops, so these two are handed to the visitor's maps app until the office has its own lists */
     taxi:     {icon:'taxi',     cat:'transport', osm:'amenity=taxi',     q:'Taksi durağı',  officeQ:'Taksi durağı Çanakkale Merkez', list:[], maps:true},
     busstop:  {icon:'busstop',  cat:'transport', osm:'highway=bus_stop', q:'Otobüs durağı', office:'c9-stop', list:[], maps:true}
@@ -1080,7 +1104,7 @@ const ROUTES = [
 const HOME = [
   {cat:'near',      tiles:['n:pharmacy','n:taxi','n:busstop']},
   {cat:'sights',    title:'routes', cards:['r:centre']},
-  {cat:'sights',    tiles:['trojan-horse','aynali-bazaar','c-saat','naval-museum','c-cimenlik','city-museum','ceramic-museum','synagogue','mosque']},
+  {cat:'sights',    tiles:['trojan-horse','aynali-bazaar','c-saat','naval-museum','c-cimenlik','city-museum','ceramic-museum','synagogue','n:mosque']},
   {cat:'far',       tiles:['troy-site','troy-museum','g:memorials','g:ancient','g:castles','g:nature','g:villages','g:islands','g:districts']},
   {cat:'services',  tiles:['atm','wc-ferry','pharmacy','hospital','exchange','ptt']},
   {cat:'transport', tiles:['otogar','g:bus','g:ferry','airport','agencies','g:cities']}      /* the bus companies are linked from the Otogar */
@@ -1109,21 +1133,11 @@ const PLACES = [
   label:['Syna­gogue','Sinagog','Synagoge','Syna­gogue','Sinagoga'],
   desc:['Çanakkale’s historic synagogue in the old town. A visit may need to be arranged in advance; ask at our desk.','Eski şehirdeki tarihî sinagog. Ziyaret için önceden izin gerekebilir; danışma masamıza sorun.','Die historische Synagoge von Çanakkale in der Altstadt. Für einen Besuch kann eine Voranmeldung nötig sein; fragen Sie an unserem Schalter.','La synagogue historique de Çanakkale, dans la vieille ville. Une autorisation préalable peut être nécessaire pour la visite ; renseignez-vous à notre comptoir.','La sinagoga histórica de Çanakkale, en el casco antiguo. Puede ser necesario concertar la visita con antelación; pregunte en nuestro mostrador.']},
  {id:'troy-museum', icon:'columns', group:'troy', cat:'far', kind:'pin', see:['troy-site'], road:30100, driveMin:32, lat:39.9553931, lng:26.2493621,
-  more:[{mode:'bus', from:'troy-minibus', min:'', cost:'ask', title:['Minibus','Minibüs','Minibus','Minibus','Minibús'], steps:[
-   ['Walk to the minibus stop for Troy (see it under Buses).','Take the Troy minibus. Ask at our desk for today’s times and the fare.','Get off at the Troy Museum.'],
-   ['Troya minibüs durağına yürüyün (Otobüs başlığı altında görebilirsiniz).','Troya minibüsüne binin. Günün saatlerini ve ücreti danışma masamıza sorun.','Troya Müzesi’nde inin.'],
-   ['Gehen Sie zur Minibus-Haltestelle nach Troja (siehe unter Busse).','Nehmen Sie den Troja-Minibus. Abfahrtszeiten und Fahrpreis erfahren Sie an unserem Schalter.','Steigen Sie am Troja-Museum aus.'],
-   ['Marchez jusqu’à l’arrêt des minibus pour Troie (voir la rubrique Bus).','Prenez le minibus de Troie. Demandez les horaires du jour et le tarif à notre comptoir.','Descendez au musée de Troie.'],
-   ['Camine hasta la parada de minibuses a Troya (véala en Autobuses).','Tome el minibús de Troya. Pregunte en nuestro mostrador por los horarios del día y la tarifa.','Baje en el Museo de Troya.']]}],
+  dolmus:{from:'troy-minibus', ride:45},
   name:['Troy Museum','Troya Müzesi','Troja-Museum','Musée de Troie','Museo de Troya'],
   desc:['Museum of the finds from ancient Troy, outside the city, about 1 km from the archaeological site. The museum and the site are separate places.','Antik Troya buluntularının müzesi; şehir dışında, ören yerine yaklaşık 1 km uzaklıktadır. Müze ve ören yeri ayrı yerlerdir.','Museum mit den Funden aus dem antiken Troja, außerhalb der Stadt, etwa 1 km von der Ausgrabungsstätte entfernt. Museum und Ausgrabungsstätte sind getrennte Orte.','Musée des découvertes de l’antique Troie, hors de la ville, à environ 1 km du site archéologique. Le musée et le site sont deux lieux distincts.','Museo de los hallazgos de la antigua Troya, fuera de la ciudad, a cerca de 1 km del yacimiento. El museo y el yacimiento son lugares distintos.']},
  {id:'troy-site', icon:'arch', group:'troy', cat:'far', kind:'pin', see:['troy-museum'], kw:'truva troia troja unesco antik kent ören yeri harabe ruins ruinen ruines ruinas', road:31000, driveMin:34, lat:39.9575, lng:26.2389,
-  more:[{mode:'bus', from:'troy-minibus', min:'', cost:'ask', title:['Minibus','Minibüs','Minibus','Minibus','Minibús'], steps:[
-   ['Walk to the minibus stop for Troy (see it under Buses).','Take the Troy minibus. Ask at our desk for today’s times and the fare.','Get off at the archaeological site of Troy.'],
-   ['Troya minibüs durağına yürüyün (Otobüs başlığı altında görebilirsiniz).','Troya minibüsüne binin. Günün saatlerini ve ücreti danışma masamıza sorun.','Troya Ören Yeri’nde inin.'],
-   ['Gehen Sie zur Minibus-Haltestelle nach Troja (siehe unter Busse).','Nehmen Sie den Troja-Minibus. Abfahrtszeiten und Fahrpreis erfahren Sie an unserem Schalter.','Steigen Sie an der Ausgrabungsstätte Troja aus.'],
-   ['Marchez jusqu’à l’arrêt des minibus pour Troie (voir la rubrique Bus).','Prenez le minibus de Troie. Demandez les horaires du jour et le tarif à notre comptoir.','Descendez au site archéologique de Troie.'],
-   ['Camine hasta la parada de minibuses a Troya (véala en Autobuses).','Tome el minibús de Troya. Pregunte en nuestro mostrador por los horarios del día y la tarifa.','Baje en el yacimiento arqueológico de Troya.']]}],
+  dolmus:{from:'troy-minibus', ride:45},
   name:['Archaeological Site of Troy','Troya Ören Yeri','Ausgrabungsstätte Troja','Site archéologique de Troie','Yacimiento arqueológico de Troya'],
   label:['Troy site','Troya Ören Yeri','Aus­grabung Troja','Site de Troie','Yacimiento de Troya'],
   desc:['The ruins of ancient Troy, a UNESCO World Heritage Site. About 1 km from the Troy Museum; the two are separate places.','Antik Troya kentinin kalıntıları; UNESCO Dünya Mirası. Troya Müzesi’ne yaklaşık 1 km uzaklıktadır; ikisi ayrı yerlerdir.','Die Ruinen des antiken Troja, UNESCO-Welterbe. Etwa 1 km vom Troja-Museum entfernt; es sind zwei getrennte Orte.','Les ruines de l’antique Troie, inscrites au patrimoine mondial de l’UNESCO. À environ 1 km du musée de Troie ; ce sont deux lieux distincts.','Las ruinas de la antigua Troya, Patrimonio Mundial de la UNESCO. A cerca de 1 km del Museo de Troya; son dos lugares distintos.']},
@@ -1203,6 +1217,7 @@ const PLACES = [
  /* hours: when ordinary pharmacies are open (days: 1 = Monday ... 5 = Friday, 6 = Saturday, 0 = Sunday). Outside them the page sends the visitor to the duty pharmacy:
     duty.q is the maps search, duty.list the official list of the Chamber of Pharmacists. */
  {id:'pharmacy', icon:'pharmacy', cat:'services', kind:'pin', see:['n:pharmacy'], lat:40.1499004, lng:26.40334,
+  all:{q:'Eczane', btn:['See all pharmacies on the map','Tüm eczaneleri haritada gör'], note:['The map shows all the pharmacies around you.','Harita çevrenizdeki tüm eczaneleri gösterir.']},
   hours:{days:[1,2,3,4,5], from:'08:30', to:'18:00'}, duty:{q:'Nöbetçi eczane Çanakkale Merkez', list:'https://www.canakkaleeo.org.tr/nobetci-eczaneler'},
   name:['Pharmacy','Eczane','Apotheke','Pharmacie','Farmacia'],
   desc:['İskele Eczanesi, a pharmacy close to the office.','Büroya yakın eczane: İskele Eczanesi.','İskele Eczanesi, eine Apotheke nahe dem Büro.','İskele Eczanesi, une pharmacie proche de l’office.','İskele Eczanesi, una farmacia cercana a la oficina.']},
@@ -1288,7 +1303,7 @@ const PLACES = [
  {id:'pamukkale', icon:'ticket', group:'buscos', cat:'transport', kind:'search', via:'otogar', q:'Çanakkale Pamukkale Turizm', name:'Pamukkale Turizm', desc:BUSCO},
  /* ---- more sights in the centre. They have no pin yet: each opens a search in the maps app.
     via:'walk' marks a place in the centre within walking distance. ---- */
- {id:'mosque', icon:'mosque', cat:'sights', kind:'search', q:'Cami Çanakkale Merkez',
+ {id:'mosque', icon:'mosque', cat:'sights', kind:'search', see:['n:mosque'], q:'Cami Çanakkale Merkez',
   name:['Mosque','Cami','Moschee','Mosquée','Mezquita'],
   desc:['There are several mosques in the centre. The buttons below find the nearest ones on the map.','Merkezde birçok cami vardır. Aşağıdaki düğmeler en yakın camileri haritada bulur.','Im Zentrum gibt es mehrere Moscheen. Die Schaltflächen unten finden die nächstgelegenen auf der Karte.','Le centre compte plusieurs mosquées. Les boutons ci-dessous trouvent les plus proches sur la carte.','En el centro hay varias mezquitas. Los botones de abajo encuentran las más cercanas en el mapa.']},
  {id:'c-saat', icon:'clock', group:'castles', via:'walk', cat:'sights', kind:'search', x:true, q:'Çanakkale Saat Kulesi',
@@ -1800,39 +1815,39 @@ Object.keys(XL_ROWS).forEach(k => { ['bg','ru','el','ar'].forEach((l, i) => { XL
 
 /* texts of "near me" */
 const UI_NEAR = {
-en:{near:'Near me', goesT:'Where the buses from this stop go', goesN:'Lines as listed by the municipality. Before you board, check the sign on the bus or ask the driver.', offNote:'Once opened, this guide also opens without the internet. The map, the weather and directions need a connection.', offNow:'You are offline: the saved guide is shown. The map, the weather and directions need the internet.', nearMaps:'Your maps app gives the most reliable answer here: the button below shows the nearest ones around you.', nearName:{pharmacy:'Pharmacy', taxi:'Taxi rank', busstop:'Bus stop'}, nearTitle:{pharmacy:'Nearest pharmacy', taxi:'Nearest taxi rank', busstop:'Nearest bus stop'},
+en:{near:'Near me', nearAll:'See all of them in your maps app', home:'First screen', goesT:'Where the buses from this stop go', goesN:'Lines as listed by the municipality. Before you board, check the sign on the bus or ask the driver.', offNote:'Once opened, this guide also opens without the internet. The map, the weather and directions need a connection.', offNow:'You are offline: the saved guide is shown. The map, the weather and directions need the internet.', nearMaps:'Your maps app gives the most reliable answer here: the button below shows the nearest ones around you.', nearName:{pharmacy:'Pharmacy', taxi:'Taxi rank', busstop:'Bus stop', mosque:'Mosque'}, nearTitle:{pharmacy:'Nearest pharmacy', taxi:'Nearest taxi rank', busstop:'Nearest bus stop', mosque:'Nearest mosque'},
   nearAsk:'Allow location access to see the one nearest to you. Your location is used only on this page and is not stored.', nearBtn:'Use my location', nearWait:'Finding your location…', nearLoad:'Looking for places near you…',
   nearDenied:'Location access was not given. Allow it in your browser settings and try again, or search in your maps app.', nearNone:'No place was found close to you. Your maps app can search around you.',
   nearYou:'You are here', nearMore:'Others nearby', nearOffice:'Nearest to our office', nearSrc:'Places come from OpenStreetMap and may be incomplete. Distances and times are estimates.', nearAgain:'Update my location'},
-tr:{near:'Yakınımda', goesT:'Bu duraktan nereye gidilir', goesN:'Hatlar belediyenin listesine göredir. Binmeden önce otobüsün tabelasına bakın ya da şoföre sorun.', offNote:'Bu rehber bir kez açıldıktan sonra internetsiz de açılır. Harita, hava durumu ve yol tarifi için bağlantı gerekir.', offNow:'Çevrimdışısınız: kayıtlı rehber gösteriliyor. Harita, hava durumu ve yol tarifi için internet gerekir.', nearMaps:'Bunun için en doğru sonucu harita uygulamanız verir: aşağıdaki düğme çevrenizdeki en yakın olanları gösterir.', nearName:{pharmacy:'Eczane', taxi:'Taksi durağı', busstop:'Otobüs durağı'}, nearTitle:{pharmacy:'En yakın eczane', taxi:'En yakın taksi durağı', busstop:'En yakın otobüs durağı'},
+tr:{near:'Yakınımda', nearAll:'Tümünü harita uygulamanızda görün', home:'Ana sayfa', goesT:'Bu duraktan nereye gidilir', goesN:'Hatlar belediyenin listesine göredir. Binmeden önce otobüsün tabelasına bakın ya da şoföre sorun.', offNote:'Bu rehber bir kez açıldıktan sonra internetsiz de açılır. Harita, hava durumu ve yol tarifi için bağlantı gerekir.', offNow:'Çevrimdışısınız: kayıtlı rehber gösteriliyor. Harita, hava durumu ve yol tarifi için internet gerekir.', nearMaps:'Bunun için en doğru sonucu harita uygulamanız verir: aşağıdaki düğme çevrenizdeki en yakın olanları gösterir.', nearName:{pharmacy:'Eczane', taxi:'Taksi durağı', busstop:'Otobüs durağı', mosque:'Cami'}, nearTitle:{pharmacy:'En yakın eczane', taxi:'En yakın taksi durağı', busstop:'En yakın otobüs durağı', mosque:'En yakın cami'},
   nearAsk:'Size en yakın olanı görmek için konum erişimine izin verin. Konumunuz yalnızca bu sayfada kullanılır, kaydedilmez.', nearBtn:'Konumumu kullan', nearWait:'Konumunuz alınıyor…', nearLoad:'Yakınınızdaki yerler aranıyor…',
   nearDenied:'Konum izni verilmedi. Tarayıcı ayarlarından izin verip yeniden deneyin ya da harita uygulamanızda arayın.', nearNone:'Yakınınızda kayıtlı bir yer bulunamadı. Harita uygulamanız çevrenizde arayabilir.',
   nearYou:'Buradasınız', nearMore:'Yakındaki diğerleri', nearOffice:'Büroya en yakın', nearSrc:'Yerler OpenStreetMap verisidir; eksik olabilir. Mesafe ve süreler tahminidir.', nearAgain:'Konumumu güncelle'},
-de:{near:'In meiner Nähe', nearName:{pharmacy:'Apotheke', taxi:'Taxistand', busstop:'Bus­halte­stelle'}, nearTitle:{pharmacy:'Nächste Apotheke', taxi:'Nächster Taxistand', busstop:'Nächste Bushaltestelle'},
+de:{near:'In meiner Nähe', nearName:{pharmacy:'Apotheke', taxi:'Taxistand', busstop:'Bus­halte­stelle', mosque:'Moschee'}, nearTitle:{pharmacy:'Nächste Apotheke', taxi:'Nächster Taxistand', busstop:'Nächste Bushaltestelle', mosque:'Nächste Moschee'},
   nearAsk:'Erlauben Sie den Zugriff auf Ihren Standort, um das nächstgelegene Ziel zu sehen. Ihr Standort wird nur auf dieser Seite verwendet und nicht gespeichert.', nearBtn:'Meinen Standort verwenden', nearWait:'Ihr Standort wird ermittelt …', nearLoad:'Orte in Ihrer Nähe werden gesucht …',
   nearDenied:'Der Standortzugriff wurde nicht erlaubt. Erlauben Sie ihn in den Browser-Einstellungen und versuchen Sie es erneut, oder suchen Sie in Ihrer Karten-App.', nearNone:'In Ihrer Nähe wurde kein Ort gefunden. Ihre Karten-App kann in Ihrer Umgebung suchen.',
   nearYou:'Ihr Standort', nearMore:'Weitere in der Nähe', nearOffice:'Am nächsten zu unserem Büro', nearSrc:'Die Orte stammen aus OpenStreetMap und können unvollständig sein. Entfernungen und Zeiten sind Schätzwerte.', nearAgain:'Standort aktualisieren'},
-fr:{near:'Près de moi', nearName:{pharmacy:'Pharmacie', taxi:'Station de taxis', busstop:'Arrêt de bus'}, nearTitle:{pharmacy:'Pharmacie la plus proche', taxi:'Station de taxis la plus proche', busstop:'Arrêt de bus le plus proche'},
+fr:{near:'Près de moi', nearName:{pharmacy:'Pharmacie', taxi:'Station de taxis', busstop:'Arrêt de bus', mosque:'Mosquée'}, nearTitle:{pharmacy:'Pharmacie la plus proche', taxi:'Station de taxis la plus proche', busstop:'Arrêt de bus le plus proche', mosque:'Mosquée la plus proche'},
   nearAsk:'Autorisez l’accès à votre position pour voir le lieu le plus proche de vous. Votre position n’est utilisée que sur cette page et n’est pas enregistrée.', nearBtn:'Utiliser ma position', nearWait:'Recherche de votre position…', nearLoad:'Recherche des lieux près de vous…',
   nearDenied:'L’accès à la position n’a pas été autorisé. Autorisez-le dans les réglages du navigateur et réessayez, ou cherchez dans votre application de cartes.', nearNone:'Aucun lieu n’a été trouvé près de vous. Votre application de cartes peut chercher autour de vous.',
   nearYou:'Vous êtes ici', nearMore:'Autres à proximité', nearOffice:'Le plus proche de notre office', nearSrc:'Les lieux proviennent d’OpenStreetMap et peuvent être incomplets. Les distances et les durées sont des estimations.', nearAgain:'Actualiser ma position'},
-es:{near:'Cerca de mí', nearName:{pharmacy:'Farmacia', taxi:'Parada de taxis', busstop:'Parada de autobús'}, nearTitle:{pharmacy:'Farmacia más cercana', taxi:'Parada de taxis más cercana', busstop:'Parada de autobús más cercana'},
+es:{near:'Cerca de mí', nearName:{pharmacy:'Farmacia', taxi:'Parada de taxis', busstop:'Parada de autobús', mosque:'Mezquita'}, nearTitle:{pharmacy:'Farmacia más cercana', taxi:'Parada de taxis más cercana', busstop:'Parada de autobús más cercana', mosque:'Mezquita más cercana'},
   nearAsk:'Permita el acceso a su ubicación para ver el lugar más cercano a usted. Su ubicación solo se usa en esta página y no se guarda.', nearBtn:'Usar mi ubicación', nearWait:'Buscando su ubicación…', nearLoad:'Buscando lugares cerca de usted…',
   nearDenied:'No se permitió el acceso a la ubicación. Permítalo en los ajustes del navegador e inténtelo de nuevo, o busque en su aplicación de mapas.', nearNone:'No se encontró ningún lugar cerca de usted. Su aplicación de mapas puede buscar a su alrededor.',
   nearYou:'Usted está aquí', nearMore:'Otros cercanos', nearOffice:'El más cercano a nuestra oficina', nearSrc:'Los lugares proceden de OpenStreetMap y pueden estar incompletos. Las distancias y los tiempos son estimaciones.', nearAgain:'Actualizar mi ubicación'},
-bg:{near:'Близо до мен', nearName:{pharmacy:'Аптека', taxi:'Таксиметрова стоянка', busstop:'Автобусна спирка'}, nearTitle:{pharmacy:'Най-близката аптека', taxi:'Най-близката таксиметрова стоянка', busstop:'Най-близката автобусна спирка'},
+bg:{near:'Близо до мен', nearName:{pharmacy:'Аптека', taxi:'Таксиметрова стоянка', busstop:'Автобусна спирка', mosque:'Джамия'}, nearTitle:{pharmacy:'Най-близката аптека', taxi:'Най-близката таксиметрова стоянка', busstop:'Най-близката автобусна спирка', mosque:'Най-близката джамия'},
   nearAsk:'Разрешете достъп до местоположението си, за да видите най-близкото до вас място. Местоположението ви се използва само на тази страница и не се запазва.', nearBtn:'Използвай моето местоположение', nearWait:'Определяне на местоположението ви…', nearLoad:'Търсене на места близо до вас…',
   nearDenied:'Достъпът до местоположението не беше разрешен. Разрешете го в настройките на браузъра и опитайте отново или потърсете в приложението си за карти.', nearNone:'Близо до вас не беше намерено място. Приложението ви за карти може да потърси около вас.',
   nearYou:'Вие сте тук', nearMore:'Други наблизо', nearOffice:'Най-близо до нашия офис', nearSrc:'Местата са от OpenStreetMap и може да са непълни. Разстоянията и времената са приблизителни.', nearAgain:'Обнови местоположението ми'},
-ru:{near:'Рядом со мной', nearName:{pharmacy:'Аптека', taxi:'Стоянка такси', busstop:'Автобусная остановка'}, nearTitle:{pharmacy:'Ближайшая аптека', taxi:'Ближайшая стоянка такси', busstop:'Ближайшая автобусная остановка'},
+ru:{near:'Рядом со мной', nearName:{pharmacy:'Аптека', taxi:'Стоянка такси', busstop:'Автобусная остановка', mosque:'Мечеть'}, nearTitle:{pharmacy:'Ближайшая аптека', taxi:'Ближайшая стоянка такси', busstop:'Ближайшая автобусная остановка', mosque:'Ближайшая мечеть'},
   nearAsk:'Разрешите доступ к геопозиции, чтобы увидеть ближайшее к вам место. Ваша геопозиция используется только на этой странице и не сохраняется.', nearBtn:'Использовать мою геопозицию', nearWait:'Определяем вашу геопозицию…', nearLoad:'Ищем места рядом с вами…',
   nearDenied:'Доступ к геопозиции не разрешён. Разрешите его в настройках браузера и повторите попытку или поищите в приложении карт.', nearNone:'Рядом с вами ничего не найдено. Приложение карт может поискать вокруг вас.',
   nearYou:'Вы здесь', nearMore:'Другие поблизости', nearOffice:'Ближайшее к нашему офису', nearSrc:'Места взяты из OpenStreetMap, список может быть неполным. Расстояния и время приблизительные.', nearAgain:'Обновить геопозицию'},
-el:{near:'Κοντά μου', nearName:{pharmacy:'Φαρμα­κείο', taxi:'Πιάτσα ταξί', busstop:'Στάση λεωφο­ρείου'}, nearTitle:{pharmacy:'Πλησιέστερο φαρμακείο', taxi:'Πλησιέστερη πιάτσα ταξί', busstop:'Πλησιέστερη στάση λεωφορείου'},
+el:{near:'Κοντά μου', nearName:{pharmacy:'Φαρμα­κείο', taxi:'Πιάτσα ταξί', busstop:'Στάση λεωφο­ρείου', mosque:'Τζαμί'}, nearTitle:{pharmacy:'Πλησιέστερο φαρμακείο', taxi:'Πλησιέστερη πιάτσα ταξί', busstop:'Πλησιέστερη στάση λεωφορείου', mosque:'Πλησιέστερο τζαμί'},
   nearAsk:'Επιτρέψτε την πρόσβαση στην τοποθεσία σας για να δείτε το πλησιέστερο σε εσάς σημείο. Η τοποθεσία σας χρησιμοποιείται μόνο σε αυτή τη σελίδα και δεν αποθηκεύεται.', nearBtn:'Χρήση της τοποθεσίας μου', nearWait:'Εντοπισμός της τοποθεσίας σας…', nearLoad:'Αναζήτηση σημείων κοντά σας…',
   nearDenied:'Δεν δόθηκε πρόσβαση στην τοποθεσία. Επιτρέψτε την στις ρυθμίσεις του προγράμματος περιήγησης και δοκιμάστε ξανά ή αναζητήστε στην εφαρμογή χαρτών σας.', nearNone:'Δεν βρέθηκε σημείο κοντά σας. Η εφαρμογή χαρτών σας μπορεί να αναζητήσει γύρω σας.',
   nearYou:'Βρίσκεστε εδώ', nearMore:'Άλλα κοντινά', nearOffice:'Πλησιέστερο στο γραφείο μας', nearSrc:'Τα σημεία προέρχονται από το OpenStreetMap και ενδέχεται να μην είναι πλήρη. Οι αποστάσεις και οι χρόνοι είναι κατά προσέγγιση.', nearAgain:'Ενημέρωση της τοποθεσίας μου'},
-ar:{near:'بالقرب مني', nearName:{pharmacy:'صيدلية', taxi:'موقف سيارات الأجرة', busstop:'موقف الحافلات'}, nearTitle:{pharmacy:'أقرب صيدلية', taxi:'أقرب موقف لسيارات الأجرة', busstop:'أقرب موقف للحافلات'},
+ar:{near:'بالقرب مني', nearName:{pharmacy:'صيدلية', taxi:'موقف سيارات الأجرة', busstop:'موقف الحافلات', mosque:'مسجد'}, nearTitle:{pharmacy:'أقرب صيدلية', taxi:'أقرب موقف لسيارات الأجرة', busstop:'أقرب موقف للحافلات', mosque:'أقرب مسجد'},
   nearAsk:'اسمح بالوصول إلى موقعك لترى أقرب مكان إليك. يُستخدم موقعك في هذه الصفحة فقط ولا يُحفظ.', nearBtn:'استخدم موقعي', nearWait:'جارٍ تحديد موقعك…', nearLoad:'جارٍ البحث عن أماكن قريبة منك…',
   nearDenied:'لم يُسمح بالوصول إلى الموقع. اسمح به من إعدادات المتصفح وحاول مرة أخرى، أو ابحث في تطبيق الخرائط لديك.', nearNone:'لم يُعثر على مكان قريب منك. يمكن لتطبيق الخرائط لديك البحث حولك.',
   nearYou:'أنت هنا', nearMore:'أماكن قريبة أخرى', nearOffice:'الأقرب إلى مكتبنا', nearSrc:'الأماكن مأخوذة من OpenStreetMap وقد تكون غير مكتملة. المسافات والأوقات تقديرية.', nearAgain:'تحديث موقعي'}
@@ -1916,6 +1931,14 @@ el:{pCheck:'Ελέγξτε την ώρα κλεισίματος πριν πάτ�
 ar:{pCheck:'تحقَّق من موعد الإغلاق قبل الذهاب.', rTour:'تبدأ الجولات المصحوبة بمرشد كل يوم الساعة {t}؛ بقي {m}. اسأل وكالة سياحية.', rTourNext:'للغد: تبدأ الجولات المصحوبة بمرشد كل يوم الساعة {t}. احجز لدى وكالة سياحية.'}
 };
 Object.keys(UI_NOW).forEach(l => { Object.assign(UI[l], UI_NOW[l]); });
+const UI_DOL = {
+en:{mWalkDol:'On foot + dolmuş (shared minibus)', mTaxiDol:'Taxi + dolmuş', payDriver:'fare paid to the driver', dolNote:'waiting time not included; ask the driver when the last dolmuş returns', dolCta:'Directions to the dolmuş stop', dolFact:'dolmuş stop {d}',
+  sDolWalk:'Walk to the {n}: {d}, {t}.', sDolTaxi:'Take a taxi to the {n}: {d}, {t}.', sDolRide:'Take the dolmuş to {n}: {t}. Pay the driver.'},
+tr:{mWalkDol:'Yürüyüş + dolmuş', mTaxiDol:'Taksi + dolmuş', payDriver:'ücret şoföre ödenir', dolNote:'bekleme süresi hariç; son dolmuşun dönüş saatini şoföre sorun', dolCta:'Dolmuş durağına yol tarifi', dolFact:'dolmuş durağı {d}',
+  sDolWalk:'{n} için yürüyün: {d}, {t}.', sDolTaxi:'{n} için taksiye binin: {d}, {t}.', sDolRide:'{n} dolmuşuna binin: {t}. Ücreti şoföre ödeyin.'}
+};
+Object.keys(UI_DOL).forEach(l => { Object.assign(UI[l], UI_DOL[l]); });
+LANGS.forEach(l => { Object.keys(UI.en).forEach(k => { if (!(k in UI[l])) UI[l][k] = UI.en[k]; }); });      /* not yet translated: English */
 
 /* ============================ end of data ============================ */
 
@@ -1984,6 +2007,12 @@ function options(p){ const t = UI[lang]; let o = []; if (p.kind !== 'pin') retur
   if (p.viaOtogar){ const city = p.viaOtogar === 'city';      /* 'city': an intercity coach from the Otogar; otherwise a district bus */
     o.push({mode:'bus', title:city ? t.mBusC : t.mBusD, time:'', cost:city ? '' : t.ask, ...startAt('c9-stop'),
       steps:[[fillT(t.sDb1, {f:RATES.busCard + '–' + RATES.busBank + ' TL'})], [fillT(city ? t.sCb2 : t.sDb2, {n})], [fillT(t.sArrive, {n})]]}); }
+  if (p.dolmus && byId(p.dolmus.from)){ const s = byId(p.dolmus.from), sr = roadM(s), wm = Math.max(1, Math.round(sr / RATES.walkMPerMin)), tm = s.driveMin || Math.round(sr / 1000 / 25 * 60) + 2,
+      ride = p.dolmus.ride, mins = m => t.mins.replace('{m}', m), sn = tx(s.name), last = [[fillT(t.sDolRide, {n, t:mins(ride)})], [fillT(t.sArrive, {n})]];
+    if (sr <= RATES.walkMaxM) o.push({mode:'bus', title:t.mWalkDol, time:mins(wm + ride), cost:t.payDriver, note:t.dolNote, cta:t.dolCta, links:mapLinks(s, 'walk'), linksTitle:fillT(t.openStart, {n:short(s)}),
+      steps:[[fillT(t.sDolWalk, {n:sn, d:approx(sr), t:mins(wm)})]].concat(last)});
+    if (CAR !== true) o.push({mode:'taxi', title:t.mTaxiDol, time:mins(tm + ride), cost:t.taxiFare + ' + ' + t.payDriver, note:t.dolNote, cta:t.dolCta, links:mapLinks(s, 'drive'), linksTitle:fillT(t.openStart, {n:short(s)}),
+      steps:[[fillT(t.sDolTaxi, {n:sn, d:approx(sr), t:mins(tm)})]].concat(last)}); }
   (p.more || []).forEach(x => o.push({mode:x.mode, title:x.title ? tx(x.title) : t['m' + x.mode[0].toUpperCase() + x.mode.slice(1)], time:x.min ? t.mins.replace('{m}', x.min) : '',
     cost:x.cost === 'ask' ? t.ask : Array.isArray(x.cost) ? tx(x.cost) : x.cost, ...(x.from ? startAt(x.from, x.go) : {links:mapLinks(p, x.go || 'walk')}), steps:x.steps ? tx(x.steps).map(y => [y]) : []}));
   const drive = t.mins.replace('{m}', p.driveMin || Math.round(r / 1000 / 25 * 60) + 2);
@@ -1997,7 +2026,7 @@ function options(p){ const t = UI[lang]; let o = []; if (p.kind !== 'pin') retur
     o.push({mode:'car', title:t.mCar, time:drive, cost:p.carCost ? tx(p.carCost) : p.ferry ? t.carCostF : t.carCost, links:mapLinks(p, 'drive'),
       steps:[[t.sCar1]].concat(note ? [[note]] : [], [[fillT(t.sCar2, {n, d, t:drive})], [fillT(t.sArrive, {n})]])}); }
   /* the answer to "do you have a car?": with a car no taxi is offered, and the own car comes first unless the place is within walking distance; without a car the own-car way is left out */
-  if (CAR === true){ o = o.filter(x => x.mode !== 'taxi'); const i = o.findIndex(x => x.mode === 'car'); if (i > 0 && !o.some(x => x.mode === 'walk')) o.unshift(o.splice(i, 1)[0]); }
+  if (CAR === true){ o = o.filter(x => x.mode !== 'taxi' || x.cta); const i = o.findIndex(x => x.mode === 'car'); if (i > 0 && !o.some(x => x.mode === 'walk')) o.unshift(o.splice(i, 1)[0]); }
   if (CAR === false) o = o.filter(x => x.mode !== 'car');
   if (p.taxiFirst){ const i = o.findIndex(x => x.mode === 'taxi'); if (i > 0) o.unshift(o.splice(i, 1)[0]); }      /* the hospital: the taxi before the bus */
   return o; }
@@ -2005,7 +2034,7 @@ function options(p){ const t = UI[lang]; let o = []; if (p.kind !== 'pin') retur
 const viaOf = p => p.via && p.via !== 'centre' && p.via !== 'walk' ? byId(p.via) : null;
 function facts(p){ const t = UI[lang]; if (p.noDist) return [];
   if (p.x) return [viaOf(p) ? fillT(t.inArea, {d:short(viaOf(p))}) : t.centre];
-  return p.kind === 'search' ? [t.several] : [approx(roadM(p))]; }
+  return p.kind === 'search' ? [t.several] : [approx(roadM(p))].concat(p.dolmus && byId(p.dolmus.from) ? [fillT(t.dolFact, {d:approx(roadM(byId(p.dolmus.from)))})] : []); }
 function summary(p){ return facts(p).concat(options(p).map(o => o.home || o.title)).join(' · '); }
 
 /* ---------- maps ---------- */
@@ -2221,7 +2250,7 @@ function renderSheet(p){
   if (closed) h += '<div class="duty"><p>' + esc(t.dutyNow) + '</p>' + cta(mine(findLinks(p.duty.q)), t.dutyBtn) + list + '</div>';
   else if (ops.length){ const o = ops[0];
     h += '<div class="best" style="--c:var(--' + c + ')"><span class="ico">' + sized(o.mode, 24) + '</span><span class="txt"><small>' + esc(t.rec) + '</small><b>' + esc(o.title) + '</b></span><span class="val"><b>' + esc(o.time) + '</b><small>' + esc(o.cost) + '</small></span></div>' +
-      cta(mine(o.links), o.mode === 'bus' && p.stop ? t.openStop : t.start); }
+      cta(mine(o.links), o.cta || (o.mode === 'bus' && p.stop ? t.openStop : t.start)); }
   else { if (v && CAR === false) h += seeCard(p.via); h += cta(mine(links), routed ? t.start : t.findIn); }
   if (p.hours && !closed) h += '<div class="hours"><p>' + esc(fillT(t.dutyHours, {a:p.hours.from, b:p.hours.to})) + '</p>' + list + '</div>';
   if (!p.hours && SUIT[p.id] && (SUIT[p.id].in || SUIT[p.id].hrs)) h += '<div class="hours"><p>' + esc(t.pCheck) + '</p></div>';
@@ -2392,23 +2421,26 @@ function renderNear(k){ const t = UI[lang], K = NEAR.kinds[k], a = NEAR.area, mi
       const ls = pts.map(p => ({lat:p[0], lng:p[1], named:!!p[2], name:p[2] || t.nearName[k].replace(/­/g, ''), m:metres(ME, {lat:p[0], lng:p[1]}) * RATES.detour})).sort((x, y) => x.m - y.m).filter(x => x.m <= NEAR.maxM).slice(0, 3);
       const walk = x => Math.max(1, Math.round(x.m / RATES.walkMPerMin));
       if (!ls.length){ top += maps(t.nearNone); low = linkRow(nearLinks(K.q), t.findIn) + again + office; }
-      else { best = ls[0];
+      else { best = ls[0]; best.others = ls.slice(1); best.all = pts;
         top += '<div class="best" style="--c:var(--' + K.cat + ')"><span class="ico">' + sized(K.icon, 24) + '</span><span class="txt"><small>' + esc(t.mWalk) + '</small><b>' + esc(best.name) + '</b></span><span class="val"><b>' + esc(t.mins.replace('{m}', walk(best))) + '</b><small>' + esc(approx(best.m)) + '</small></span></div>' +
           cta(mine(to(best)), t.start) + (H && H.hours && !closed ? '<div class="hours"><p>' + esc(fillT(t.dutyHours, {a:H.hours.from, b:H.hours.to})) + '</p>' + dutyList + '</div>' : '');
         low = linkRow(to(best), t.openIn) +
-          (ls.length > 1 ? '<div class="how gap">' + esc(t.nearMore) + '</div><ul class="list">' + ls.slice(1).map(x => '<li><a class="card" style="--c:var(--' + K.cat + ')" target="_blank" rel="noopener" href="' + esc(mine(to(x))[1]) + '"><span class="big">' + sized(K.icon, 32) + '</span><span class="txt"><b>' + esc(x.name) + '</b><small>' + esc(approx(x.m) + ' · ' + t.homeWalk.replace('{m}', walk(x))) + '</small></span><span class="go">' + ICONS.chevron + '</span></a></li>').join('') + '</ul>' : '') +
+          (ls.length > 1 ? '<div class="how gap">' + esc(t.nearMore) + '</div><ul class="list">' + ls.slice(1).map(x => '<li><a class="card" style="--c:var(--' + K.cat + ')" target="_blank" rel="noopener" href="' + esc(mine(to(x))[1]) + '"><span class="big">' + sized(K.icon, 32) + '</span><span class="txt"><b>' + esc(x.name) + '</b><small>' + esc(approx(x.m) + ' · ' + t.homeWalk.replace('{m}', walk(x))) + '</small></span><span class="go">' + ICONS.chevron + '</span></a></li>').join('') + '</ul>' : '') + linkRow(nearLinks(K.q), t.nearAll || UI.en.nearAll) +
           '<p class="est" style="margin-top:14px">' + esc(K.list.length && K.src !== 'osm' ? t.est : t.nearSrc) + '</p>' + again + office; } }
   }
   $('#sheetTop').innerHTML = top; $('#sheet').innerHTML = low; return best; }
 function drawNear(k, best){ const K = NEAR.kinds[k], pts = [[ME.lat, ME.lng], [best.lat, best.lng]], up = best.lat >= ME.lat;      /* the two labels point away from each other */
   if (!placeMap) placeMap = makeMap('placeMap');
   placeMap._layer.clearLayers(); placeMap.invalidateSize();
+  /* every other place of the kind within reach is marked with a dot; touching one shows its name */
+  (best.all || []).filter(p => (p[0] !== best.lat || p[1] !== best.lng) && metres(ME, {lat:p[0], lng:p[1]}) * RATES.detour <= NEAR.maxM).slice(0, 80)
+    .forEach(p => L.circleMarker([p[0], p[1]], {radius:7, color:'#fff', weight:2, fillColor:COLORS[K.cat], fillOpacity:.9}).addTo(placeMap._layer).bindTooltip(p[2] || UI[lang].nearName[k], {direction:'top', className:'lbl'}));
   L.polyline(pts, {color:'#18242a', weight:3, opacity:.55, dashArray:'2 9', lineCap:'round'}).addTo(placeMap._layer);
   L.circleMarker(pts[0], {radius:8, color:'#fff', weight:3, fillColor:'#1a73e8', fillOpacity:1}).addTo(placeMap._layer)
     .bindTooltip(UI[lang].nearYou, {permanent:true, direction:up ? 'bottom' : 'top', offset:[0, up ? 10 : -10], className:'lbl'});
   L.marker(pts[1], {icon:pin(K.cat, glyph(K.icon), true), keyboard:false, zIndexOffset:400}).addTo(placeMap._layer)
     .bindTooltip(best.name, {permanent:true, direction:up ? 'top' : 'bottom', offset:[0, up ? -17 : 17], className:'lbl'});
-  placeMap._bounds = pts; placeMap.fitBounds(pts, {paddingTopLeft:[70,70], paddingBottomRight:[70,70], maxZoom:18}); }
+  placeMap._bounds = pts; placeMap.fitBounds(pts.concat((best.others || []).map(x => [x.lat, x.lng])), {paddingTopLeft:[50,70], paddingBottomRight:[50,50], maxZoom:17}); }      /* the next nearest ones are in view too */
 
 const here = () => (location.hash || '#/').replace(/^#$/, '#/');
 let trail = [here()], homeY = 0;      /* trail: the screens opened inside the guide, so Back never leaves it */
@@ -2432,6 +2464,8 @@ function route(){
   else { scrollTo(0, homeY); document.title = UI[lang].title + ' · ' + UI[lang].brand; }
 }
 document.addEventListener('click', e => {
+  if (e.target.closest('#homelink')){      /* the banner: back to the first screen as it was when the guide was opened */
+    MODE = 'where'; F.q = ''; $('#q').value = ''; homeY = 0; renderChips(); renderHome(); if (here() === '#/'){ e.preventDefault(); scrollTo(0, 0); } return; }
   const back = e.target.closest('.backbtn');
   if (back){ if (trail.length > 1){ e.preventDefault(); history.back(); } return; }
   if (e.target.closest('[data-loc]')){ ASKED = true; locate(); return; }      /* "use my location" */
@@ -2440,6 +2474,9 @@ document.addEventListener('click', e => {
   if (e.target.closest('#home a.icon, #home a.card')) homeY = scrollY; });
 addEventListener('hashchange', () => { const h = here(); if (trail.length > 1 && trail[trail.length - 2] === h) trail.pop(); else trail.push(h); route(); });
 
+/* the 'Back' bar sits right under the banner */
+function setHH(){ document.documentElement.style.setProperty('--hh', $('header.top').offsetHeight + 'px'); }
+addEventListener('resize', setHH);
 function toast(msg){ const d = document.createElement('div'); d.className = 'toast'; d.textContent = msg; d.setAttribute('role','status'); document.body.appendChild(d); setTimeout(() => d.remove(), 3200); }
 
 function setLang(c){
@@ -2447,6 +2484,7 @@ function setLang(c){
   document.querySelectorAll('[data-i18n]').forEach(n => { n.textContent = t[n.dataset.i18n]; });
   $('#lang').value = c;
   $('#theme').setAttribute('aria-label', t.theme);
+  $('#homelink').setAttribute('aria-label', t.home || UI.en.home); $('#homelink').title = t.home || UI.en.home; setHH();
   $('#offnote').textContent = t.offNote || UI.en.offNote;
   [placeMap].forEach(m => { if (m && m._locBtn){ m._locBtn.setAttribute('aria-label', t.locate); m._locBtn.title = t.locate; } });
   PLACES.forEach(p => { delete p._hay; }); renderChips(); renderHome(); route();
