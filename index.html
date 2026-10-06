@@ -855,6 +855,8 @@ button.btn{width:100%;cursor:pointer}
 .card .big.num{font-size:23px;font-weight:800}
 .sheet .list{margin:0 0 12px}
 .tips .facts{margin:0 0 10px}
+.hours.all{margin:0 0 16px}
+.offnote{margin:0 0 28px;font-size:15px;color:var(--muted)}
 .tips .hours{margin:0 0 10px}
 .tips .tipnote{margin:10px 0 0}
 .tips .tipnote a{color:inherit}
@@ -908,6 +910,7 @@ button.btn{width:100%;cursor:pointer}
   </section>
 
   <footer data-i18n="foot"></footer>
+  <p class="offnote" id="offnote" hidden></p>
 </div>
 <noscript><p style="padding:16px">This page needs JavaScript.</p></noscript>
 
@@ -943,6 +946,8 @@ button.btn{width:100%;cursor:pointer}
    noDist        : true hides distance, time and map (used for other cities)
    kw            : optional extra search words
    label         : optional short name for the map label
+   all           : optional {q, btn:[...], note:[...]} for a place of which there are many kinds (ATMs of different banks):
+                   a button that shows all of them around the visitor in the maps app, searching for q
    stop          : optional {lat, lng, name:[...]} bus stop to walk to first
    ===================================================================== */
 const DRAFT  = true;
@@ -1176,6 +1181,7 @@ const PLACES = [
   desc:['Çanakkale Airport, south-east of the centre.','Çanakkale Havalimanı; merkezin güneydoğusundadır.','Flughafen Çanakkale, südöstlich des Zentrums.','Aéroport de Çanakkale, au sud-est du centre.','Aeropuerto de Çanakkale, al sureste del centro.']},
 
  {id:'atm', icon:'cash', cat:'services', kind:'pin', lat:40.1498508, lng:26.4024384,
+  all:{q:'ATM', btn:['See all ATMs on the map','Tüm ATM’leri haritada gör'], note:['Every bank has its own ATMs. The map shows all the ATMs around you, so you can pick your own bank.','Her bankanın ATM’si ayrıdır. Harita çevrenizdeki tüm ATM’leri gösterir; kendi bankanızınkini seçebilirsiniz.']},
   name:['Cash (ATM)','Nakit (ATM)','Bargeld (Geldautomat)','Espèces (distributeur)','Efectivo (cajero)'],
   label:['ATM','ATM','Bargeld','Espèces','Efectivo'],
   desc:['Cash machines on the ferry square, right beside the office.','İskele Meydanı’nda, büronun hemen yanında ATM’ler bulunur.','Geldautomaten am Fährplatz, direkt neben dem Büro.','Distributeurs sur la place de l’embarcadère, juste à côté de l’office.','Cajeros en la plaza del embarcadero, justo al lado de la oficina.']},
@@ -1773,11 +1779,11 @@ Object.keys(XL_ROWS).forEach(k => { ['bg','ru','el','ar'].forEach((l, i) => { XL
 
 /* texts of "near me" */
 const UI_NEAR = {
-en:{near:'Near me', nearMaps:'Your maps app gives the most reliable answer here: the button below shows the nearest ones around you.', nearName:{pharmacy:'Pharmacy', taxi:'Taxi rank', busstop:'Bus stop'}, nearTitle:{pharmacy:'Nearest pharmacy', taxi:'Nearest taxi rank', busstop:'Nearest bus stop'},
+en:{near:'Near me', offNote:'Once opened, this guide also opens without the internet. The map, the weather and directions need a connection.', offNow:'You are offline: the saved guide is shown. The map, the weather and directions need the internet.', nearMaps:'Your maps app gives the most reliable answer here: the button below shows the nearest ones around you.', nearName:{pharmacy:'Pharmacy', taxi:'Taxi rank', busstop:'Bus stop'}, nearTitle:{pharmacy:'Nearest pharmacy', taxi:'Nearest taxi rank', busstop:'Nearest bus stop'},
   nearAsk:'Allow location access to see the one nearest to you. Your location is used only on this page and is not stored.', nearBtn:'Use my location', nearWait:'Finding your location…', nearLoad:'Looking for places near you…',
   nearDenied:'Location access was not given. Allow it in your browser settings and try again, or search in your maps app.', nearNone:'No place was found close to you. Your maps app can search around you.',
   nearYou:'You are here', nearMore:'Others nearby', nearOffice:'Nearest to our office', nearSrc:'Places come from OpenStreetMap and may be incomplete. Distances and times are estimates.', nearAgain:'Update my location'},
-tr:{near:'Yakınımda', nearMaps:'Bunun için en doğru sonucu harita uygulamanız verir: aşağıdaki düğme çevrenizdeki en yakın olanları gösterir.', nearName:{pharmacy:'Eczane', taxi:'Taksi durağı', busstop:'Otobüs durağı'}, nearTitle:{pharmacy:'En yakın eczane', taxi:'En yakın taksi durağı', busstop:'En yakın otobüs durağı'},
+tr:{near:'Yakınımda', offNote:'Bu rehber bir kez açıldıktan sonra internetsiz de açılır. Harita, hava durumu ve yol tarifi için bağlantı gerekir.', offNow:'Çevrimdışısınız: kayıtlı rehber gösteriliyor. Harita, hava durumu ve yol tarifi için internet gerekir.', nearMaps:'Bunun için en doğru sonucu harita uygulamanız verir: aşağıdaki düğme çevrenizdeki en yakın olanları gösterir.', nearName:{pharmacy:'Eczane', taxi:'Taksi durağı', busstop:'Otobüs durağı'}, nearTitle:{pharmacy:'En yakın eczane', taxi:'En yakın taksi durağı', busstop:'En yakın otobüs durağı'},
   nearAsk:'Size en yakın olanı görmek için konum erişimine izin verin. Konumunuz yalnızca bu sayfada kullanılır, kaydedilmez.', nearBtn:'Konumumu kullan', nearWait:'Konumunuz alınıyor…', nearLoad:'Yakınınızdaki yerler aranıyor…',
   nearDenied:'Konum izni verilmedi. Tarayıcı ayarlarından izin verip yeniden deneyin ya da harita uygulamanızda arayın.', nearNone:'Yakınınızda kayıtlı bir yer bulunamadı. Harita uygulamanız çevrenizde arayabilir.',
   nearYou:'Buradasınız', nearMore:'Yakındaki diğerleri', nearOffice:'Büroya en yakın', nearSrc:'Yerler OpenStreetMap verisidir; eksik olabilir. Mesafe ve süreler tahminidir.', nearAgain:'Konumumu güncelle'},
@@ -2182,6 +2188,7 @@ function renderSheet(p){
   const desc = p.desc ? tx(p.desc) : p.noDist ? fillT(t.cDesc, {n}) : p.x ? (v ? fillT(CAR === true ? t.xDescCar : t.xDesc, {d:short(v)}) : t.xDescC) : fillT(t.dDesc, {n});
   let h = '<div class="cat" style="--c:var(--' + c + ')"><i></i>' + esc(t.cats[c]) + '</div><h2>' + esc(n) + '</h2><p>' + esc(desc) + '</p>';
   const fs = facts(p); if (fs.length) h += '<ul class="facts">' + fs.map(f => '<li>' + esc(f) + '</li>').join('') + '</ul>';
+  if (p.all) h += '<div class="hours all"><p>' + esc(tx(p.all.note)) + '</p><a class="btn primary" target="_blank" rel="noopener" href="' + esc(nearLinks(p.all.q)[isIOS ? 1 : 0][1]) + '">' + esc(tx(p.all.btn)) + '</a></div>';
   h += carBox();
   if (CAR === null){ $('#sheetTop').innerHTML = h; $('#sheet').innerHTML = ''; return; }      /* the directions follow the answer */
   const ops = options(p), mine = l => l.length > 1 ? l[isIOS ? 1 : 0] : l[0];      /* the visitor's own maps app: Apple on iPhone, Google elsewhere */
@@ -2417,6 +2424,7 @@ function setLang(c){
   document.querySelectorAll('[data-i18n]').forEach(n => { n.textContent = t[n.dataset.i18n]; });
   $('#lang').value = c;
   $('#theme').setAttribute('aria-label', t.theme);
+  $('#offnote').textContent = t.offNote || UI.en.offNote;
   [placeMap].forEach(m => { if (m && m._locBtn){ m._locBtn.setAttribute('aria-label', t.locate); m._locBtn.title = t.locate; } });
   PLACES.forEach(p => { delete p._hay; }); renderChips(); renderHome(); route();
 }
@@ -2429,6 +2437,11 @@ $('#theme').addEventListener('click', () => { const r = document.documentElement
 try { const th = localStorage.getItem('guide-theme'); if (th === 'light' || th === 'dark') document.documentElement.dataset.theme = th; } catch(e){}
 
 if (DRAFT) $('#draft').hidden = false;
+/* offline: sw.js keeps the page on the phone (needs https) */
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')){
+  navigator.serviceWorker.register('sw.js').then(() => { $('#offnote').hidden = false; }).catch(() => {}); }
+const offNow = () => toast(UI[lang].offNow || UI.en.offNow);
+addEventListener('offline', offNow); if (navigator.onLine === false) setTimeout(offNow, 600);
 wxLoad();
 setLang(lang);
 </script>
