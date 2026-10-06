@@ -12,6 +12,11 @@
 <meta property="og:title" content="Çanakkale Turizm Danışma · Şehir Rehberi">
 <meta property="og:description" content="Nereye gidebilirim? Bir yere nasıl giderim? Çanakkale için yol tarifleri, 9 dilde.">
 <meta property="og:type" content="website">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Çanakkale Rehber">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2318242a'/%3E%3Ccircle cx='32' cy='18' r='5' fill='%23fff'/%3E%3Crect x='27' y='27' width='10' height='24' rx='3' fill='%23fff'/%3E%3C/svg%3E">
 <style>/* required styles */
 
@@ -864,6 +869,12 @@ button.btn{width:100%;cursor:pointer}
 .sheet .list{margin:0 0 12px}
 .tips .facts{margin:0 0 10px}
 .hours.all{margin:0 0 16px}
+.appbox{margin-top:10px}
+.appbox p{margin:0 0 12px}
+.appbox .btn{margin:0 0 12px}
+.appbox details{margin:0 0 8px;padding:0 14px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+.appbox summary{padding:14px 0;font-weight:700;font-size:18.5px;cursor:pointer}
+.appbox details .steps{margin:2px 0 14px}
 .goes{list-style:none;margin:0 0 10px;padding:0;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
 .goes li{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:11px 14px;border-top:1px solid var(--line)}
 .goes li:first-child{border-top:0}
@@ -906,6 +917,7 @@ button.btn{width:100%;cursor:pointer}
     </div>
     <div class="count" id="count" hidden><span id="countText"></span><button type="button" id="clear"></button></div>
     <div id="needs" class="needs"></div>
+    <section class="needs appbox" id="appbox" style="--c:var(--accent)" hidden></section>
     <p class="draft" id="draft" hidden data-i18n="draft"></p>
   </section>
 
@@ -967,6 +979,7 @@ button.btn{width:100%;cursor:pointer}
    stop          : optional {lat, lng, name:[...]} bus stop to walk to first
    ===================================================================== */
 const DRAFT  = true;
+const BUILD  = '2026-10-06 a';      /* changed with every new version: an open guide that comes back online reloads itself when this differs */
 const LANGS  = ['en','tr','de','fr','es','bg','ru','el','ar'];
 const XLANGS = ['bg','ru','el','ar'];      /* the languages whose place texts live in XL_ROWS */
 const OFFICE = {lat:40.1498833, lng:26.4024356};
@@ -1931,6 +1944,17 @@ el:{pCheck:'Ελέγξτε την ώρα κλεισίματος πριν πάτ�
 ar:{pCheck:'تحقَّق من موعد الإغلاق قبل الذهاب.', rTour:'تبدأ الجولات المصحوبة بمرشد كل يوم الساعة {t}؛ بقي {m}. اسأل وكالة سياحية.', rTourNext:'للغد: تبدأ الجولات المصحوبة بمرشد كل يوم الساعة {t}. احجز لدى وكالة سياحية.'}
 };
 Object.keys(UI_NOW).forEach(l => { Object.assign(UI[l], UI_NOW[l]); });
+const UI_APP = {
+en:{appT:'Add the guide to your phone', appP:'Put the guide on your home screen and open it like an app. Once it has been opened it also works without the internet; when the connection returns it updates itself.',
+  appBtn:'Install as an app', appIosT:'iPhone and iPad (Safari)', appAndT:'Android (Chrome)', appN:'Maps, the weather and directions still need the internet.', onNow:'You are back online: the guide is being updated.',
+  appIos:['Tap the Share button at the bottom of Safari (a square with an arrow pointing up).','Scroll down and choose “Add to Home Screen”.','Tap “Add”. The guide appears on your home screen.'],
+  appAnd:['Tap the menu at the top right of Chrome (three dots).','Choose “Add to Home screen” or “Install app”.','Tap “Install” or “Add”. The guide appears on your home screen.']},
+tr:{appT:'Rehberi telefonunuza ekleyin', appP:'Rehberi ana ekranınıza ekleyin, bir uygulama gibi açın. Bir kez açıldıktan sonra internetsiz de çalışır; bağlantı gelince kendini günceller.',
+  appBtn:'Uygulama olarak yükle', appIosT:'iPhone ve iPad (Safari)', appAndT:'Android (Chrome)', appN:'Harita, hava durumu ve yol tarifi için yine internet gerekir.', onNow:'Yeniden çevrimiçisiniz: rehber güncelleniyor.',
+  appIos:['Safari’nin altındaki Paylaş düğmesine dokunun (yukarı oklu kare).','Aşağı kaydırıp “Ana Ekrana Ekle”yi seçin.','“Ekle”ye dokunun. Rehber ana ekranınızda görünür.'],
+  appAnd:['Chrome’un sağ üstündeki menüye dokunun (üç nokta).','“Ana ekrana ekle” ya da “Uygulamayı yükle”yi seçin.','“Yükle” ya da “Ekle”ye dokunun. Rehber ana ekranınızda görünür.']}
+};
+Object.keys(UI_APP).forEach(l => { Object.assign(UI[l], UI_APP[l]); });
 const UI_DOL = {
 en:{mWalkDol:'On foot + dolmuş (shared minibus)', mTaxiDol:'Taxi + dolmuş', payDriver:'fare paid to the driver', dolNote:'waiting time not included; ask the driver when the last dolmuş returns', dolCta:'Directions to the dolmuş stop', dolFact:'dolmuş stop {d}',
   sDolWalk:'Walk to the {n}: {d}, {t}.', sDolTaxi:'Take a taxi to the {n}: {d}, {t}.', sDolRide:'Take the dolmuş to {n}: {t}. Pay the driver.'},
@@ -2201,7 +2225,15 @@ const cards = list => '<ul class="list">' + list.map(pick).filter(Boolean).map(k
 const listOf = found => found.length ? '<ul class="list">' + found.map(card).join('') + '</ul>' : '<p class="none">' + esc(UI[lang].none) + '</p>';
 /* first screen. "How do I get to ...?": a search, with the most asked places while nothing is typed.
    "Where can I go?": pictures by need, three to a row; with a planning filter it becomes one list, nearest first. */
+let INSTALL = null;      /* Android: the browser's own install question, when it offers one */
+const isApp = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+function renderApp(){ const t = UI[lang], box = $('#appbox'), ol = a => '<ol class="steps">' + a.map(x => '<li><span>' + esc(x) + '</span></li>').join('') + '</ol>';
+  const ios = '<details' + (isIOS ? ' open' : '') + '><summary>' + esc(t.appIosT) + '</summary>' + ol(t.appIos) + '</details>', and = '<details' + (!isIOS && !INSTALL ? ' open' : '') + '><summary>' + esc(t.appAndT) + '</summary>' + ol(t.appAnd) + '</details>';
+  box.innerHTML = '<h2><i></i>' + esc(t.appT) + '</h2><p>' + esc(t.appP) + '</p>' + (INSTALL ? '<button type="button" class="btn primary" id="install">' + esc(t.appBtn) + '</button>' : '') + (isIOS ? ios + and : and + ios) + '<p class="est">' + esc(t.appN) + '</p>'; }
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); INSTALL = e; renderApp(); });
+addEventListener('appinstalled', () => { INSTALL = null; $('#appbox').hidden = true; });
 function renderHome(){ const t = UI[lang];
+  $('#appbox').hidden = isApp() || MODE !== 'where' || F.sort || F.walk || F.noferry || F.one; if (!$('#appbox').hidden) renderApp();
   if (MODE === 'how'){ const q = F.q.trim(); $('#count').hidden = !q;
     if (!q){ $('#needs').innerHTML = '<section style="--c:var(--accent)"><h2><i></i>' + esc(t.popular) + '</h2>' + tiles(POPULAR, true) + '</section>'; return; }
     const found = search(PLACES, q); $('#countText').textContent = t.nFound.replace('{n}', found.length); $('#needs').innerHTML = listOf(found); return; }
@@ -2468,6 +2500,7 @@ document.addEventListener('click', e => {
     MODE = 'where'; F.q = ''; $('#q').value = ''; homeY = 0; renderChips(); renderHome(); if (here() === '#/'){ e.preventDefault(); scrollTo(0, 0); } return; }
   const back = e.target.closest('.backbtn');
   if (back){ if (trail.length > 1){ e.preventDefault(); history.back(); } return; }
+  if (e.target.closest('#install') && INSTALL){ INSTALL.prompt(); INSTALL = null; return; }      /* "install as an app" */
   if (e.target.closest('[data-loc]')){ ASKED = true; locate(); return; }      /* "use my location" */
   const car = e.target.closest('.carbtn');      /* the answer to "do you have a car?" */
   if (car){ CAR = car.dataset.car === '1'; try { localStorage.setItem('guide-car', CAR ? '1' : '0'); } catch(e2){} route(); return; }
@@ -2503,6 +2536,15 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
   navigator.serviceWorker.register('sw.js').then(() => { $('#offnote').hidden = false; }).catch(() => {}); }
 const offNow = () => toast(UI[lang].offNow || UI.en.offNow);
 addEventListener('offline', offNow); if (navigator.onLine === false) setTimeout(offNow, 600);
+let CHECKED = Date.now();
+function checkBuild(){ CHECKED = Date.now();
+  fetch('./?b=' + CHECKED, {cache:'no-store'}).then(r => r.ok ? r.text() : '').then(tx => { const m = /const BUILD  = '([^']+)'/.exec(tx);
+    if (!m || m[1] === BUILD) return; let done = ''; try { done = sessionStorage.getItem('guide-build') || ''; } catch(e){}
+    if (done === m[1]) return; try { sessionStorage.setItem('guide-build', m[1]); } catch(e){}      /* never twice for one version */
+    const show = () => location.reload();
+    if (window.caches) caches.open('guide-v1').then(c => c.put('./', new Response(tx, {headers:{'Content-Type':'text/html; charset=utf-8'}}))).then(show, show); else show(); }).catch(() => {}); }
+addEventListener('online', () => { toast(UI[lang].onNow); WXSTATE = 'idle'; wxLoad(); checkBuild(); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden && navigator.onLine !== false && Date.now() - CHECKED > 30 * 6e4){ WXSTATE = 'idle'; wxLoad(); checkBuild(); } });      /* an app left open: looked at again after half an hour */
 wxLoad();
 setLang(lang);
 </script>
