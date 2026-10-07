@@ -979,7 +979,7 @@ button.btn{width:100%;cursor:pointer}
    stop          : optional {lat, lng, name:[...]} bus stop to walk to first
    ===================================================================== */
 const DRAFT  = true;
-const BUILD  = '2026-10-06 a';      /* changed with every new version: an open guide that comes back online reloads itself when this differs */
+const BUILD  = '2026-10-07 a';      /* changed with every new version: an open guide that comes back online reloads itself when this differs */
 const LANGS  = ['en','tr','de','fr','es','bg','ru','el','ar'];
 const XLANGS = ['bg','ru','el','ar'];      /* the languages whose place texts live in XL_ROWS */
 const OFFICE = {lat:40.1498833, lng:26.4024356};
@@ -1095,7 +1095,7 @@ const NEAR = {
    '?wx=61,14,45,70,80' in the address previews a weather: code, °C, wind and gusts in km/h, chance of rain in %. */
 const WEATHER = {lat:40.15, lng:26.41, url:'https://api.open-meteo.com/v1/forecast', keepMin:30, rainMm:0.2, rainProb:60, hot:31, cold:8, wind:40, gust:60, dayFrom:'09:00', dayTo:'17:00'};
 const SUIT = {
-  'r:centre':{out:1, hrs:1, min:200},
+  'r:centre':{out:1, hrs:1, min:230},
   'trojan-horse':{out:1, sun:1, eve:1, min:20}, 'c-saat':{out:1, eve:1, min:15}, 'c-cimenlik':{out:1, hrs:1, min:45},
   'naval-museum':{in:1, min:60}, 'city-museum':{in:1, min:40}, 'ceramic-museum':{in:1, min:30}, 'aynali-bazaar':{in:1, min:30},
   'troy-museum':{in:1, far:1, min:180},
@@ -1107,9 +1107,9 @@ const SUIT = {
    The page adds up the walking distances, starting at the office, and the visit times ('min' of the place in SUIT; 30 minutes without one).
    A place is linked to its route with see:['r:<id>']. */
 const ROUTES = [
- {id:'centre', icon:'walk', cat:'sights', stops:['naval-museum','city-museum','trojan-horse','ceramic-museum'],
+ {id:'centre', icon:'walk', cat:'sights', stops:['aynali-bazaar','naval-museum','city-museum','trojan-horse','ceramic-museum'],
   name:['City centre on foot','Yürüyerek şehir merkezi','Das Stadtzentrum zu Fuß','Le centre-ville à pied','El centro a pie'],
-  desc:['A walk from our office through four sights of the centre: the Naval Museum, the City Museum, the Trojan Horse on the waterfront and the Ceramic Museum.','Büromuzdan başlayıp merkezdeki dört yeri gezen bir yürüyüş: Deniz Müzesi, Kent Müzesi, kordondaki Truva Atı ve Seramik Müzesi.','Ein Spaziergang von unserem Büro zu vier Sehenswürdigkeiten im Zentrum: Marinemuseum, Stadtmuseum, das Trojanische Pferd an der Uferpromenade und das Keramikmuseum.','Une promenade depuis notre office vers quatre sites du centre : le musée naval, le musée de la ville, le cheval de Troie sur le front de mer et le musée de la céramique.','Un paseo desde nuestra oficina por cuatro lugares del centro: el Museo Naval, el Museo de la Ciudad, el Caballo de Troya en el paseo marítimo y el Museo de Cerámica.']}
+  desc:['A walk from our office through five sights of the centre: the Aynalı Bazaar, the Naval Museum, the City Museum, the Trojan Horse on the waterfront and the Ceramic Museum.','Büromuzdan başlayıp merkezdeki beş yeri gezen bir yürüyüş: Aynalı Çarşı, Deniz Müzesi, Kent Müzesi, kordondaki Truva Atı ve Seramik Müzesi.']}
 ];
 /* the first screen: each need shows its pictures three to a row, so keep 3, 6 or 9 per need.
    An entry is a place id, 'g:<key>' for one of the GROUPS above, or 'n:<key>' for one of the NEAR kinds.
@@ -1129,7 +1129,7 @@ const PLACES = [
  {id:'trojan-horse', icon:'horse', cat:'sights', kind:'pin', see:['r:centre'], lat:40.1520614, lng:26.4054584,
   name:['Trojan Horse','Truva Atı','Trojani­sches Pferd','Cheval de Troie','Caballo de Troya'],
   desc:['The wooden horse made for the 2004 film Troy, on the waterfront promenade.','2004 yapımı Troy filmi için yapılan ahşap at; kordonda durur.','Das Holzpferd aus dem Film „Troja“ (2004), an der Uferpromenade.','Le cheval de bois du film Troie (2004), sur la promenade du front de mer.','El caballo de madera de la película Troya (2004), en el paseo marítimo.']},
- {id:'aynali-bazaar', icon:'bag', cat:'sights', kind:'pin', lat:40.1462548, lng:26.4038044,
+ {id:'aynali-bazaar', icon:'bag', cat:'sights', kind:'pin', see:['r:centre'], lat:40.1462548, lng:26.4038044,
   name:['Aynalı Bazaar','Aynalı Çarşı','Aynalı-Basar','Bazar Aynalı','Bazar Aynalı'],
   desc:['Historic covered bazaar in the old town, good for souvenirs and local products.','Eski şehirdeki tarihî kapalı çarşı; hediyelik eşya ve yöresel ürünler bulunur.','Historischer überdachter Basar in der Altstadt, gut für Souvenirs und lokale Produkte.','Bazar couvert historique de la vieille ville, idéal pour les souvenirs et les produits locaux.','Bazar cubierto histórico del casco antiguo, ideal para recuerdos y productos locales.']},
  {id:'naval-museum', icon:'anchor', cat:'sights', kind:'pin', see:['r:centre'], lat:40.1475135, lng:26.3992667,
@@ -1459,11 +1459,11 @@ en:{name:'EN', brand:'Çanakkale Tourism Information', kicker:'CITY GUIDE', titl
   xDescCar:'In the {d} area. You can drive straight there; your maps app shows the road and the driving time.',
   dutyNow:'Pharmacies are closed right now (evening or weekend). Only the duty pharmacy (nöbetçi eczane) is open; its address is also posted on every pharmacy door.', dutyBtn:'Find the duty pharmacy', dutyList:'Duty pharmacy list',
   dutyHours:'Pharmacies are open on weekdays {a}–{b}. Outside these hours, at weekends and on public holidays only the duty pharmacy (nöbetçi eczane) is open.',
-  intro:'Tap a picture to see the route, the time and the fare.', rec:'Recommended',
+  intro:'Tap a picture to see the route and the time.', rec:'Recommended',
   cats:{sights:'Sights within walking distance', far:'Around Çanakkale', services:'Urgent needs', transport:'Getting around'},
   back:'Back', office:'Tourism Office',
   under:'under 100 m', several:'several nearby',
-  mWalk:'On foot', mBus:'City bus {l}', mTaxi:'Taxi', mFerry:'Ferry crossing', free:'Free', mins:'≈ {m} min', busFare:'{a} Kentkart · {b} bank card', busNote:'runs about every {f} min; waiting time not included', est:'Distances, times and fares are estimates.', homeWalk:'{m} min on foot',
+  mWalk:'On foot', mBus:'City bus {l}', mTaxi:'Taxi', mFerry:'Ferry crossing', free:'Free', mins:'≈ {m} min', busFare:'{a} Kentkart · {b} bank card', busNote:'runs about every {f} min; waiting time not included', est:'Distances and times are estimates.', homeWalk:'{m} min on foot',
   openIn:'Open the route in your maps app', openStop:'Walking route to the bus stop', findIn:'Search in your maps app', gName:'Google Maps', aName:'Apple Maps', yName:'Yandex Maps',
   sStart:'Start at the Tourism Information Office on the ferry square (İskele Meydanı).', sWalk:'Walk to {n}: {d}, {t}. Open the route below to follow it on your phone.', sArrive:'Arrival: {n}.',
   sTaxi1:'Take a taxi from the nearest rank; ask at our desk where it is.', sTaxi2:'Ride to {n}: {d}, {t}. The fare is set by the taximeter; ask the driver for an estimate before you set off.', taxiFare:'by taximeter',
@@ -1477,17 +1477,17 @@ en:{name:'EN', brand:'Çanakkale Tourism Information', kicker:'CITY GUIDE', titl
   xDesc:'In the {d} area. See how to get to {d} first; the last stretch usually needs a taxi, a tour or your own car.', xDescC:'In or near the centre of Çanakkale.', toVia:'How to get to {d}', inArea:'{d} area', centre:'city centre',
   how:'How to get there', locate:'Show my location', locErr:'Your location is not available.', theme:'Switch between light and dark',
   draft:'Draft: places and details are still being checked by the office.',
-  foot:'Çanakkale Tourism Information Office. Distances, times and fares are estimates; ask at the desk for today’s details.'},
+  foot:'Çanakkale Tourism Information Office. Distances and times are estimates; ask at the desk for today’s details.'},
 tr:{name:'TR', brand:'Çanakkale Turizm Danışma', kicker:'ŞEHİR REHBERİ', title:'Çanakkale rehber haritası', h1:'Ne sormak istersiniz?',
   qWhere:'Şu an nereye gidebilirim?', qHow:'Bir yere nasıl giderim?', phHow:'Nereye gitmek istiyorsunuz?', popular:'En çok sorulanlar', carQ:'Arabanız var mı?', carYes:'Arabam var', carNo:'Arabam yok',
   xDescCar:'{d} çevresindedir. Aracınızla doğrudan gidebilirsiniz; yolu ve süreyi harita uygulamanız gösterir.',
   dutyNow:'Şu an eczanelerin mesai saatleri dışında (akşam ya da hafta sonu). Yalnızca nöbetçi eczane açıktır; adresi her eczanenin kapısında da yazar.', dutyBtn:'Nöbetçi eczaneyi bul', dutyList:'Nöbetçi eczane listesi',
   dutyHours:'Eczaneler hafta içi {a}–{b} arasında açıktır. Bu saatlerin dışında, hafta sonu ve resmî tatillerde yalnızca nöbetçi eczane hizmet verir.',
-  intro:'Bir simgeye dokunun; güzergâhı, süreyi ve ücreti görün.', rec:'Önerilen',
+  intro:'Bir simgeye dokunun; güzergâhı ve süreyi görün.', rec:'Önerilen',
   cats:{sights:'Yürüyerek gezilecek yerler', far:'Çanakkale çevresinde', services:'Acil ihtiyaçlar', transport:'Ulaşım'},
   back:'Geri', office:'Turizm Danışma',
   under:'100 m’den az', several:'yakında birden fazla',
-  mWalk:'Yürüyerek', mBus:'{l} şehir içi otobüsü', mTaxi:'Taksi', mFerry:'Feribotla geçiş', free:'Ücretsiz', mins:'≈ {m} dk', busFare:'Kentkart {a} · banka kartı {b}', busNote:'yaklaşık {f} dakikada bir; bekleme süresi hariç', est:'Mesafe, süre ve ücretler tahminidir.', homeWalk:'yürüyerek {m} dk',
+  mWalk:'Yürüyerek', mBus:'{l} şehir içi otobüsü', mTaxi:'Taksi', mFerry:'Feribotla geçiş', free:'Ücretsiz', mins:'≈ {m} dk', busFare:'Kentkart {a} · banka kartı {b}', busNote:'yaklaşık {f} dakikada bir; bekleme süresi hariç', est:'Mesafe ve süreler tahminidir.', homeWalk:'yürüyerek {m} dk',
   openIn:'Rotayı harita uygulamanızda açın', openStop:'Durağa yürüme rotası', findIn:'Harita uygulamanızda arayın', gName:'Google Haritalar', aName:'Apple Haritalar', yName:'Yandex Haritalar',
   sStart:'İskele Meydanı’ndaki Turizm Danışma Bürosu’ndan yola çıkın.', sWalk:'{n} için yürüyün: {d}, {t}. Yolu telefonunuzdan izlemek için aşağıdan rotayı açın.', sArrive:'Varış: {n}.',
   sTaxi1:'En yakın taksi durağından taksiye binin; durağın yerini danışma masamıza sorabilirsiniz.', sTaxi2:'{n} için yolculuk: {d}, {t}. Ücreti taksimetre belirler; binmeden önce şoförden tahmini tutarı sorun.', taxiFare:'taksimetreye göre',
@@ -1501,17 +1501,17 @@ tr:{name:'TR', brand:'Çanakkale Turizm Danışma', kicker:'ŞEHİR REHBERİ', t
   xDesc:'{d} çevresindedir. Önce aşağıdaki “{d}: nasıl gidilir” bağlantısına bakın; yolun son bölümü için genellikle taksi, tur ya da kendi aracınız gerekir.', xDescC:'Çanakkale merkezinde ya da merkeze yakındır.', toVia:'{d}: nasıl gidilir', inArea:'{d} çevresi', centre:'şehir merkezi',
   how:'Nasıl gidilir', locate:'Konumumu göster', locErr:'Konumunuz alınamadı.', theme:'Açık ve koyu görünüm arasında geç',
   draft:'Taslak: yerler ve ayrıntılar büro tarafından henüz kontrol ediliyor.',
-  foot:'Çanakkale Turizm Danışma Bürosu. Mesafe, süre ve ücretler tahminidir; güncel bilgi için danışma masasına sorun.'},
+  foot:'Çanakkale Turizm Danışma Bürosu. Mesafe ve süreler tahminidir; güncel bilgi için danışma masasına sorun.'},
 de:{name:'DE', brand:'Touristeninformation Çanakkale', kicker:'STADTFÜHRER', title:'Stadtplan Çanakkale', h1:'Was möchten Sie wissen?',
   qWhere:'Wohin kann ich jetzt gehen?', qHow:'Wie komme ich dorthin?', phHow:'Wohin möchten Sie?', popular:'Am häufigsten gefragt', carQ:'Haben Sie ein Auto?', carYes:'Ich habe ein Auto', carNo:'Ich habe kein Auto',
   xDescCar:'Im Raum {d}. Sie können direkt mit dem Auto hinfahren; Ihre Karten-App zeigt Strecke und Fahrzeit.',
   dutyNow:'Die Apotheken sind jetzt geschlossen (abends oder am Wochenende). Geöffnet ist nur die Notdienstapotheke (nöbetçi eczane); ihre Adresse hängt auch an jeder Apothekentür.', dutyBtn:'Notdienstapotheke finden', dutyList:'Liste der Notdienstapotheken',
   dutyHours:'Apotheken sind werktags von {a} bis {b} Uhr geöffnet. Außerhalb dieser Zeiten, am Wochenende und an Feiertagen hat nur die Notdienstapotheke (nöbetçi eczane) geöffnet.',
-  intro:'Tippen Sie auf ein Symbol und sehen Sie Route, Dauer und Preis.', rec:'Empfohlen',
+  intro:'Tippen Sie auf ein Symbol und sehen Sie Route und Dauer.', rec:'Empfohlen',
   cats:{sights:'Sehenswertes zu Fuß', far:'Rund um Çanakkale', services:'Dringend benötigt', transport:'Verkehr'},
   back:'Zurück', office:'Touristeninformation',
   under:'unter 100 m', several:'mehrere in der Nähe',
-  mWalk:'Zu Fuß', mBus:'Stadtbus {l}', mTaxi:'Taxi', mFerry:'Überfahrt mit der Fähre', free:'Kostenlos', mins:'≈ {m} Min.', busFare:'{a} Kentkart · {b} Bankkarte', busNote:'etwa alle {f} Min.; ohne Wartezeit', est:'Entfernungen, Zeiten und Preise sind Schätzwerte.', homeWalk:'{m} Min. zu Fuß',
+  mWalk:'Zu Fuß', mBus:'Stadtbus {l}', mTaxi:'Taxi', mFerry:'Überfahrt mit der Fähre', free:'Kostenlos', mins:'≈ {m} Min.', busFare:'{a} Kentkart · {b} Bankkarte', busNote:'etwa alle {f} Min.; ohne Wartezeit', est:'Entfernungen und Zeiten sind Schätzwerte.', homeWalk:'{m} Min. zu Fuß',
   openIn:'Route in Ihrer Karten-App öffnen', openStop:'Fußweg zur Haltestelle', findIn:'In Ihrer Karten-App suchen', gName:'Google Maps', aName:'Apple Karten', yName:'Yandex Maps',
   sStart:'Starten Sie an der Touristeninformation am Fährplatz (İskele Meydanı).', sWalk:'Gehen Sie zu Fuß zu {n}: {d}, {t}. Öffnen Sie unten die Route, um ihr auf dem Telefon zu folgen.', sArrive:'Ankunft: {n}.',
   sTaxi1:'Nehmen Sie ein Taxi am nächsten Taxistand; wo er ist, erfahren Sie an unserem Schalter.', sTaxi2:'Fahrt zu {n}: {d}, {t}. Der Preis richtet sich nach dem Taxameter; fragen Sie den Fahrer vor der Abfahrt nach einer Schätzung.', taxiFare:'nach Taxameter',
@@ -1525,17 +1525,17 @@ de:{name:'DE', brand:'Touristeninformation Çanakkale', kicker:'STADTFÜHRER', t
   xDesc:'Im Raum {d}. Sehen Sie zuerst, wie Sie nach {d} kommen; für das letzte Stück brauchen Sie meist ein Taxi, eine Tour oder ein eigenes Auto.', xDescC:'Im Zentrum von Çanakkale oder in der Nähe.', toVia:'So kommen Sie nach {d}', inArea:'Raum {d}', centre:'Stadtzentrum',
   how:'So kommen Sie hin', locate:'Meinen Standort anzeigen', locErr:'Ihr Standort ist nicht verfügbar.', theme:'Zwischen heller und dunkler Ansicht wechseln',
   draft:'Entwurf: Orte und Angaben werden noch vom Büro geprüft.',
-  foot:'Touristeninformation Çanakkale. Entfernungen, Zeiten und Preise sind Schätzwerte; aktuelle Angaben erhalten Sie am Schalter.'},
+  foot:'Touristeninformation Çanakkale. Entfernungen und Zeiten sind Schätzwerte; aktuelle Angaben erhalten Sie am Schalter.'},
 fr:{name:'FR', brand:'Office de tourisme de Çanakkale', kicker:'GUIDE DE LA VILLE', title:'Plan de Çanakkale', h1:'Que souhaitez-vous savoir ?',
   qWhere:'Où puis-je aller maintenant ?', qHow:'Comment y aller ?', phHow:'Où voulez-vous aller ?', popular:'Les plus demandés', carQ:'Avez-vous une voiture ?', carYes:'J’ai une voiture', carNo:'Je n’ai pas de voiture',
   xDescCar:'Dans le secteur de {d}. Vous pouvez y aller directement en voiture ; votre application de cartes indique la route et la durée.',
   dutyNow:'Les pharmacies sont fermées en ce moment (soir ou week-end). Seule la pharmacie de garde (nöbetçi eczane) est ouverte ; son adresse est aussi affichée sur la porte de chaque pharmacie.', dutyBtn:'Trouver la pharmacie de garde', dutyList:'Liste des pharmacies de garde',
   dutyHours:'Les pharmacies sont ouvertes en semaine de {a} à {b}. En dehors de ces horaires, le week-end et les jours fériés, seule la pharmacie de garde (nöbetçi eczane) est ouverte.',
-  intro:'Touchez une icône pour voir l’itinéraire, la durée et le prix.', rec:'Recommandé',
+  intro:'Touchez une icône pour voir l’itinéraire et la durée.', rec:'Recommandé',
   cats:{sights:'À visiter à pied', far:'Autour de Çanakkale', services:'Besoins urgents', transport:'Se déplacer'},
   back:'Retour', office:'Office de tourisme',
   under:'moins de 100 m', several:'plusieurs à proximité',
-  mWalk:'À pied', mBus:'Bus de ville {l}', mTaxi:'Taxi', mFerry:'Traversée en ferry', free:'Gratuit', mins:'≈ {m} min', busFare:'{a} Kentkart · {b} carte bancaire', busNote:'environ toutes les {f} min ; attente non comprise', est:'Les distances, durées et tarifs sont des estimations.', homeWalk:'{m} min à pied',
+  mWalk:'À pied', mBus:'Bus de ville {l}', mTaxi:'Taxi', mFerry:'Traversée en ferry', free:'Gratuit', mins:'≈ {m} min', busFare:'{a} Kentkart · {b} carte bancaire', busNote:'environ toutes les {f} min ; attente non comprise', est:'Les distances et les durées sont des estimations.', homeWalk:'{m} min à pied',
   openIn:'Ouvrir l’itinéraire dans votre application de cartes', openStop:'Itinéraire à pied jusqu’à l’arrêt', findIn:'Chercher dans votre application de cartes', gName:'Google Maps', aName:'Plans (Apple)', yName:'Yandex Maps',
   sStart:'Partez de l’office de tourisme, sur la place de l’embarcadère (İskele Meydanı).', sWalk:'Marchez jusqu’à {n} : {d}, {t}. Ouvrez l’itinéraire ci-dessous pour le suivre sur votre téléphone.', sArrive:'Arrivée : {n}.',
   sTaxi1:'Prenez un taxi à la station la plus proche ; demandez-nous où elle se trouve.', sTaxi2:'Trajet jusqu’à {n} : {d}, {t}. Le prix est fixé par le taximètre ; demandez une estimation au chauffeur avant de partir.', taxiFare:'au taximètre',
@@ -1549,17 +1549,17 @@ fr:{name:'FR', brand:'Office de tourisme de Çanakkale', kicker:'GUIDE DE LA VIL
   xDesc:'Dans le secteur de {d}. Voyez d’abord comment rejoindre {d} ; pour la dernière partie, il faut en général un taxi, une excursion ou votre voiture.', xDescC:'Au centre de Çanakkale ou à proximité.', toVia:'Comment aller à {d}', inArea:'secteur de {d}', centre:'centre-ville',
   how:'Comment s’y rendre', locate:'Afficher ma position', locErr:'Votre position est indisponible.', theme:'Basculer entre thème clair et sombre',
   draft:'Brouillon : les lieux et les détails sont encore en cours de vérification.',
-  foot:'Office de tourisme de Çanakkale. Les distances, durées et tarifs sont des estimations ; demandez les informations du jour au comptoir.'},
+  foot:'Office de tourisme de Çanakkale. Les distances et les durées sont des estimations ; demandez les informations du jour au comptoir.'},
 es:{name:'ES', brand:'Oficina de Turismo de Çanakkale', kicker:'GUÍA DE LA CIUDAD', title:'Mapa de Çanakkale', h1:'¿Qué desea saber?',
   qWhere:'¿Adónde puedo ir ahora?', qHow:'¿Cómo llego allí?', phHow:'¿Adónde quiere ir?', popular:'Lo más preguntado', carQ:'¿Tiene coche?', carYes:'Tengo coche', carNo:'No tengo coche',
   xDescCar:'En la zona de {d}. Puede ir directamente en coche; su aplicación de mapas muestra la ruta y el tiempo.',
   dutyNow:'Las farmacias están cerradas ahora (noche o fin de semana). Solo abre la farmacia de guardia (nöbetçi eczane); su dirección figura también en la puerta de cada farmacia.', dutyBtn:'Buscar la farmacia de guardia', dutyList:'Lista de farmacias de guardia',
   dutyHours:'Las farmacias abren los días laborables de {a} a {b}. Fuera de ese horario, los fines de semana y los festivos solo abre la farmacia de guardia (nöbetçi eczane).',
-  intro:'Toque un icono para ver la ruta, el tiempo y el precio.', rec:'Recomendado',
+  intro:'Toque un icono para ver la ruta y el tiempo.', rec:'Recomendado',
   cats:{sights:'Para visitar a pie', far:'Alrededores de Çanakkale', services:'Necesidades urgentes', transport:'Cómo moverse'},
   back:'Volver', office:'Oficina de turismo',
   under:'menos de 100 m', several:'varios cerca',
-  mWalk:'A pie', mBus:'Autobús urbano {l}', mTaxi:'Taxi', mFerry:'Travesía en ferri', free:'Gratis', mins:'≈ {m} min', busFare:'{a} Kentkart · {b} tarjeta bancaria', busNote:'cada {f} min aprox.; sin contar la espera', est:'Las distancias, los tiempos y las tarifas son estimaciones.', homeWalk:'{m} min a pie',
+  mWalk:'A pie', mBus:'Autobús urbano {l}', mTaxi:'Taxi', mFerry:'Travesía en ferri', free:'Gratis', mins:'≈ {m} min', busFare:'{a} Kentkart · {b} tarjeta bancaria', busNote:'cada {f} min aprox.; sin contar la espera', est:'Las distancias y los tiempos son estimaciones.', homeWalk:'{m} min a pie',
   openIn:'Abrir la ruta en su aplicación de mapas', openStop:'Ruta a pie hasta la parada', findIn:'Buscar en su aplicación de mapas', gName:'Google Maps', aName:'Apple Maps', yName:'Yandex Maps',
   sStart:'Salga de la oficina de turismo, en la plaza del embarcadero (İskele Meydanı).', sWalk:'Camine hasta {n}: {d}, {t}. Abra la ruta de abajo para seguirla en su teléfono.', sArrive:'Llegada: {n}.',
   sTaxi1:'Tome un taxi en la parada más cercana; pregunte en nuestro mostrador dónde está.', sTaxi2:'Trayecto hasta {n}: {d}, {t}. El precio lo marca el taxímetro; pida una estimación al conductor antes de salir.', taxiFare:'según taxímetro',
@@ -1573,7 +1573,7 @@ es:{name:'ES', brand:'Oficina de Turismo de Çanakkale', kicker:'GUÍA DE LA CIU
   xDesc:'En la zona de {d}. Vea primero cómo llegar a {d}; para el último tramo suele hacer falta un taxi, una excursión o su propio coche.', xDescC:'En el centro de Çanakkale o cerca.', toVia:'Cómo llegar a {d}', inArea:'zona de {d}', centre:'centro de la ciudad',
   how:'Cómo llegar', locate:'Mostrar mi ubicación', locErr:'Su ubicación no está disponible.', theme:'Cambiar entre tema claro y oscuro',
   draft:'Borrador: la oficina aún está revisando los lugares y los detalles.',
-  foot:'Oficina de Turismo de Çanakkale. Las distancias, los tiempos y las tarifas son estimaciones; pregunte en el mostrador por los datos del día.'}
+  foot:'Oficina de Turismo de Çanakkale. Las distancias y los tiempos son estimaciones; pregunte en el mostrador por los datos del día.'}
 };
 /* ---- four more languages: Bulgarian, Russian, Greek, Arabic ----
    Interface texts are below. Texts of the places are in XL further down, looked up by their English text. */
@@ -1583,10 +1583,10 @@ bg:{name:'BG', brand:'Туристически център Чанаккале',
   xDescCar:'В района на {d}. Можете да стигнете направо с автомобила си; приложението ви за карти показва пътя и времето.',
   dutyNow:'В момента аптеките са затворени (вечер или уикенд). Работи само дежурната аптека (nöbetçi eczane); адресът ѝ е изписан и на вратата на всяка аптека.', dutyBtn:'Намери дежурната аптека', dutyList:'Списък на дежурните аптеки',
   dutyHours:'Аптеките работят в делнични дни от {a} до {b}. Извън тези часове, през уикенда и на официални празници работи само дежурната аптека (nöbetçi eczane).',
-  intro:'Докоснете картинка, за да видите маршрута, времето и цената.', rec:'Препоръчано',
+  intro:'Докоснете картинка, за да видите маршрута и времето.', rec:'Препоръчано',
   cats:{sights:'Забележителности пеша', far:'Около Чанаккале', services:'Спешни нужди', transport:'Транспорт'},
   back:'Назад', office:'Туристически център', under:'под 100 м', several:'няколко наблизо',
-  mWalk:'Пеша', mBus:'Градски автобус {l}', mTaxi:'Такси', mFerry:'С ферибот', free:'Безплатно', mins:'≈ {m} мин', busFare:'{a} с Kentkart · {b} с банкова карта', busNote:'на около {f} мин; без времето за чакане', est:'Разстоянията, времената и цените са приблизителни.', homeWalk:'{m} мин пеша',
+  mWalk:'Пеша', mBus:'Градски автобус {l}', mTaxi:'Такси', mFerry:'С ферибот', free:'Безплатно', mins:'≈ {m} мин', busFare:'{a} с Kentkart · {b} с банкова карта', busNote:'на около {f} мин; без времето за чакане', est:'Разстоянията и времената са приблизителни.', homeWalk:'{m} мин пеша',
   openIn:'Отворете маршрута в приложението си за карти', openStop:'Пешеходен маршрут до спирката', findIn:'Търсете в приложението си за карти', gName:'Google Maps', aName:'Apple Maps', yName:'Yandex Maps',
   sStart:'Тръгнете от Туристическия информационен център на площада при ферибота (İskele Meydanı).', sWalk:'Вървете до {n}: {d}, {t}. Отворете маршрута по-долу, за да го следвате на телефона си.', sArrive:'Пристигане: {n}.',
   sTaxi1:'Вземете такси от най-близката стоянка; попитайте на нашето гише къде се намира.', sTaxi2:'Пътуване до {n}: {d}, {t}. Цената се определя от таксиметъра; преди да тръгнете, попитайте шофьора за приблизителна сума.', taxiFare:'по таксиметър',
@@ -1598,7 +1598,7 @@ bg:{name:'BG', brand:'Туристически център Чанаккале',
   gduT:'Разписание и цени на фериботите', gduP:'Фериботите се обслужват от GESTAŞ. Преди да тръгнете, проверете днешните курсове и актуалните цени на официалния сайт.', gduTimes:'Разписание', gduFares:'Цени',
   how:'Как да стигнете', locate:'Покажи моето местоположение', locErr:'Местоположението ви не е достъпно.', theme:'Смяна между светъл и тъмен изглед',
   draft:'Чернова: местата и подробностите все още се проверяват от центъра.',
-  foot:'Туристически информационен център Чанаккале. Разстоянията, времената и цените са приблизителни; попитайте на гишето за актуална информация.',
+  foot:'Туристически информационен център Чанаккале. Разстоянията и времената са приблизителни; попитайте на гишето за актуална информация.',
   nFound:'{n} резултата, най-подходящите първо', mBusC:'Ç9 + междуградски автобус', sCb2:'От автогарата вземете междуградски автобус до {n}. Билети се продават в офисите на автобусните фирми и онлайн; вижте „Автобусни фирми“.', sCarNo:'Приложението ви за карти показва разстоянието и времето за пътуване до {n}.', cDesc:'Как да стигнете от Чанаккале до {n}.',
   xDesc:'В района на {d}. Първо вижте как да стигнете до {d}; за последната част обикновено е нужно такси, екскурзия или собствен автомобил.', xDescC:'В центъра на Чанаккале или наблизо.', toVia:'Как да стигнете до {d}', inArea:'район {d}', centre:'център на града'},
 
@@ -1607,10 +1607,10 @@ ru:{name:'RU', brand:'Туристический центр Чанаккале',
   xDescCar:'В районе {d}. Туда можно доехать прямо на автомобиле; приложение карт покажет дорогу и время в пути.',
   dutyNow:'Сейчас аптеки закрыты (вечер или выходные). Работает только дежурная аптека (nöbetçi eczane); её адрес указан также на двери каждой аптеки.', dutyBtn:'Найти дежурную аптеку', dutyList:'Список дежурных аптек',
   dutyHours:'Аптеки работают по будням с {a} до {b}. В остальное время, в выходные и праздничные дни работает только дежурная аптека (nöbetçi eczane).',
-  intro:'Нажмите на значок, чтобы увидеть маршрут, время и стоимость.', rec:'Рекомендуем',
+  intro:'Нажмите на значок, чтобы увидеть маршрут и время.', rec:'Рекомендуем',
   cats:{sights:'Достопримечательности пешком', far:'В окрестностях Чанаккале', services:'Срочные нужды', transport:'Транспорт'},
   back:'Назад', office:'Туристический центр', under:'менее 100 м', several:'несколько поблизости',
-  mWalk:'Пешком', mBus:'Городской автобус {l}', mTaxi:'Такси', mFerry:'На пароме', free:'Бесплатно', mins:'≈ {m} мин', busFare:'{a} по Kentkart · {b} банковской картой', busNote:'примерно каждые {f} мин; без учёта ожидания', est:'Расстояния, время и цены указаны приблизительно.', homeWalk:'{m} мин пешком',
+  mWalk:'Пешком', mBus:'Городской автобус {l}', mTaxi:'Такси', mFerry:'На пароме', free:'Бесплатно', mins:'≈ {m} мин', busFare:'{a} по Kentkart · {b} банковской картой', busNote:'примерно каждые {f} мин; без учёта ожидания', est:'Расстояния и время указаны приблизительно.', homeWalk:'{m} мин пешком',
   openIn:'Откройте маршрут в приложении карт', openStop:'Пешеходный маршрут до остановки', findIn:'Найдите в приложении карт', gName:'Google Карты', aName:'Apple Карты', yName:'Яндекс Карты',
   sStart:'Начните от Туристического информационного центра на паромной площади (İskele Meydanı).', sWalk:'Идите до места «{n}»: {d}, {t}. Откройте маршрут ниже, чтобы следовать ему на телефоне.', sArrive:'Прибытие: {n}.',
   sTaxi1:'Возьмите такси на ближайшей стоянке; где она находится, подскажут на нашей стойке.', sTaxi2:'Поездка до места «{n}»: {d}, {t}. Стоимость определяется по таксометру; перед поездкой спросите у водителя примерную сумму.', taxiFare:'по таксометру',
@@ -1622,7 +1622,7 @@ ru:{name:'RU', brand:'Туристический центр Чанаккале',
   gduT:'Расписание и цены паромов', gduP:'Паромы обслуживает компания GESTAŞ. Перед поездкой проверьте сегодняшние рейсы и актуальные цены на официальном сайте.', gduTimes:'Расписание', gduFares:'Цены',
   how:'Как добраться', locate:'Показать моё местоположение', locErr:'Не удалось определить ваше местоположение.', theme:'Переключить светлую и тёмную тему',
   draft:'Черновик: места и сведения ещё проверяются центром.',
-  foot:'Туристический информационный центр Чанаккале. Расстояния, время и цены указаны приблизительно; актуальную информацию уточняйте на стойке.',
+  foot:'Туристический информационный центр Чанаккале. Расстояния и время указаны приблизительно; актуальную информацию уточняйте на стойке.',
   nFound:'Результатов: {n}, сначала самые подходящие', mBusC:'Ç9 + междугородный автобус', sCb2:'На автовокзале сядьте на междугородный автобус до {n}. Билеты продаются в офисах автобусных компаний и онлайн; см. «Автобусные компании».', sCarNo:'Расстояние и время в пути до {n} покажет ваше приложение карт.', cDesc:'Как добраться из Чанаккале до {n}.',
   xDesc:'В районе {d}. Сначала посмотрите, как добраться до {d}; на последнем участке обычно нужны такси, экскурсия или свой автомобиль.', xDescC:'В центре Чанаккале или рядом.', toVia:'Как добраться: {d}', inArea:'район {d}', centre:'центр города'},
 
@@ -1631,10 +1631,10 @@ el:{name:'EL', brand:'Τουριστικές Πληροφορίες Τσανάκ
   xDescCar:'Στην περιοχή: {d}. Μπορείτε να πάτε απευθείας με το αυτοκίνητό σας· η εφαρμογή χαρτών σας δείχνει τη διαδρομή και τον χρόνο.',
   dutyNow:'Τα φαρμακεία είναι κλειστά αυτή την ώρα (βράδυ ή Σαββατοκύριακο). Ανοιχτό είναι μόνο το εφημερεύον φαρμακείο (nöbetçi eczane)· η διεύθυνσή του αναγράφεται και στην πόρτα κάθε φαρμακείου.', dutyBtn:'Βρείτε το εφημερεύον φαρμακείο', dutyList:'Λίστα εφημερευόντων φαρμακείων',
   dutyHours:'Τα φαρμακεία είναι ανοιχτά τις καθημερινές {a}–{b}. Εκτός αυτών των ωρών, τα Σαββατοκύριακα και τις αργίες λειτουργεί μόνο το εφημερεύον φαρμακείο (nöbetçi eczane).',
-  intro:'Πατήστε ένα εικονίδιο για να δείτε τη διαδρομή, τον χρόνο και το κόστος.', rec:'Προτείνεται',
+  intro:'Πατήστε ένα εικονίδιο για να δείτε τη διαδρομή και τον χρόνο.', rec:'Προτείνεται',
   cats:{sights:'Αξιοθέατα με τα πόδια', far:'Γύρω από το Τσανάκκαλε', services:'Άμεσες ανάγκες', transport:'Μετακινήσεις'},
   back:'Πίσω', office:'Γραφείο Τουρισμού', under:'κάτω από 100 μ.', several:'αρκετά κοντά',
-  mWalk:'Με τα πόδια', mBus:'Αστικό λεωφορείο {l}', mTaxi:'Ταξί', mFerry:'Με το φέρι', free:'Δωρεάν', mins:'≈ {m} λεπτά', busFare:'{a} με Kentkart · {b} με τραπεζική κάρτα', busNote:'περίπου κάθε {f} λεπτά· δεν περιλαμβάνεται η αναμονή', est:'Οι αποστάσεις, οι χρόνοι και οι τιμές είναι κατά προσέγγιση.', homeWalk:'{m} λεπτά με τα πόδια',
+  mWalk:'Με τα πόδια', mBus:'Αστικό λεωφορείο {l}', mTaxi:'Ταξί', mFerry:'Με το φέρι', free:'Δωρεάν', mins:'≈ {m} λεπτά', busFare:'{a} με Kentkart · {b} με τραπεζική κάρτα', busNote:'περίπου κάθε {f} λεπτά· δεν περιλαμβάνεται η αναμονή', est:'Οι αποστάσεις και οι χρόνοι είναι κατά προσέγγιση.', homeWalk:'{m} λεπτά με τα πόδια',
   openIn:'Ανοίξτε τη διαδρομή στην εφαρμογή χαρτών σας', openStop:'Διαδρομή με τα πόδια έως τη στάση', findIn:'Αναζήτηση στην εφαρμογή χαρτών σας', gName:'Google Maps', aName:'Apple Maps', yName:'Yandex Maps',
   sStart:'Ξεκινήστε από το Γραφείο Τουριστικών Πληροφοριών στην πλατεία του φέρι (İskele Meydanı).', sWalk:'Περπατήστε έως: {n} — {d}, {t}. Ανοίξτε τη διαδρομή παρακάτω για να την ακολουθήσετε στο κινητό σας.', sArrive:'Άφιξη: {n}.',
   sTaxi1:'Πάρτε ταξί από την κοντινότερη πιάτσα· ρωτήστε στο γκισέ μας πού βρίσκεται.', sTaxi2:'Διαδρομή έως: {n} — {d}, {t}. Η τιμή ορίζεται από το ταξίμετρο· ρωτήστε τον οδηγό για μια εκτίμηση πριν ξεκινήσετε.', taxiFare:'με ταξίμετρο',
@@ -1646,7 +1646,7 @@ el:{name:'EL', brand:'Τουριστικές Πληροφορίες Τσανάκ
   gduT:'Δρομολόγια και τιμές φέρι', gduP:'Τα φέρι εκτελούνται από την GESTAŞ. Πριν ξεκινήσετε, ελέγξτε τα σημερινά δρομολόγια και τις ισχύουσες τιμές στον επίσημο ιστότοπο.', gduTimes:'Δρομολόγια', gduFares:'Τιμές',
   how:'Πώς θα πάτε', locate:'Εμφάνιση της θέσης μου', locErr:'Η θέση σας δεν είναι διαθέσιμη.', theme:'Εναλλαγή φωτεινού και σκούρου θέματος',
   draft:'Προσχέδιο: οι τόποι και οι λεπτομέρειες ελέγχονται ακόμη από το γραφείο.',
-  foot:'Γραφείο Τουριστικών Πληροφοριών Τσανάκκαλε. Οι αποστάσεις, οι χρόνοι και οι τιμές είναι κατά προσέγγιση· ρωτήστε στο γκισέ για τα σημερινά στοιχεία.',
+  foot:'Γραφείο Τουριστικών Πληροφοριών Τσανάκκαλε. Οι αποστάσεις και οι χρόνοι είναι κατά προσέγγιση· ρωτήστε στο γκισέ για τα σημερινά στοιχεία.',
   nFound:'{n} αποτελέσματα, πρώτα τα πιο σχετικά', mBusC:'Ç9 + υπεραστικό λεωφορείο', sCb2:'Στον σταθμό πάρτε υπεραστικό λεωφορείο για {n}. Εισιτήρια πωλούνται στα γραφεία των εταιρειών λεωφορείων και διαδικτυακά· δείτε «Εταιρείες λεωφορείων».', sCarNo:'Η εφαρμογή χαρτών σας δείχνει την απόσταση και τον χρόνο οδήγησης έως: {n}.', cDesc:'Πώς θα πάτε από το Τσανάκκαλε προς: {n}.',
   xDesc:'Στην περιοχή: {d}. Δείτε πρώτα πώς φτάνετε εκεί· για το τελευταίο τμήμα χρειάζεται συνήθως ταξί, οργανωμένη εκδρομή ή δικό σας αυτοκίνητο.', xDescC:'Στο κέντρο του Τσανάκκαλε ή κοντά.', toVia:'Πώς θα πάτε: {d}', inArea:'περιοχή {d}', centre:'κέντρο πόλης'},
 
@@ -1655,10 +1655,10 @@ ar:{name:'AR', brand:'مكتب الاستعلامات السياحية في جن
   xDescCar:'في منطقة {d}. يمكنك الذهاب مباشرةً بسيارتك؛ يعرض تطبيق الخرائط لديك الطريق ومدة القيادة.',
   dutyNow:'الصيدليات مغلقة الآن (مساءً أو في عطلة نهاية الأسبوع). تعمل الصيدلية المناوبة فقط (nöbetçi eczane)، وعنوانها مكتوب أيضًا على باب كل صيدلية.', dutyBtn:'ابحث عن الصيدلية المناوبة', dutyList:'قائمة الصيدليات المناوبة',
   dutyHours:'تعمل الصيدليات في أيام الأسبوع من {a} إلى {b}. خارج هذه الأوقات وفي عطلة نهاية الأسبوع والعطل الرسمية تعمل الصيدلية المناوبة فقط (nöbetçi eczane).',
-  intro:'اضغط على أيقونة لمعرفة الطريق والوقت والتكلفة.', rec:'موصى به',
+  intro:'اضغط على أيقونة لمعرفة الطريق والوقت.', rec:'موصى به',
   cats:{sights:'معالم تُزار سيرًا على الأقدام', far:'في محيط جناق قلعة', services:'احتياجات عاجلة', transport:'التنقل'},
   back:'رجوع', office:'مكتب السياحة', under:'أقل من 100 م', several:'عدة أماكن قريبة',
-  mWalk:'سيرًا على الأقدام', mBus:'حافلة المدينة {l}', mTaxi:'سيارة أجرة', mFerry:'بالعبّارة', free:'مجانًا', mins:'≈ {m} دقيقة', busFare:'{a} ببطاقة Kentkart · {b} بالبطاقة المصرفية', busNote:'كل {f} دقيقة تقريبًا؛ لا يشمل وقت الانتظار', est:'المسافات والأوقات والأسعار تقديرية.', homeWalk:'{m} دقيقة سيرًا',
+  mWalk:'سيرًا على الأقدام', mBus:'حافلة المدينة {l}', mTaxi:'سيارة أجرة', mFerry:'بالعبّارة', free:'مجانًا', mins:'≈ {m} دقيقة', busFare:'{a} ببطاقة Kentkart · {b} بالبطاقة المصرفية', busNote:'كل {f} دقيقة تقريبًا؛ لا يشمل وقت الانتظار', est:'المسافات والأوقات تقديرية.', homeWalk:'{m} دقيقة سيرًا',
   openIn:'افتح المسار في تطبيق الخرائط لديك', openStop:'مسار المشي إلى موقف الحافلة', findIn:'ابحث في تطبيق الخرائط لديك', gName:'خرائط Google', aName:'خرائط Apple', yName:'خرائط Yandex',
   sStart:'انطلق من مكتب الاستعلامات السياحية في ساحة العبّارات (İskele Meydanı).', sWalk:'امشِ إلى {n}: {d}، {t}. افتح المسار أدناه لتتبعه على هاتفك.', sArrive:'الوصول: {n}.',
   sTaxi1:'استقل سيارة أجرة من أقرب موقف؛ اسأل في مكتبنا عن مكانه.', sTaxi2:'الرحلة إلى {n}: {d}، {t}. تُحدَّد الأجرة بالعدّاد؛ اسأل السائق عن التكلفة التقديرية قبل الانطلاق.', taxiFare:'حسب العدّاد',
@@ -1670,7 +1670,7 @@ ar:{name:'AR', brand:'مكتب الاستعلامات السياحية في جن
   gduT:'مواعيد العبّارات وأسعارها', gduP:'تشغّل شركة GESTAŞ العبّارات. قبل الانطلاق تحقّق من رحلات اليوم والأسعار الحالية على موقعها الرسمي.', gduTimes:'المواعيد', gduFares:'الأسعار',
   how:'كيف تصل', locate:'إظهار موقعي', locErr:'تعذّر تحديد موقعك.', theme:'التبديل بين الوضع الفاتح والداكن',
   draft:'مسودة: الأماكن والتفاصيل ما زالت قيد المراجعة من المكتب.',
-  foot:'مكتب الاستعلامات السياحية في جناق قلعة. المسافات والأوقات والأسعار تقديرية؛ اسأل في المكتب عن معلومات اليوم.',
+  foot:'مكتب الاستعلامات السياحية في جناق قلعة. المسافات والأوقات تقديرية؛ اسأل في المكتب عن معلومات اليوم.',
   nFound:'{n} نتيجة، الأنسب أولًا', mBusC:'Ç9 + حافلة بين المدن', sCb2:'من محطة الحافلات استقل حافلة بين المدن إلى {n}. تُباع التذاكر في مكاتب شركات الحافلات وعبر الإنترنت؛ انظر «شركات الحافلات».', sCarNo:'يعرض تطبيق الخرائط لديك المسافة ومدة القيادة إلى {n}.', cDesc:'كيف تصل من جناق قلعة إلى {n}.',
   xDesc:'في منطقة {d}. اطّلع أولًا على طريقة الوصول إلى {d}؛ يحتاج الجزء الأخير عادةً إلى سيارة أجرة أو جولة منظمة أو سيارتك الخاصة.', xDescC:'في مركز مدينة جناق قلعة أو بالقرب منه.', toVia:'طريقة الوصول إلى {d}', inArea:'منطقة {d}', centre:'مركز المدينة'}
 };
@@ -1989,7 +1989,12 @@ const li = () => LANGS.indexOf(lang);
 const byId = id => PLACES.find(x => x.id === id);
 /* a text in the page's language. The four extra languages are looked up in XL by the English text. */
 const xl = s => (XL[lang] && XL[lang][s.replace(/\u00ad/g, '')]) || s;
-const tx = a => typeof a === 'string' ? xl(a) : li() < a.length ? a[li()] : Array.isArray(a[0]) ? a[0].map(xl) : xl(a[0]);
+const tx0 = a => typeof a === 'string' ? xl(a) : li() < a.length ? a[li()] : Array.isArray(a[0]) ? a[0].map(xl) : xl(a[0]);
+/* No prices are shown anywhere (they go out of date). The amounts are still in the texts of the data; here every clause that names an amount in TL is cut out. */
+function noFare(s){ if (typeof s !== 'string' || s.indexOf('TL') < 0) return s;
+  s = s.replace(/(\d)[.,](\d{3})(?!\d)/g, '$1$2').replace(/\s*\([^()]*\bTL\b[^()]*\)/g, '').replace(/\s*[:,،؛;·]\s*[^.:,،؛;!?·]*\bTL\b[^.!?]*(?=[.!?]|$)/g, '');
+  return /\bTL\b/.test(s) ? (s.match(/[^.!?]+[.!?]*\s*/g) || []).filter(x => !/\bTL\b/.test(x)).join('').trim() : s; }
+const tx = a => { const r = tx0(a); return Array.isArray(r) ? r.map(x => Array.isArray(x) ? x.map(noFare) : noFare(x)) : noFare(r); };
 
 function metres(a, b){ const R = 6371000, r = Math.PI/180, dLa = (b.lat-a.lat)*r, dLo = (b.lng-a.lng)*r;
   const h = Math.sin(dLa/2)**2 + Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(dLo/2)**2; return 2*R*Math.asin(Math.sqrt(h)); }
@@ -1998,7 +2003,7 @@ function distText(m){ const t = UI[lang], u = UNITS[lang] || ['m','km']; if (m <
   return (m < 10000 ? (m/1000).toFixed(1) : Math.round(m/1000)).toString().replace('.', lang === 'en' || lang === 'ar' ? '.' : ',') + ' ' + u[1]; }
 function roadM(p){ return p.road || metres(OFFICE, p) * RATES.detour; }
 function approx(m){ return m < 100 ? UI[lang].under : '≈ ' + distText(m); }
-const fillT = (s, o) => s.replace(/\{(\w)\}/g, (m, k) => o[k] ?? m);
+const fillT = (s, o) => noFare(s.replace(/\{(\w)\}/g, (m, k) => o[k] ?? m));
 
 /* links that hand the journey over to the phone's maps apps: Google, Apple and Yandex.
    No starting point is given, so each app routes from where the visitor is standing. */
@@ -2026,7 +2031,7 @@ function options(p){ const t = UI[lang]; let o = []; if (p.kind !== 'pin') retur
       tm = t.mins.replace('{m}', p.bus.rideMin + toStop), fare = t.busFare.replace('{a}', RATES.busCard + ' TL').replace('{b}', RATES.busBank + ' TL');
     o.push({mode:'bus', title:t.mBus.replace('{l}', p.bus.line), note:p.bus.every ? t.busNote.replace('{f}', p.bus.every) : '', time:tm, cost:RATES.busCard + '–' + RATES.busBank + ' TL',
       links:p.stop ? mapLinks(p.stop, 'walk') : [mapLinks(p, 'transit')[2]], linksTitle:p.stop ? t.openStop : t.openIn,
-      steps:tx(p.steps || [[]]).map((x, i) => [x, i === 1 ? ride + ' · ' + fare : ''])}); }
+      steps:tx(p.steps || [[]]).map((x, i) => [x, i === 1 ? ride : ''])}); }
   const startAt = (id, how) => { const q = byId(id); return q ? {links:mapLinks(q, how || 'walk'), linksTitle:fillT(t.openStart, {n:short(q)})} : {links:mapLinks(p, how || 'walk')}; };
   if (p.viaOtogar){ const city = p.viaOtogar === 'city';      /* 'city': an intercity coach from the Otogar; otherwise a district bus */
     o.push({mode:'bus', title:city ? t.mBusC : t.mBusD, time:'', cost:city ? '' : t.ask, ...startAt('c9-stop'),
@@ -2281,14 +2286,14 @@ function renderSheet(p){
   const links = ops.length ? null : routed ? nameLinks(p.q, p.via === 'walk' ? 'walk' : 'drive') : findLinks(p.q);
   if (closed) h += '<div class="duty"><p>' + esc(t.dutyNow) + '</p>' + cta(mine(findLinks(p.duty.q)), t.dutyBtn) + list + '</div>';
   else if (ops.length){ const o = ops[0];
-    h += '<div class="best" style="--c:var(--' + c + ')"><span class="ico">' + sized(o.mode, 24) + '</span><span class="txt"><small>' + esc(t.rec) + '</small><b>' + esc(o.title) + '</b></span><span class="val"><b>' + esc(o.time) + '</b><small>' + esc(o.cost) + '</small></span></div>' +
+    h += '<div class="best" style="--c:var(--' + c + ')"><span class="ico">' + sized(o.mode, 24) + '</span><span class="txt"><small>' + esc(t.rec) + '</small><b>' + esc(o.title) + '</b></span><span class="val"><b>' + esc(o.time) + '</b></span></div>' +
       cta(mine(o.links), o.cta || (o.mode === 'bus' && p.stop ? t.openStop : t.start)); }
   else { if (v && CAR === false) h += seeCard(p.via); h += cta(mine(links), routed ? t.start : t.findIn); }
   if (p.hours && !closed) h += '<div class="hours"><p>' + esc(fillT(t.dutyHours, {a:p.hours.from, b:p.hours.to})) + '</p>' + list + '</div>';
   if (!p.hours && SUIT[p.id] && (SUIT[p.id].in || SUIT[p.id].hrs)) h += '<div class="hours"><p>' + esc(t.pCheck) + '</p></div>';
   $('#sheetTop').innerHTML = h; h = '';
   if (ops.length) h += '<div class="how">' + esc(t.how) + '</div><div class="opts" style="--c:var(--' + c + ')">' + ops.map((o, i) =>
-      '<details class="opt"' + (i === 0 && !closed ? ' open' : '') + '><summary><span class="ico">' + ICONS[o.mode] + '</span><span class="txt"><b>' + esc(o.title) + '</b>' + (i === 0 && ops.length > 1 && !closed ? '<span class="rec">' + esc(t.rec) + '</span>' : '') + '</span><span class="val"><b>' + esc(o.time) + '</b><small>' + esc(o.cost) + '</small></span><span class="go">' + ICONS.chevron + '</span>' + (o.note ? '<span class="note">' + esc(o.note) + '</span>' : '') + '</summary><div class="body">' +
+      '<details class="opt"' + (i === 0 && !closed ? ' open' : '') + '><summary><span class="ico">' + ICONS[o.mode] + '</span><span class="txt"><b>' + esc(o.title) + '</b>' + (i === 0 && ops.length > 1 && !closed ? '<span class="rec">' + esc(t.rec) + '</span>' : '') + '</span><span class="val"><b>' + esc(o.time) + '</b></span><span class="go">' + ICONS.chevron + '</span>' + (o.note ? '<span class="note">' + esc(o.note) + '</span>' : '') + '</summary><div class="body">' +
       (o.steps.length ? '<ol class="steps">' + o.steps.map(x => '<li><span>' + esc(x[0]) + (x[1] ? '<small>' + esc(x[1]) + '</small>' : '') + '</span></li>').join('') + '</ol>' : '') +
       linkRow(o.links, o.linksTitle || t.openIn) + '</div></details>').join('') + '</div>' + (p.noDist ? '' : '<p class="est">' + esc(t.est) + '</p>');
   else h += linkRow(links, routed ? t.openIn : t.findIn);
