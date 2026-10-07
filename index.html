@@ -10,13 +10,8 @@
 <meta name="theme-color" content="#f1f5f6" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#101618" media="(prefers-color-scheme: dark)">
 <meta property="og:title" content="Çanakkale Turizm Danışma · Şehir Rehberi">
-<meta property="og:description" content="Nereye gidebilirim? Bir yere nasıl giderim? Çanakkale için yol tarifleri, 9 dilde.">
+<meta property="og:description" content="Nereyi ziyaret edebilirim? Bir yere nasıl giderim? Çanakkale için yol tarifleri, 9 dilde.">
 <meta property="og:type" content="website">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Çanakkale Rehber">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2318242a'/%3E%3Ccircle cx='32' cy='18' r='5' fill='%23fff'/%3E%3Crect x='27' y='27' width='10' height='24' rx='3' fill='%23fff'/%3E%3C/svg%3E">
 <style>/* required styles */
 
@@ -684,7 +679,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
 :root{
   --bg:#f1f5f6; --panel:#ffffff; --line:#cfdadd; --text:#12222a; --muted:#40525a; --accent:#0b5c7a;
   --sights:#b4470a; --far:#a3264d; --transport:#5b2fc0; --services:#0f6b63; --chip:#e3ecee;
-  --near:var(--accent);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -705,16 +699,8 @@ button{font:inherit;color:inherit}
 button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 [hidden]{display:none!important}
 
-/* the banner stays at the top of every screen; its left half leads back to the first screen */
-header.top{position:sticky;top:0;z-index:1200;display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 -16px;padding:6px 16px;background:var(--bg);border-bottom:1px solid var(--line)}
-header.top > :first-child{min-width:0}
-.homelink{display:flex;align-items:center;gap:10px;min-height:46px;text-decoration:none}
-.homeico{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--text);color:var(--bg)}
-.homelink .txt{min-width:0}
-.brand,.kicker{display:block}
-@media (max-width:520px){.brand{font-size:15px;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.kicker{display:none}
-  .homeico{width:40px;height:40px}.theme{width:42px;height:42px}.langsel{height:42px;max-width:112px;padding:0 30px 0 12px;background-position:right 11px center}
-  section .bar{position:static}}      /* on a phone only the banner stays in place */
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0 12px;border-bottom:1px solid var(--line)}
+header.top > div:first-child{min-width:0}
 .brand{font-weight:700;font-size:19px;letter-spacing:-.2px;line-height:1.2}
 .kicker{margin-top:2px;font-size:13.5px;font-weight:700;letter-spacing:1.5px;color:var(--muted)}
 .controls{flex:none;display:flex;align-items:center;gap:8px}
@@ -785,8 +771,8 @@ h1{margin:16px 0 12px;font-size:clamp(29px,7.2vw,40px);line-height:1.15;letter-s
 .card.see{margin:10px 0;border-width:2px}
 .rows{margin-top:14px}
 
-.bar{position:sticky;top:var(--hh,59px);z-index:1100;margin:0 -16px;padding:6px 16px;background:var(--bg);border-bottom:1px solid var(--line)}
-.backbtn{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 16px;padding-inline-start:10px;border-radius:25px;border:1px solid var(--line);background:var(--panel);font-weight:650;font-size:18.5px;text-decoration:none;cursor:pointer}
+.bar{position:sticky;top:0;z-index:1100;margin:0 -16px;padding:8px 16px;background:var(--bg);border-bottom:1px solid var(--line)}
+.backbtn{display:inline-flex;align-items:center;gap:6px;min-height:50px;padding:0 16px;padding-inline-start:10px;border-radius:25px;border:1px solid var(--line);background:var(--panel);font-weight:650;font-size:18.5px;text-decoration:none;cursor:pointer}
 #sheetTop{padding:18px 0 8px}
 #sheetTop .facts{margin-bottom:12px}
 .rec{display:inline-block;margin-top:4px;padding:1px 9px;border-radius:11px;background:var(--c);color:var(--bg);font-size:14.5px;font-weight:700}
@@ -864,46 +850,24 @@ footer{margin-top:26px;padding:18px 0 calc(28px + env(safe-area-inset-bottom));b
 .duty .btn:not(.primary),.hours .btn{margin-top:4px}
 .hours{margin:10px 0 0;padding:12px 14px;border-radius:14px;background:var(--chip)}
 .hours p{margin:0 0 6px;font-size:17.5px}
-button.btn{width:100%;cursor:pointer}
-.card .big.num{font-size:23px;font-weight:800}
-.sheet .list{margin:0 0 12px}
-.tips .facts{margin:0 0 10px}
-.hours.all{margin:0 0 16px}
-.appbox{margin-top:10px}
-.appbox p{margin:0 0 12px}
-.appbox .btn{margin:0 0 12px}
-.appbox details{margin:0 0 8px;padding:0 14px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
-.appbox summary{padding:14px 0;font-weight:700;font-size:18.5px;cursor:pointer}
-.appbox details .steps{margin:2px 0 14px}
-.goes{list-style:none;margin:0 0 10px;padding:0;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
-.goes li{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:11px 14px;border-top:1px solid var(--line)}
-.goes li:first-child{border-top:0}
-.goes b{font-size:18.5px;line-height:1.3}
-.goes span{flex:none;max-width:48%;text-align:end;font-size:17px;font-weight:700;color:var(--transport)}
-.offnote{margin:0 0 28px;font-size:15px;color:var(--muted)}
-.tips .hours{margin:0 0 10px}
-.tips .tipnote{margin:10px 0 0}
-.tips .tipnote a{color:inherit}
-.sheet .how.gap{margin-top:20px}
-.sheet .none{margin:4px 0 12px}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:2000;padding:10px 16px;border-radius:20px;background:var(--text);color:var(--bg);font-size:17px;font-weight:600}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header class="top">
-    <a class="homelink" id="homelink" href="#/">
-      <span class="homeico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 11.5L12 4l8.5 7.5M6 9.8V20h12V9.8M10 20v-5.5h4V20"></path></svg></span>
-      <span class="txt"><span class="brand" data-i18n="brand"></span><span class="kicker" data-i18n="kicker"></span></span>
-    </a>
-    <div class="controls">
-      <button class="theme" id="theme" type="button">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
-      </button>
-      <select class="langsel" id="lang" aria-label="Language"></select>
-    </div>
-  </header>
   <section id="home">
+    <header class="top">
+      <div>
+        <div class="brand" data-i18n="brand"></div>
+        <div class="kicker" data-i18n="kicker"></div>
+      </div>
+      <div class="controls">
+        <button class="theme" id="theme" type="button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+        </button>
+        <select class="langsel" id="lang" aria-label="Language"></select>
+      </div>
+    </header>
     <h1 data-i18n="h1"></h1>
     <div class="ask" id="ask" role="tablist">
       <button type="button" class="askbtn" data-m="where" role="tab"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M15.8 8.2l-2.2 5.4-5.4 2.2 2.2-5.4z"></path></svg><span data-i18n="qWhere"></span></button>
@@ -917,7 +881,6 @@ button.btn{width:100%;cursor:pointer}
     </div>
     <div class="count" id="count" hidden><span id="countText"></span><button type="button" id="clear"></button></div>
     <div id="needs" class="needs"></div>
-    <section class="needs appbox" id="appbox" style="--c:var(--accent)" hidden></section>
     <p class="draft" id="draft" hidden data-i18n="draft"></p>
   </section>
 
@@ -935,7 +898,6 @@ button.btn{width:100%;cursor:pointer}
   </section>
 
   <footer data-i18n="foot"></footer>
-  <p class="offnote" id="offnote" hidden></p>
 </div>
 <noscript><p style="padding:16px">This page needs JavaScript.</p></noscript>
 
@@ -967,19 +929,13 @@ button.btn{width:100%;cursor:pointer}
    vehicles      : optional number of vehicles needed (default: 0 if walkable, otherwise 1)
    group         : optional key of GROUPS; places of one group share a picture on the first screen
    via           : optional place id this place is reached from (adds a 'how to get to ...' link)
-   see           : optional list of place ids, 'g:<group>' or 'n:<near kind>' linked at the bottom of the place's screen
+   see           : optional list of place ids or 'g:<group>' linked at the bottom of the place's screen
    noDist        : true hides distance, time and map (used for other cities)
    kw            : optional extra search words
    label         : optional short name for the map label
-   dolmus        : {from:'<place id of the stop>', ride:<minutes>} a dolmuş (shared minibus) goes there from a stop in town.
-                   The page offers two ways, on foot to the stop and by taxi to the stop, and shows how far the stop is.
-   goes          : for a bus stop, where its buses go: [{to:[...], lines:'Ç7, ÇT3', id:'<place id, optional>'}]
-   all           : optional {q, btn:[...], note:[...]} for a place of which there are many kinds (ATMs of different banks):
-                   a button that shows all of them around the visitor in the maps app, searching for q
    stop          : optional {lat, lng, name:[...]} bus stop to walk to first
    ===================================================================== */
 const DRAFT  = true;
-const BUILD  = '2026-10-07 a';      /* changed with every new version: an open guide that comes back online reloads itself when this differs */
 const LANGS  = ['en','tr','de','fr','es','bg','ru','el','ar'];
 const XLANGS = ['bg','ru','el','ar'];      /* the languages whose place texts live in XL_ROWS */
 const OFFICE = {lat:40.1498833, lng:26.4024356};
@@ -1014,146 +970,46 @@ const GROUPS = {              /* a picture that opens several places. cat: its c
   nature:    {icon:'tree', cat:'far', name:['Nature and beaches','Doğa ve plajlar','Natur und Strände','Nature et plages','Naturaleza y playas'], label:['Nature','Doğa','Natur','Nature','Natura­leza']},
   villages:  {icon:'house', cat:'far', name:['Villages and towns','Köyler ve kasabalar','Dörfer und Orte','Villages et bourgs','Pueblos y villas'], label:['Villages','Köyler','Dörfer','Villages','Pueblos']}
 };
-/* ---- near me: when the visitor allows location access, the page shows the nearest pharmacy, taxi rank and bus stop.
-   The visitor's position never leaves the phone: the page downloads every such place of the area below once
-   (from OpenStreetMap; kept on the phone for 'keepDays') and compares the distances itself.
-   area    : south, west, north, east. Outside it the visitor's maps app is offered instead.
-   maxM    : a nearest place farther away than this (road metres) is not shown; the maps app is offered instead
-   servers : OpenStreetMap search services, tried in this order
-   kinds   : icon, cat (colour) and
-             osm     the OpenStreetMap tag of the kind
-             q       what the maps app searches for when the page has no answer
-             office  place id shown under "Nearest to our office"; officeQ: without such a place, a maps search around the office
-             hoursOf place id whose opening hours and duty notice apply to the kind
-             list    places of the kind, as [lat, lng, 'name']. A kind with a list is not looked up in OpenStreetMap. src:'osm' marks a list taken from OpenStreetMap.
-             maps    true: the page does not look for the nearest place itself; it opens a search around the visitor in the maps app */
-/* pharmacies of the city, from OpenStreetMap on 6 October 2026: [lat, lng, 'name']. The office can correct and extend this list. */
-const PHARMACIES = [
- [40.09489,26.3949,'Çiğdem Eczanesi'],[40.09516,26.39377,'Boğaz Eczanesi'],[40.09571,26.39364,'Kepez Eczanesi'],[40.09635,26.39172,'Hale Eczanesi'],
- [40.09642,26.39392,'Ada Eczanesi'],[40.09644,26.3915,'Betül Eczanesi'],[40.09659,26.39117,'Akın Eczanesi'],[40.09672,26.39089,'Yağmur Eczanesi'],
- [40.09854,26.41501,'Batı Eczanesi'],[40.09857,26.41492,'Barbaros Eczanesi'],[40.09863,26.40089,'Alınteri Eczanesi'],[40.09866,26.41485,'Hale Eczanesi'],
- [40.09875,26.41477,'Bilge Eczanesi'],[40.09882,26.4147,'Meltem Türker Eczanesi'],[40.0989,26.41465,'Evcim Eczanesi'],[40.09897,26.41451,'Lotus Eczanesi'],
- [40.09998,26.39769,'Doğa Eczanesi'],[40.1015,26.39785,'Yeni Eczanesi'],[40.10437,26.40879,'Anafartalar Eczanesi'],[40.12317,26.4099,'On Sekiz Mart Eczanesi'],
- [40.12473,26.41105,'17 Burda Eczanesi'],[40.13028,26.41193,'Sibel Eczanesi'],[40.1304,26.41082,'Göktürk Eczanesi'],[40.13171,26.4112,'Aydoğdu Eczanesi'],
- [40.13188,26.41126,'Cadde Eczanesi'],[40.13227,26.40918,'Gökhan Eczanesi'],[40.13541,26.41284,'Gözde Eczanesi'],[40.13898,26.41822,'Ertuğrul 17 Eczanesi'],
- [40.13936,26.41837,'Elifcan Eczanesi'],[40.1396,26.4185,'Onur Eczanesi'],[40.13974,26.40797,'Şenol Eczanesi'],[40.14174,26.40236,'Damla Eczanesi'],
- [40.14266,26.40289,'Çetin Eczanesi'],[40.14279,26.40294,'Ata Eczanesi'],[40.14434,26.40721,'Cumhuriyet Eczanesi'],[40.14442,26.40769,'Halk Eczanesi'],
- [40.14446,26.40717,'Bahar Eczanesi'],[40.14519,26.40378,'Deva Eczanesi'],[40.1454,26.40565,'Çarşı Eczanesi'],[40.14606,26.40426,'İdil Eczanesi'],
- [40.1462,26.40618,'Narin Eczanesi'],[40.14626,26.40806,'Çanakkale Eczanesi'],[40.14634,26.40848,'Aslıhan Eczanesi'],[40.14667,26.40815,'Yaprak Eczanesi'],
- [40.14691,26.40459,'Marmara Eczanesi'],[40.14693,26.40802,'Akbay Eczanesi'],[40.14713,26.40678,'Özhan Eczanesi'],[40.14713,26.40733,'Göker Eczanesi'],
- [40.14727,26.40645,'Merkez Eczanesi'],[40.14737,26.40887,'Derya Eczanesi'],[40.14747,26.40503,'Yeditepe Eczanesi'],[40.14761,26.40828,'Defne Eczanesi'],
- [40.14763,26.40793,'İlksin Eczanesi'],[40.14779,26.44491,'Elmas Eczanesi'],[40.14865,26.40638,'İrem Eczanesi'],[40.14894,26.40662,'Büşra Eczanesi'],
- [40.14944,26.40662,'Orçun Eczanesi'],[40.14956,26.4067,'Elçin Eczanesi'],[40.1496,26.40673,'Yeşim Eczanesi'],[40.14967,26.40656,'Barbaros Eczanesi'],
- [40.14976,26.40338,'Iskele Eczanesi'],[40.15029,26.41122,'Yaşam Eczanesi'],[40.15117,26.408,'Elçin Eczanesi'],[40.15129,26.41141,'Ege Aytap Eczanesi'],
- [40.15131,26.41185,'Duran Eczanesi'],[40.15136,26.41174,'Troya Eczanesi'],[40.15138,26.40746,'Ertuğrul Eczanesi'],[40.15155,26.41131,'Köksal Eczanesi'],
- [40.15176,26.4124,'Nil Eczanesi'],[40.15203,26.41023,'Hande Eczanesi'],[40.15206,26.40892,'Umut Eczanesi'],[40.15344,26.41498,'Nergis Eczanesi'],
- [40.15444,26.41094,'Sağlık Eczanesi'],[40.15623,26.41008,'Ladin Eczanesi'],[40.15784,26.41906,'Deniz Eczanesi'],[40.15795,26.41893,'Deniz Eczanesi'],
- [40.15914,26.41564,'Gazi Eczanesi'],[40.16014,26.42005,'Eczane 17'],[40.16038,26.4215,'Aydın Eczanesi'],[40.16493,26.41502,'Bulut Eczanesi'],
- [40.16566,26.41935,'Çağrı Eczanesi'],[40.16567,26.41479,'Ebru Bal Eczanesi'],[40.16708,26.42102,'Özdemir Eczanesi'],[40.18103,26.36008,'Eylül Eczanesi'],
- [40.18129,26.35894,'Eceabat Eczanesi'],[40.18132,26.35912,'Mert Eczanesi']
-];
-/* mosques of the city, from OpenStreetMap on 6 October 2026: [lat, lng, 'name'] (a mosque without a name of its own has ''). */
-const MOSQUES = [
- [40.07948,26.36952,''],[40.08425,26.42013,''],[40.08585,26.45388,''],[40.09455,26.39958,''],
- [40.09464,26.39511,''],[40.10055,26.39173,''],[40.10103,26.39827,''],[40.10395,26.4098,''],
- [40.10905,26.40668,''],[40.1102,26.40952,'Hatime Ana Ulu Camii'],[40.11148,26.41775,'Turan Mildon Camii'],[40.11491,26.41731,''],
- [40.12488,26.41475,''],[40.12531,26.42098,'Tacettin Aslan Camii'],[40.1336,26.47957,''],[40.13795,26.40512,''],
- [40.13984,26.41814,'Dumlupınar Camii'],[40.14197,26.41269,'Anafartalar Cami'],[40.14262,26.40488,''],[40.14504,26.40506,'Kurşunlu Cami'],
- [40.1455,26.43909,'Conk Bayırı Camii'],[40.14561,26.41186,'Arslanca Cami'],[40.14584,26.40344,'Tıflı Camii'],[40.14635,26.46022,''],
- [40.1466,26.40123,'Fatih Camii'],[40.14736,26.42689,'Hüseyin Özcan Cami'],[40.14783,26.42076,'Mecidiye Cami'],[40.1486,26.41567,'Orta Cami'],
- [40.14862,26.40057,'Yalı Camii'],[40.15382,26.41593,'Kocatepe Cami'],[40.15663,26.41002,'Necip Paşa Cami'],[40.15985,26.41575,'Şehitler Cami'],
- [40.16532,26.41375,'Seyit Onbaşı Cami'],[40.16905,26.45074,''],[40.1661,26.42039,'Yahya Çavuş Camii'],[40.17113,26.3671,'57. Alay Camii'],
- [40.18294,26.35976,'Şehitler Camii']
-];
-const NEAR = {
-  area: [40.07, 26.35, 40.20, 26.48],      /* city centre, Kepez, the university campus and the Otogar */
-  maxM: 2500,
-  keepDays: 7,
-  servers: ['https://overpass-api.de/api/interpreter', 'https://overpass.private.coffee/api/interpreter'],
-  kinds: {
-    pharmacy: {icon:'pharmacy', cat:'services',  osm:'amenity=pharmacy', q:'Eczane',        office:'pharmacy', hoursOf:'pharmacy', list:PHARMACIES, src:'osm'},
-    mosque:   {icon:'mosque',   cat:'sights',    osm:'amenity=place_of_worship', q:'Cami', office:'mosque', list:MOSQUES, src:'osm'},
-    /* OpenStreetMap knows only a few of the city's taxi ranks and bus stops, so these two are handed to the visitor's maps app until the office has its own lists */
-    taxi:     {icon:'taxi',     cat:'transport', osm:'amenity=taxi',     q:'Taksi durağı',  officeQ:'Taksi durağı Çanakkale Merkez', list:[], maps:true},
-    busstop:  {icon:'busstop',  cat:'transport', osm:'highway=bus_stop', q:'Otobüs durağı', office:'c9-stop', list:[], maps:true}
-  }
-};
-/* ---- suggestions for right now: the first screen proposes up to three places that fit the time of day and the weather.
-   WEATHER : where the forecast is asked for (Open-Meteo, the centre of Çanakkale; the visitor's position is not used) and the limits:
-             keepMin  minutes a forecast is kept on the phone        rainMm, rainProb  rain now (mm) or chance of rain in the next hours (%) that counts as wet
-             hot, cold  °C                                           wind, gust  km/h from which the ferry warning is shown
-             dayFrom, dayTo  a place whose opening hours are not known is proposed from dayFrom on, while the visit can end by dayTo, with a note to check its closing time
-   SUIT    : what each place (or 'g:<group>', or 'r:<route>') is good for. A place without a row is never proposed.
-             in   indoors: proposed in rain, heat and cold        out  outdoors: proposed in fair weather
-             hrs  outdoors but with opening hours                 eve  pleasant after dark
-             sun  good at sunset                                  sea  beaches and shade for a hot day
-             far  outside the city: proposed only while there is daylight for the whole trip
-             min  the usual length of a visit in minutes; for far places the whole trip there and back
-             tour visitors without a car go there on a guided tour that starts at this time every day; via: the place the suggestion opens (who sells the tour).
-                  Before the start the tour is proposed with the time left; after it, as a plan for tomorrow.
-   A place with hours:{days, from, to} (as the pharmacy has) is proposed only while it stays open long enough for the visit.
-   '?wx=61,14,45,70,80' in the address previews a weather: code, °C, wind and gusts in km/h, chance of rain in %. */
-const WEATHER = {lat:40.15, lng:26.41, url:'https://api.open-meteo.com/v1/forecast', keepMin:30, rainMm:0.2, rainProb:60, hot:31, cold:8, wind:40, gust:60, dayFrom:'09:00', dayTo:'17:00'};
-const SUIT = {
-  'r:centre':{out:1, hrs:1, min:230},
-  'trojan-horse':{out:1, sun:1, eve:1, min:20}, 'c-saat':{out:1, eve:1, min:15}, 'c-cimenlik':{out:1, hrs:1, min:45},
-  'naval-museum':{in:1, min:60}, 'city-museum':{in:1, min:40}, 'ceramic-museum':{in:1, min:30}, 'aynali-bazaar':{in:1, min:30},
-  'troy-museum':{in:1, far:1, min:180},
-  'troy-site':{out:1, hrs:1, far:1, min:240}, 'g:castles':{out:1, far:1, min:240}, 'g:nature':{out:1, sea:1, far:1, min:240},
-  'g:memorials':{out:1, far:1, min:360, tour:'10:00', via:'agencies'}, 'g:villages':{out:1, far:1, min:300}, 'g:ancient':{out:1, far:1, min:420}
-};
-/* ---- ready-made routes: a walk through several places in a fixed order.
-   stops : place ids in walking order; each must be a place with a pin (lat, lng).
-   The page adds up the walking distances, starting at the office, and the visit times ('min' of the place in SUIT; 30 minutes without one).
-   A place is linked to its route with see:['r:<id>']. */
-const ROUTES = [
- {id:'centre', icon:'walk', cat:'sights', stops:['aynali-bazaar','naval-museum','city-museum','trojan-horse','ceramic-museum'],
-  name:['City centre on foot','Yürüyerek şehir merkezi','Das Stadtzentrum zu Fuß','Le centre-ville à pied','El centro a pie'],
-  desc:['A walk from our office through five sights of the centre: the Aynalı Bazaar, the Naval Museum, the City Museum, the Trojan Horse on the waterfront and the Ceramic Museum.','Büromuzdan başlayıp merkezdeki beş yeri gezen bir yürüyüş: Aynalı Çarşı, Deniz Müzesi, Kent Müzesi, kordondaki Truva Atı ve Seramik Müzesi.']}
-];
 /* the first screen: each need shows its pictures three to a row, so keep 3, 6 or 9 per need.
-   An entry is a place id, 'g:<key>' for one of the GROUPS above, or 'n:<key>' for one of the NEAR kinds.
-   A need with 'cards' instead of 'tiles' is shown as a list ('r:<id>' for one of the ROUTES); 'title' names its heading in the page texts. */
+   An entry is a place id, or 'g:<key>' for one of the GROUPS above. */
 const HOME = [
-  {cat:'near',      tiles:['n:pharmacy','n:taxi','n:busstop']},
-  {cat:'sights',    title:'routes', cards:['r:centre']},
-  {cat:'sights',    tiles:['trojan-horse','aynali-bazaar','c-saat','naval-museum','c-cimenlik','city-museum','ceramic-museum','synagogue','n:mosque']},
-  {cat:'far',       tiles:['troy-site','troy-museum','g:memorials','g:ancient','g:castles','g:nature','g:villages','g:islands','g:districts']},
-  {cat:'services',  tiles:['atm','wc-ferry','pharmacy','hospital','exchange','ptt']},
-  {cat:'transport', tiles:['otogar','g:bus','g:ferry','airport','agencies','g:cities']}      /* the bus companies are linked from the Otogar */
+  {cat:'sights',    tiles:['trojan-horse','aynali-bazaar','c-saat','naval-museum','c-cimenlik','city-museum','ceramic-museum','synagogue','mosque']},
+  {cat:'far',       tiles:['g:troy','g:memorials','g:ancient','g:castles','g:nature','g:villages']},
+  {cat:'services',  tiles:['atm','toilet','pharmacy','hospital','exchange','ptt']},
+  {cat:'transport', tiles:['otogar','g:bus','g:buscos','g:ferry','airport','agencies','g:districts','g:islands','g:cities']}
 ];
 /* the pictures shown under "How do I get to ...?" before anything is typed: keep 3, 6 or 9 */
-const POPULAR = ['otogar','airport','eceabat-ferry','troy-site','troy-museum','troy-minibus','g:memorials','g:islands','agencies'];
+const POPULAR = ['otogar','airport','eceabat-ferry','g:troy','g:memorials','g:islands'];
 const BUSCO = ['Intercity coach company. The buttons below find its ticket offices on the map; coaches leave from the Otogar.','Şehirlerarası otobüs firması. Aşağıdaki düğmeler yazıhanelerini haritada bulur; otobüsler otogardan kalkar.','Fernbusunternehmen. Die Schaltflächen unten finden seine Büros auf der Karte; die Busse fahren am Otogar ab.','Compagnie d’autocars. Les boutons ci-dessous trouvent ses agences sur la carte ; les autocars partent de l’Otogar.','Empresa de autobuses interurbanos. Los botones de abajo encuentran sus oficinas en el mapa; los autobuses salen del Otogar.'];
 const PLACES = [
- {id:'trojan-horse', icon:'horse', cat:'sights', kind:'pin', see:['r:centre'], lat:40.1520614, lng:26.4054584,
+ {id:'trojan-horse', icon:'horse', cat:'sights', kind:'pin', lat:40.1520614, lng:26.4054584,
   name:['Trojan Horse','Truva Atı','Trojani­sches Pferd','Cheval de Troie','Caballo de Troya'],
   desc:['The wooden horse made for the 2004 film Troy, on the waterfront promenade.','2004 yapımı Troy filmi için yapılan ahşap at; kordonda durur.','Das Holzpferd aus dem Film „Troja“ (2004), an der Uferpromenade.','Le cheval de bois du film Troie (2004), sur la promenade du front de mer.','El caballo de madera de la película Troya (2004), en el paseo marítimo.']},
- {id:'aynali-bazaar', icon:'bag', cat:'sights', kind:'pin', see:['r:centre'], lat:40.1462548, lng:26.4038044,
+ {id:'aynali-bazaar', icon:'bag', cat:'sights', kind:'pin', lat:40.1462548, lng:26.4038044,
   name:['Aynalı Bazaar','Aynalı Çarşı','Aynalı-Basar','Bazar Aynalı','Bazar Aynalı'],
   desc:['Historic covered bazaar in the old town, good for souvenirs and local products.','Eski şehirdeki tarihî kapalı çarşı; hediyelik eşya ve yöresel ürünler bulunur.','Historischer überdachter Basar in der Altstadt, gut für Souvenirs und lokale Produkte.','Bazar couvert historique de la vieille ville, idéal pour les souvenirs et les produits locaux.','Bazar cubierto histórico del casco antiguo, ideal para recuerdos y productos locales.']},
- {id:'naval-museum', icon:'anchor', cat:'sights', kind:'pin', see:['r:centre'], lat:40.1475135, lng:26.3992667,
+ {id:'naval-museum', icon:'anchor', cat:'sights', kind:'pin', lat:40.1475135, lng:26.3992667,
   name:['Naval Museum','Deniz Müzesi','Marine­museum','Musée naval','Museo Naval'],
   desc:['Naval museum beside Çimenlik Castle, with a replica of the minelayer Nusret.','Çimenlik Kalesi’nin yanındaki deniz müzesi; Nusret Mayın Gemisi’nin benzeri de buradadır.','Marinemuseum neben der Festung Çimenlik, mit einem Nachbau des Minenlegers Nusret.','Musée naval à côté de la forteresse de Çimenlik, avec une réplique du mouilleur de mines Nusret.','Museo naval junto a la fortaleza de Çimenlik, con una réplica del minador Nusret.']},
- {id:'city-museum', icon:'landmark', cat:'sights', kind:'pin', see:['r:centre'], lat:40.1485236, lng:26.400803,
+ {id:'city-museum', icon:'landmark', cat:'sights', kind:'pin', lat:40.1485236, lng:26.400803,
   name:['City Museum','Kent Müzesi','Stadt­museum','Musée de la ville','Museo de la Ciudad'],
   desc:['The City Museum and Archive tells the story of Çanakkale and its people.','Kent Müzesi ve Arşivi, Çanakkale’nin ve Çanakkalelilerin hikâyesini anlatır.','Das Stadtmuseum mit Archiv erzählt die Geschichte Çanakkales und seiner Menschen.','Le musée de la ville et ses archives racontent l’histoire de Çanakkale et de ses habitants.','El Museo de la Ciudad y su archivo cuentan la historia de Çanakkale y de su gente.']},
- {id:'ceramic-museum', icon:'amphora', cat:'sights', kind:'pin', see:['r:centre'], lat:40.1570601, lng:26.4123371,
+ {id:'ceramic-museum', icon:'amphora', cat:'sights', kind:'pin', lat:40.1570601, lng:26.4123371,
   name:['Ceramic Museum','Seramik Müzesi','Keramik­museum','Musée de la céramique','Museo de Cerámica'],
   desc:['Museum of traditional Çanakkale ceramics.','Geleneksel Çanakkale seramiklerinin müzesi.','Museum für traditionelle Keramik aus Çanakkale.','Musée de la céramique traditionnelle de Çanakkale.','Museo de la cerámica tradicional de Çanakkale.']},
  {id:'synagogue', icon:'star', cat:'sights', kind:'pin', lat:40.146303, lng:26.4053599,
   name:['Mekor Hayim Synagogue','Mekor Hayim Sinagogu (Havra)','Synagoge Mekor Hayim','Synagogue Mekor Hayim','Sinagoga Mekor Hayim'],
   label:['Syna­gogue','Sinagog','Synagoge','Syna­gogue','Sinagoga'],
   desc:['Çanakkale’s historic synagogue in the old town. A visit may need to be arranged in advance; ask at our desk.','Eski şehirdeki tarihî sinagog. Ziyaret için önceden izin gerekebilir; danışma masamıza sorun.','Die historische Synagoge von Çanakkale in der Altstadt. Für einen Besuch kann eine Voranmeldung nötig sein; fragen Sie an unserem Schalter.','La synagogue historique de Çanakkale, dans la vieille ville. Une autorisation préalable peut être nécessaire pour la visite ; renseignez-vous à notre comptoir.','La sinagoga histórica de Çanakkale, en el casco antiguo. Puede ser necesario concertar la visita con antelación; pregunte en nuestro mostrador.']},
- {id:'troy-museum', icon:'columns', group:'troy', cat:'far', kind:'pin', see:['troy-site'], road:30100, driveMin:32, lat:39.9553931, lng:26.2493621,
-  dolmus:{from:'troy-minibus', ride:45},
+ {id:'troy-museum', icon:'columns', group:'troy', cat:'far', kind:'pin', road:30100, driveMin:32, lat:39.9553931, lng:26.2493621,
+  more:[{mode:'bus', from:'troy-minibus', min:'', cost:'ask', title:['Minibus','Minibüs','Minibus','Minibus','Minibús'], steps:[
+   ['Walk to the minibus stop for Troy (see it under Buses).','Take the Troy minibus. Ask at our desk for today’s times and the fare.','Get off at the Troy Museum.'],
+   ['Troya minibüs durağına yürüyün (Otobüs başlığı altında görebilirsiniz).','Troya minibüsüne binin. Günün saatlerini ve ücreti danışma masamıza sorun.','Troya Müzesi’nde inin.'],
+   ['Gehen Sie zur Minibus-Haltestelle nach Troja (siehe unter Busse).','Nehmen Sie den Troja-Minibus. Abfahrtszeiten und Fahrpreis erfahren Sie an unserem Schalter.','Steigen Sie am Troja-Museum aus.'],
+   ['Marchez jusqu’à l’arrêt des minibus pour Troie (voir la rubrique Bus).','Prenez le minibus de Troie. Demandez les horaires du jour et le tarif à notre comptoir.','Descendez au musée de Troie.'],
+   ['Camine hasta la parada de minibuses a Troya (véala en Autobuses).','Tome el minibús de Troya. Pregunte en nuestro mostrador por los horarios del día y la tarifa.','Baje en el Museo de Troya.']]}],
   name:['Troy Museum','Troya Müzesi','Troja-Museum','Musée de Troie','Museo de Troya'],
-  desc:['Museum of the finds from ancient Troy, outside the city, about 1 km from the archaeological site. The museum and the site are separate places.','Antik Troya buluntularının müzesi; şehir dışında, ören yerine yaklaşık 1 km uzaklıktadır. Müze ve ören yeri ayrı yerlerdir.','Museum mit den Funden aus dem antiken Troja, außerhalb der Stadt, etwa 1 km von der Ausgrabungsstätte entfernt. Museum und Ausgrabungsstätte sind getrennte Orte.','Musée des découvertes de l’antique Troie, hors de la ville, à environ 1 km du site archéologique. Le musée et le site sont deux lieux distincts.','Museo de los hallazgos de la antigua Troya, fuera de la ciudad, a cerca de 1 km del yacimiento. El museo y el yacimiento son lugares distintos.']},
- {id:'troy-site', icon:'arch', group:'troy', cat:'far', kind:'pin', see:['troy-museum'], kw:'truva troia troja unesco antik kent ören yeri harabe ruins ruinen ruines ruinas', road:31000, driveMin:34, lat:39.9575, lng:26.2389,
-  dolmus:{from:'troy-minibus', ride:45},
-  name:['Archaeological Site of Troy','Troya Ören Yeri','Ausgrabungsstätte Troja','Site archéologique de Troie','Yacimiento arqueológico de Troya'],
-  label:['Troy site','Troya Ören Yeri','Aus­grabung Troja','Site de Troie','Yacimiento de Troya'],
-  desc:['The ruins of ancient Troy, a UNESCO World Heritage Site. About 1 km from the Troy Museum; the two are separate places.','Antik Troya kentinin kalıntıları; UNESCO Dünya Mirası. Troya Müzesi’ne yaklaşık 1 km uzaklıktadır; ikisi ayrı yerlerdir.','Die Ruinen des antiken Troja, UNESCO-Welterbe. Etwa 1 km vom Troja-Museum entfernt; es sind zwei getrennte Orte.','Les ruines de l’antique Troie, inscrites au patrimoine mondial de l’UNESCO. À environ 1 km du musée de Troie ; ce sont deux lieux distincts.','Las ruinas de la antigua Troya, Patrimonio Mundial de la UNESCO. A cerca de 1 km del Museo de Troya; son dos lugares distintos.']},
+  desc:['Museum of the finds from ancient Troy, outside the city next to the archaeological site.','Antik Troya buluntularının müzesi; şehir dışında, ören yerinin yanındadır.','Museum mit den Funden aus dem antiken Troja, außerhalb der Stadt neben der Ausgrabungsstätte.','Musée des découvertes de l’antique Troie, hors de la ville, près du site archéologique.','Museo de los hallazgos de la antigua Troya, fuera de la ciudad, junto al yacimiento.']},
 
  {id:'eceabat-ferry', icon:'ferry', group:'ferry', cat:'transport', kind:'pin', lat:40.1504756, lng:26.4024052,
   label:['Eceabat ferry','Eceabat feribotu','Fähre Eceabat','Ferry Eceabat','Ferri Eceabat'], more:[{mode:'ferry', min:'25–30', cost:'40 TL', steps:[
@@ -1164,16 +1020,10 @@ const PLACES = [
    ['Camine hasta el muelle del ferri, junto a la oficina (alrededor de 1 min).','Compre un billete de peatón en el muelle: 40 TL.','La travesía a Eceabat dura unos 25–30 minutos.']]}],
   name:['Ferry to Eceabat','Eceabat feribotu','Fähre nach Eceabat','Ferry pour Eceabat','Ferri a Eceabat'],
   desc:['Ferries across the Dardanelles to Eceabat leave from this pier, next to our office.','Boğaz’ın karşı yakasına, Eceabat’a giden feribotlar büromuzun hemen yanındaki bu iskeleden kalkar.','Von diesem Anleger direkt neben unserem Büro fahren die Fähren über die Dardanellen nach Eceabat.','Les ferries pour Eceabat, de l’autre côté des Dardanelles, partent de ce quai, à côté de notre office.','Los ferris que cruzan los Dardanelos hacia Eceabat salen de este muelle, junto a nuestra oficina.']},
- {id:'c9-stop', icon:'busstop', group:'bus', cat:'transport', kind:'pin', see:['n:busstop'], kw:'ç9 iskele durak şehir içi belediye otobüsü halk otobüsü stadtbus', lat:40.149632, lng:26.403208,
-  goes:[{to:['Bus terminal (Otogar)','Otogar'], lines:'Ç9', id:'otogar'}, {to:['Airport','Havalimanı'], lines:'Ç8', id:'airport'},
-   {to:['State Hospital (Mehmet Akif Ersoy)','Devlet Hastanesi (Mehmet Akif Ersoy)'], lines:'Ç7, ÇT3', id:'hospital'},
-   {to:['University Research Hospital','Üniversite Araştırma Hastanesi'], lines:'Ç1, Ç3, Ç7, Ç8, ÇT3'},
-   {to:['Terzioğlu Campus (university)','Terzioğlu Kampüsü (ÇOMÜ)'], lines:'Ç1, Ç3, Ç8'},
-   {to:['17 Burda shopping centre','17 Burda AVM'], lines:'Ç1, Ç3, Ç7, Ç8, Ç11K, ÇT3, Çınarlı'}, {to:['Troy Park shopping centre','Troy Park AVM'], lines:'Ç1, Ç3, Ç7, Ç11K, ÇT3, Çınarlı'},
-   {to:['Kepez','Kepez'], lines:'Ç11K, Çınarlı, Ç11G'}, {to:['Güzelyalı, Dardanos','Güzelyalı, Dardanos'], lines:'Ç11G'}],
-  name:['City bus stop (İskele)','Şehir içi otobüs durağı (İskele)','Stadtbus-Haltestelle (İskele)','Arrêt de bus de ville (İskele)','Parada de autobús urbano (İskele)'],
-  label:['City bus stop','Otobüs durağı','Stadtbus-Halte­stelle','Arrêt de bus','Parada de autobús'],
-  desc:['The city bus stop nearest to our office, called “İskele”, about 100 m away. Lines Ç1, Ç3, Ç5, Ç7, Ç8, Ç9, Ç11K and ÇT3 and the Güzelyalı and Çınarlı buses stop here. Ç9 goes to the intercity bus terminal (Otogar) about every 30 minutes; Ç8 goes to the airport.','Büroya en yakın şehir içi otobüs durağı: “İskele” durağı, yaklaşık 100 m. Ç1, Ç3, Ç5, Ç7, Ç8, Ç9, Ç11K ve ÇT3 hatları ile Güzelyalı ve Çınarlı otobüsleri buradan geçer. Ç9 yaklaşık 30 dakikada bir otogara, Ç8 havalimanına gider.','Die dem Büro nächstgelegene Stadtbus-Haltestelle („İskele“), etwa 100 m entfernt. Hier halten die Linien Ç1, Ç3, Ç5, Ç7, Ç8, Ç9, Ç11K und ÇT3 sowie die Busse nach Güzelyalı und Çınarlı. Die Ç9 fährt etwa alle 30 Minuten zum Fernbusbahnhof (Otogar), die Ç8 zum Flughafen.','L’arrêt de bus de ville le plus proche de l’office, appelé « İskele », à environ 100 m. Les lignes Ç1, Ç3, Ç5, Ç7, Ç8, Ç9, Ç11K et ÇT3 ainsi que les bus de Güzelyalı et de Çınarlı s’y arrêtent. Le Ç9 va à la gare routière (Otogar) environ toutes les 30 minutes ; le Ç8 va à l’aéroport.','La parada de autobús urbano más cercana a la oficina, llamada «İskele», a unos 100 m. Aquí paran las líneas Ç1, Ç3, Ç5, Ç7, Ç8, Ç9, Ç11K y ÇT3 y los autobuses de Güzelyalı y Çınarlı. El Ç9 va a la terminal de autobuses (Otogar) aproximadamente cada 30 minutos; el Ç8 va al aeropuerto.']},
+ {id:'c9-stop', icon:'busstop', group:'bus', cat:'transport', kind:'pin', lat:40.149632, lng:26.403208,
+  name:['Ç9 bus stop (to the bus terminal)','Ç9 durağı (otogara gider)','Haltestelle Ç9 (zum Fernbusbahnhof)','Arrêt Ç9 (vers la gare routière)','Parada Ç9 (hacia la terminal)'],
+  label:['Ç9 stop','Ç9 durağı','Haltestelle Ç9','Arrêt Ç9','Parada Ç9'],
+  desc:['City bus Ç9 to the intercity bus terminal (Otogar) leaves from this stop, called “İskele”, about every 30 minutes.','Otogara giden Ç9 şehir içi otobüsü, “İskele” adlı bu duraktan yaklaşık 30 dakikada bir kalkar.','Von dieser Haltestelle („İskele“) fährt der Stadtbus Ç9 etwa alle 30 Minuten zum Fernbusbahnhof (Otogar).','Le bus de ville Ç9 pour la gare routière (Otogar) part de cet arrêt, appelé « İskele », environ toutes les 30 minutes.','El autobús urbano Ç9 a la terminal de autobuses (Otogar) sale de esta parada, llamada «İskele», aproximadamente cada 30 minutos.']},
  {id:'otogar', icon:'bus', group:'bus', cat:'transport', kind:'pin', see:['g:buscos','g:cities'], road:6000, driveMin:15, bus:{line:'Ç9', rideMin:14, every:30}, lat:40.1506149, lng:26.4564649,
   label:['Otogar','Otogar','Otogar','Otogar','Otogar'],
   stop:{lat:40.149632, lng:26.403208, name:['Ç9 stop (İskele)','Ç9 durağı (İskele)','Haltestelle Ç9 (İskele)','Arrêt Ç9 (İskele)','Parada Ç9 (İskele)']},
@@ -1186,12 +1036,6 @@ const PLACES = [
    ['Marchez jusqu’à l’arrêt « İskele » du bus Ç9, devant l’ancienne direction de la police (Eski Emniyet Müdürlüğü) : environ 100 m, 1 min.','Prenez le bus Ç9 en direction de l’Otogar et payez avec une Kentkart ou une carte bancaire sans contact.','Restez jusqu’au terminus : l’Otogar.'],
    ['Camine hasta la parada «İskele» del autobús Ç9, frente a la antigua jefatura de policía (Eski Emniyet Müdürlüğü): unos 100 m, 1 min.','Tome el autobús Ç9 en dirección a Otogar y pague con Kentkart o con tarjeta bancaria sin contacto.','Siga hasta la última parada: el Otogar.']]},
  {id:'troy-minibus', icon:'busstop', group:'bus', cat:'transport', kind:'pin', lat:40.1432564, lng:26.4074452,
-  more:[{mode:'bus', from:'c9-stop', min:'', cost:RATES.busCard + '–' + RATES.busBank + ' TL', title:['City bus','Şehir içi otobüs','Stadtbus','Bus de ville','Autobús urbano'], steps:[
-   ['Walk to the city bus stop beside the office (İskele): about 100 m.','Ask the driver or our desk which bus passes the Troy minibus stop, and pay with a Kentkart or a contactless bank card.','Get off at the stop nearest to the Troy minibus stop.'],
-   ['Büronun yanındaki şehir içi otobüs durağına (İskele) yürüyün: yaklaşık 100 m.','Troya minibüs durağından geçen otobüsü şoföre ya da danışma masamıza sorun; Kentkart ya da temassız banka kartıyla ödeyin.','Troya minibüs durağına en yakın durakta inin.'],
-   ['Gehen Sie zur Stadtbus-Haltestelle neben dem Büro (İskele): etwa 100 m.','Fragen Sie den Fahrer oder an unserem Schalter, welcher Bus an der Minibus-Haltestelle nach Troja vorbeifährt, und zahlen Sie mit Kentkart oder kontaktloser Bankkarte.','Steigen Sie an der Haltestelle aus, die der Minibus-Haltestelle nach Troja am nächsten liegt.'],
-   ['Marchez jusqu’à l’arrêt de bus de ville à côté de l’office (İskele) : environ 100 m.','Demandez au chauffeur ou à notre comptoir quel bus passe par l’arrêt des minibus pour Troie, et payez avec une Kentkart ou une carte bancaire sans contact.','Descendez à l’arrêt le plus proche de l’arrêt des minibus pour Troie.'],
-   ['Camine hasta la parada de autobús urbano junto a la oficina (İskele): unos 100 m.','Pregunte al conductor o en nuestro mostrador qué autobús pasa por la parada de minibuses a Troya, y pague con Kentkart o con tarjeta bancaria sin contacto.','Baje en la parada más cercana a la parada de minibuses a Troya.']]}],
   name:['Minibus stop for Troy','Troya minibüs durağı','Minibus-Haltestelle nach Troja','Arrêt des minibus pour Troie','Parada de minibuses a Troya'],
   label:['Troy minibus','Troya minibüsü','Troja-Minibus','Minibus Troie','Minibús Troya'],
   desc:['Minibuses to Troy and the Troy Museum leave from this stop. Ask at our desk for today’s times and the fare.','Troya’ya ve Troya Müzesi’ne giden minibüsler bu duraktan kalkar. Günün saatlerini ve ücreti danışma masamıza sorun.','Von dieser Haltestelle fahren die Minibusse nach Troja und zum Troja-Museum. Abfahrtszeiten und Fahrpreis erfahren Sie an unserem Schalter.','Les minibus pour Troie et le musée de Troie partent de cet arrêt. Demandez les horaires du jour et le tarif à notre comptoir.','De esta parada salen los minibuses a Troya y al Museo de Troya. Pregunte en nuestro mostrador por los horarios del día y la tarifa.']},
@@ -1216,35 +1060,24 @@ const PLACES = [
   label:['Bozcaada ferry','Bozcaada feribotu','Fähre Bozcaada','Ferry Bozcaada','Ferri Bozcaada'],
   desc:['The ferry to the island of Bozcaada leaves from the pier at Geyikli (Yükyeri), about 53 km south of Çanakkale by road.','Bozcaada feribotu, Çanakkale’nin karayoluyla yaklaşık 53 km güneyindeki Geyikli (Yükyeri) İskelesi’nden kalkar.','Die Fähre zur Insel Bozcaada legt am Anleger Geyikli (Yükyeri) ab, etwa 53 Straßenkilometer südlich von Çanakkale.','Le ferry pour l’île de Bozcaada part du quai de Geyikli (Yükyeri), à environ 53 km au sud de Çanakkale par la route.','El ferri a la isla de Bozcaada sale del muelle de Geyikli (Yükyeri), a unos 53 km al sur de Çanakkale por carretera.']},
  {id:'airport', icon:'plane', cat:'transport', kind:'pin', road:3500, driveMin:11, lat:40.1390576, lng:26.4236701,
-  more:[{mode:'bus', from:'c9-stop', min:'', cost:RATES.busCard + '–' + RATES.busBank + ' TL', title:['City bus Ç8','Ç8 şehir içi otobüsü'], steps:[
-   ['Walk to the city bus stop beside the office (İskele): about 100 m.','Take bus Ç8 and pay with a Kentkart or a contactless bank card. Check with the driver that the bus goes to the airport (Havalimanı).','Get off at the airport.'],
-   ['Büronun yanındaki şehir içi otobüs durağına (İskele) yürüyün: yaklaşık 100 m.','Ç8 otobüsüne binin; Kentkart ya da temassız banka kartıyla ödeyin. Otobüsün havalimanına gittiğini şoföre teyit edin.','Havalimanında inin.']]}],
   name:['Airport','Hava­limanı','Flug­hafen','Aéroport','Aero­puerto'],
   desc:['Çanakkale Airport, south-east of the centre.','Çanakkale Havalimanı; merkezin güneydoğusundadır.','Flughafen Çanakkale, südöstlich des Zentrums.','Aéroport de Çanakkale, au sud-est du centre.','Aeropuerto de Çanakkale, al sureste del centro.']},
 
  {id:'atm', icon:'cash', cat:'services', kind:'pin', lat:40.1498508, lng:26.4024384,
-  all:{q:'ATM', btn:['See all ATMs on the map','Tüm ATM’leri haritada gör'], note:['Every bank has its own ATMs. The map shows all the ATMs around you, so you can pick your own bank.','Her bankanın ATM’si ayrıdır. Harita çevrenizdeki tüm ATM’leri gösterir; kendi bankanızınkini seçebilirsiniz.']},
   name:['Cash (ATM)','Nakit (ATM)','Bargeld (Geldautomat)','Espèces (distributeur)','Efectivo (cajero)'],
   label:['ATM','ATM','Bargeld','Espèces','Efectivo'],
   desc:['Cash machines on the ferry square, right beside the office.','İskele Meydanı’nda, büronun hemen yanında ATM’ler bulunur.','Geldautomaten am Fährplatz, direkt neben dem Büro.','Distributeurs sur la place de l’embarcadère, juste à côté de l’office.','Cajeros en la plaza del embarcadero, justo al lado de la oficina.']},
  /* hours: when ordinary pharmacies are open (days: 1 = Monday ... 5 = Friday, 6 = Saturday, 0 = Sunday). Outside them the page sends the visitor to the duty pharmacy:
     duty.q is the maps search, duty.list the official list of the Chamber of Pharmacists. */
- {id:'pharmacy', icon:'pharmacy', cat:'services', kind:'pin', see:['n:pharmacy'], lat:40.1499004, lng:26.40334,
-  all:{q:'Eczane', btn:['See all pharmacies on the map','Tüm eczaneleri haritada gör'], note:['The map shows all the pharmacies around you.','Harita çevrenizdeki tüm eczaneleri gösterir.']},
+ {id:'pharmacy', icon:'pharmacy', cat:'services', kind:'pin', lat:40.1499004, lng:26.40334,
   hours:{days:[1,2,3,4,5], from:'08:30', to:'18:00'}, duty:{q:'Nöbetçi eczane Çanakkale Merkez', list:'https://www.canakkaleeo.org.tr/nobetci-eczaneler'},
   name:['Pharmacy','Eczane','Apotheke','Pharmacie','Farmacia'],
   desc:['İskele Eczanesi, a pharmacy close to the office.','Büroya yakın eczane: İskele Eczanesi.','İskele Eczanesi, eine Apotheke nahe dem Büro.','İskele Eczanesi, une pharmacie proche de l’office.','İskele Eczanesi, una farmacia cercana a la oficina.']},
- {id:'wc-ferry', icon:'wc', cat:'services', kind:'pin', kw:'tuvalet wc lavabo ücretsiz free toilet toilette gestaş iskele atm', lat:40.14992, lng:26.40238,
-  name:['Free toilet at the ferry pier','Ücretsiz tuvalet (feribot iskelesi)'], label:['WC','WC'],
-  desc:['Free public toilet on the ferry square, next to the ATMs and the GESTAŞ ferry pier, a few steps from our office.','İskele Meydanı’nda, ATM’lerin ve GESTAŞ feribot iskelesinin yanındaki ücretsiz tuvalet; büromuza birkaç adım uzaklıktadır.']},
  {id:'toilet', icon:'wc', cat:'services', kind:'pin', lat:40.1512899, lng:26.4074585,
   name:['Public toilet','Umumi tuvalet','Öffentliche Toilette','Toilettes publiques','Aseos públicos'],
   label:['WC','WC','WC','WC','WC'],
   desc:['Public toilet on Ziveriye Sokak, beside Halk Bahçesi park.','Halk Bahçesi’nin yanında, Ziveriye Sokak’taki umumi tuvalet.','Öffentliche Toilette in der Ziveriye Sokak, neben dem Park Halk Bahçesi.','Toilettes publiques rue Ziveriye, à côté du parc Halk Bahçesi.','Aseos públicos en la calle Ziveriye, junto al parque Halk Bahçesi.']},
- {id:'hospital', icon:'hospital', cat:'services', kind:'pin', taxiFirst:true, road:7900, driveMin:19, lat:40.0985551, lng:26.4179195,
-  more:[{mode:'bus', from:'c9-stop', min:'', cost:RATES.busCard + '–' + RATES.busBank + ' TL', title:['City bus Ç7 or ÇT3','Ç7 ya da ÇT3 şehir içi otobüsü'], steps:[
-   ['Walk to the city bus stop beside the office (İskele): about 100 m.','Take bus Ç7 or ÇT3 and pay with a Kentkart or a contactless bank card. Check with the driver that the bus goes to the State Hospital (Devlet Hastanesi).','Get off at the State Hospital.'],
-   ['Büronun yanındaki şehir içi otobüs durağına (İskele) yürüyün: yaklaşık 100 m.','Ç7 ya da ÇT3 otobüsüne binin; Kentkart ya da temassız banka kartıyla ödeyin. Otobüsün Devlet Hastanesi’ne gittiğini şoföre teyit edin.','Devlet Hastanesi’nde inin.']]}],
+ {id:'hospital', icon:'hospital', cat:'services', kind:'pin', road:7900, driveMin:19, lat:40.0985551, lng:26.4179195,
   name:['Hospital (emergency)','Hastane (acil servis)','Kranken­haus (Notaufnahme)','Hôpital (urgences)','Hospital (urgencias)'],
   label:['Hospital','Hastane','Kranken­haus','Hôpital','Hospital'],
   desc:['Çanakkale Mehmet Akif Ersoy State Hospital, with a 24-hour emergency department. In an emergency call 112.','Çanakkale Mehmet Akif Ersoy Devlet Hastanesi; acil servisi 24 saat açıktır. Acil durumda 112’yi arayın.','Staatliches Krankenhaus Mehmet Akif Ersoy mit 24-Stunden-Notaufnahme. Im Notfall rufen Sie 112 an.','Hôpital public Mehmet Akif Ersoy, avec un service d’urgences ouvert 24 h/24. En cas d’urgence, appelez le 112.','Hospital público Mehmet Akif Ersoy, con urgencias las 24 horas. En caso de emergencia, llame al 112.']},
@@ -1255,13 +1088,6 @@ const PLACES = [
   name:['Currency exchange','Döviz bürosu (sarraf)','Geld­wechsel','Bureau de change','Cambio de divisas'],
   desc:['Jewellery shops (sarraf) in the centre also change money.','Merkezdeki sarraflar döviz de bozar.','Juweliere (Sarraf) im Zentrum wechseln auch Geld.','Les bijoutiers (sarraf) du centre changent aussi de l’argent.','Las joyerías (sarraf) del centro también cambian divisas.']},
  /* ---- districts of Çanakkale: how to get there from the city centre ---- */
- /* texts given as [English, Turkish] are shown in English in the other languages until they are translated */
- {id:'c-kilitbahir', icon:'castle', group:'castles', cat:'far', kind:'pin', ferry:true, car:false, vehicles:1, kw:'kale kilitbahir castle festung château castillo', lat:40.148, lng:26.3786,
-  more:[{mode:'ferry', go:'transit', min:'', cost:'ask', title:['Ferry + on foot','Feribot + yürüyüş'], steps:[
-   ['Walk to the pier of the Kilitbahir ferry. It is close to our office; ask at our desk where it is. This is not the Eceabat ferry.','Cross to Kilitbahir as a foot passenger. Check today’s sailings and the fare at the pier.','From the Kilitbahir pier walk to the castle: a few minutes.'],
-   ['Kilitbahir feribotunun iskelesine yürüyün. Büromuza yakındır; yerini danışma masamıza sorun. Bu, Eceabat feribotu değildir.','Kilitbahir’e yaya yolcu olarak geçin. Günün seferlerini ve ücreti iskelede teyit edin.','Kilitbahir iskelesinden kaleye yürüyün: birkaç dakika.']]}],
-  name:['Kilitbahir Castle','Kilitbahir Kalesi'],
-  desc:['The 15th-century castle on the European shore, opposite Çanakkale. A small ferry crosses from the centre to Kilitbahir; the castle is a short walk from its pier.','Çanakkale’nin karşısında, Avrupa yakasındaki 15. yüzyıl kalesi. Merkezden Kilitbahir’e küçük bir feribot geçer; kale, iskeleye kısa bir yürüyüş mesafesindedir.']},
  {id:'eceabat', icon:'town', group:'districts', cat:'transport', kind:'pin', name:'Eceabat', taxi:false, ferry:true, vehicles:1, road:5800, driveMin:30, lat:40.184286, lng:26.359394,
   more:[{mode:'ferry', from:'eceabat-ferry', min:'25–30', cost:'40 TL', title:['Ferry','Feribot','Fähre','Ferry','Ferri'], steps:[
    ['Walk to the ferry pier beside the office (about 1 min).','Buy a foot-passenger ticket at the pier: 40 TL.','The crossing takes about 25–30 minutes and lands in the centre of Eceabat.'],
@@ -1316,7 +1142,7 @@ const PLACES = [
  {id:'pamukkale', icon:'ticket', group:'buscos', cat:'transport', kind:'search', via:'otogar', q:'Çanakkale Pamukkale Turizm', name:'Pamukkale Turizm', desc:BUSCO},
  /* ---- more sights in the centre. They have no pin yet: each opens a search in the maps app.
     via:'walk' marks a place in the centre within walking distance. ---- */
- {id:'mosque', icon:'mosque', cat:'sights', kind:'search', see:['n:mosque'], q:'Cami Çanakkale Merkez',
+ {id:'mosque', icon:'mosque', cat:'sights', kind:'search', q:'Cami Çanakkale Merkez',
   name:['Mosque','Cami','Moschee','Mosquée','Mezquita'],
   desc:['There are several mosques in the centre. The buttons below find the nearest ones on the map.','Merkezde birçok cami vardır. Aşağıdaki düğmeler en yakın camileri haritada bulur.','Im Zentrum gibt es mehrere Moscheen. Die Schaltflächen unten finden die nächstgelegenen auf der Karte.','Le centre compte plusieurs mosquées. Les boutons ci-dessous trouvent les plus proches sur la carte.','En el centro hay varias mezquitas. Los botones de abajo encuentran las más cercanas en el mapa.']},
  {id:'c-saat', icon:'clock', group:'castles', via:'walk', cat:'sights', kind:'search', x:true, q:'Çanakkale Saat Kulesi',
@@ -1334,18 +1160,20 @@ const PLACES = [
    via : the district or place it is reached from (a place id), 'walk' for the centre within walking distance, or 'centre' for the rest of the city.
    The page opens a search for the place in the visitor's maps app and links to "how to get to <via>". */
 const EXTRA = [
+ [‘troy-site’,’troy’,’troy-museum’,’arch’,’Troya Ören Yeri’,’Archaeological Site of Troy’,’truva troia troja unesco antik kent’,’Troya Ören Yeri’],
  /* Gallipoli peninsula: memorials, cemeteries and war museums */
- ['m-abide','memorials','eceabat','memorial','Çanakkale Şehitler Abidesi','Çanakkale Martyrs’ Memorial','şehitlik abide morto hisarlık'],
+ [‘martyrs-tour’,’memorials’,’eceabat’,’flag’,’Şehitlik Turu’,’Martyrs Tour’,’şehitlik tur rehber guide turizm agency tur’,’’],
+ [‘m-abide’,’memorials’,’eceabat’,’memorial’,’Çanakkale Şehitler Abidesi’,’Çanakkale Martyrs’ Memorial’,’şehitlik abide morto hisarlık’],
  ['m-57','memorials','eceabat','memorial','57. Piyade Alayı Şehitliği','57th Infantry Regiment Memorial','şehitlik 57 alay'],
  ['m-conkbayiri','memorials','eceabat','memorial','Conkbayırı Atatürk Anıtı','Chunuk Bair','şehitlik conkbayırı new zealand yeni zelanda'],
  ['m-kabatepe','memorials','eceabat','memorial','Çanakkale Destanı Tanıtım Merkezi','Gallipoli Epic Promotion Centre','kabatepe müze museum simülasyon'],
  ['m-anzac','memorials','eceabat','memorial','Anzak Koyu','Anzac Cove','anzac avustralya australia'],
  ['m-ariburnu','memorials','eceabat','memorial','Arıburnu Anıtı','Arıburnu Cemetery and Memorial','şehitlik ari burnu anzac'],
  ['m-lonepine','memorials','eceabat','memorial','Kanlısırt Anıtı','Lone Pine Memorial','şehitlik kanlısırt australia'],
- ['m-seyit','memorials','c-kilitbahir','memorial','Seyit Onbaşı Anıtı','Corporal Seyit Monument','kilitbahir'],
- ['m-mecidiye','memorials','c-kilitbahir','memorial','Mecidiye Tabyası','Mecidiye Bastion','şehitlik kilitbahir tabya'],
- ['m-namazgah','memorials','c-kilitbahir','memorial','Namazgâh Tabyası','Namazgâh Bastion','namazgah kilitbahir tabya'],
- ['m-havuzlar','memorials','c-kilitbahir','memorial','Havuzlar Şehitliği','Havuzlar Martyrs’ Cemetery','şehitlik kilitbahir'],
+ ['m-seyit','memorials','eceabat','memorial','Seyit Onbaşı Anıtı','Corporal Seyit Monument','kilitbahir'],
+ ['m-mecidiye','memorials','eceabat','memorial','Mecidiye Tabyası','Mecidiye Bastion','şehitlik kilitbahir tabya'],
+ ['m-namazgah','memorials','eceabat','memorial','Namazgâh Tabyası','Namazgâh Bastion','namazgah kilitbahir tabya'],
+ ['m-havuzlar','memorials','eceabat','memorial','Havuzlar Şehitliği','Havuzlar Martyrs’ Cemetery','şehitlik kilitbahir'],
  ['m-yahya','memorials','eceabat','memorial','Yahya Çavuş Şehitliği','Sergeant Yahya Memorial','şehitlik seddülbahir ertuğrul koyu'],
  ['m-helles','memorials','eceabat','memorial','Helles Anıtı','Helles Memorial','ingiliz british seddülbahir'],
  ['m-french','memorials','eceabat','memorial','Fransız Mezarlığı ve Anıtı','French Cemetery and Memorial','şehitlik french français morto','Fransız Mezarlığı Seddülbahir'],
@@ -1368,6 +1196,7 @@ const EXTRA = [
  ['a-dardanos','ancient','centre','arch','Dardanos Tümülüsü','Dardanos Tumulus',''],
  /* castles and landmarks */
  ['c-nusret','castles','walk','castle','Nusret Mayın Gemisi','Minelayer Nusret','gemi ship müze'],
+ ['c-kilitbahir','castles','eceabat','castle','Kilitbahir Kalesi','Kilitbahir Castle','kale'],
  ['c-seddulbahir','castles','eceabat','castle','Seddülbahir Kalesi','Seddülbahir Castle','kale'],
  ['c-gelibolu','castles','gelibolu','castle','Gelibolu Kalesi ve Piri Reis Müzesi','Gelibolu Castle and Piri Reis Museum','kale müze museum'],
  ['c-mevlevi','castles','gelibolu','castle','Gelibolu Mevlevihanesi','Gelibolu Mevlevi Lodge','mevlevihane'],
@@ -1455,19 +1284,19 @@ const STOPWORDS = ['çanakkale','ve','ile','the','of','and','de','la','el','der'
 Object.keys(KEYWORDS).forEach(id => { const p = PLACES.find(x => x.id === id); if (p) p.kw = (p.kw ? p.kw + ' ' : '') + KEYWORDS[id]; });
 const UI = {
 en:{name:'EN', brand:'Çanakkale Tourism Information', kicker:'CITY GUIDE', title:'Çanakkale guide map', h1:'What would you like to ask?',
-  qWhere:'Where can I go right now?', qHow:'How do I get there?', phHow:'Where do you want to go?', popular:'Most asked', carQ:'Do you have a car?', carYes:'I have a car', carNo:'I have no car',
+  qWhere:'What can I visit?', qHow:'How do I get there?', phHow:'What do you want to visit?', popular:'Most asked', carQ:'Do you have a car?', carYes:'I have a car', carNo:'I have no car',
   xDescCar:'In the {d} area. You can drive straight there; your maps app shows the road and the driving time.',
   dutyNow:'Pharmacies are closed right now (evening or weekend). Only the duty pharmacy (nöbetçi eczane) is open; its address is also posted on every pharmacy door.', dutyBtn:'Find the duty pharmacy', dutyList:'Duty pharmacy list',
   dutyHours:'Pharmacies are open on weekdays {a}–{b}. Outside these hours, at weekends and on public holidays only the duty pharmacy (nöbetçi eczane) is open.',
-  intro:'Tap a picture to see the route and the time.', rec:'Recommended',
+  intro:'Tap a picture to see the route, the time and the fare.', rec:'Recommended',
   cats:{sights:'Sights within walking distance', far:'Around Çanakkale', services:'Urgent needs', transport:'Getting around'},
   back:'Back', office:'Tourism Office',
   under:'under 100 m', several:'several nearby',
-  mWalk:'On foot', mBus:'City bus {l}', mTaxi:'Taxi', mFerry:'Ferry crossing', free:'Free', mins:'≈ {m} min', busFare:'{a} Kentkart · {b} bank card', busNote:'runs about every {f} min; waiting time not included', est:'Distances and times are estimates.', homeWalk:'{m} min on foot',
+  mWalk:'On foot', mBus:'City bus {l}', mTaxi:'Taxi', mFerry:'Ferry crossing', free:'Free', mins:'≈ {m} min', busFare:'{a} Kentkart · {b} bank card', busNote:'runs about every {f} min; waiting time not included', est:'Distances, times and fares are estimates.', homeWalk:'{m} min on foot',
   openIn:'Open the route in your maps app', openStop:'Walking route to the bus stop', findIn:'Search in your maps app', gName:'Google Maps', aName:'Apple Maps', yName:'Yandex Maps',
   sStart:'Start at the Tourism Information Office on the ferry square (İskele Meydanı).', sWalk:'Walk to {n}: {d}, {t}. Open the route below to follow it on your phone.', sArrive:'Arrival: {n}.',
   sTaxi1:'Take a taxi from the nearest rank; ask at our desk where it is.', sTaxi2:'Ride to {n}: {d}, {t}. The fare is set by the taximeter; ask the driver for an estimate before you set off.', taxiFare:'by taximeter',
-  fSort:'Nearest first', fWalk:'On foot', fNoFerry:'No ferry', fOne:'One vehicle at most', ph:'Search a place (e.g. museum, ATM)', nRes:'{n} places, nearest first', clear:'Clear', none:'No place matches. Try another word or remove a filter.',
+  fSort:'Nearest first', fWalk:'On foot', fOne:'One vehicle at most', ph:'Search a place (e.g. Troy Museum, Otogar, museum, ATM)', nRes:'{n} places, nearest first', clear:'Clear', none:'No place matches. Try another word or remove a filter.',
   full:'English', start:'Start directions',
   mCar:'By your own car', carCost:'fuel only', carCostF:'fuel + ferry', sCar1:'Start the driving route in your maps app.', sCar2:'Drive to {n}: {d}, {t}.', sCarFerry:'The route includes the car ferry across the Dardanelles: about {c} TL per car.', ask:'ask at the desk', mBusD:'Ç9 + district bus',
   sDb1:'Take city bus Ç9 from the stop beside the office to the Otogar: about 15 min, {f}.', sDb2:'At the Otogar take the bus or minibus to {n}. Ask at our desk for today’s times and the fare.', dDesc:'{n} is one of the districts of Çanakkale. Below is how to get there from the city centre.',
@@ -1477,21 +1306,21 @@ en:{name:'EN', brand:'Çanakkale Tourism Information', kicker:'CITY GUIDE', titl
   xDesc:'In the {d} area. See how to get to {d} first; the last stretch usually needs a taxi, a tour or your own car.', xDescC:'In or near the centre of Çanakkale.', toVia:'How to get to {d}', inArea:'{d} area', centre:'city centre',
   how:'How to get there', locate:'Show my location', locErr:'Your location is not available.', theme:'Switch between light and dark',
   draft:'Draft: places and details are still being checked by the office.',
-  foot:'Çanakkale Tourism Information Office. Distances and times are estimates; ask at the desk for today’s details.'},
+  foot:'Çanakkale Tourism Information Office. Distances, times and fares are estimates; ask at the desk for today’s details.'},
 tr:{name:'TR', brand:'Çanakkale Turizm Danışma', kicker:'ŞEHİR REHBERİ', title:'Çanakkale rehber haritası', h1:'Ne sormak istersiniz?',
-  qWhere:'Şu an nereye gidebilirim?', qHow:'Bir yere nasıl giderim?', phHow:'Nereye gitmek istiyorsunuz?', popular:'En çok sorulanlar', carQ:'Arabanız var mı?', carYes:'Arabam var', carNo:'Arabam yok',
+  qWhere:'Nereyi ziyaret edebilirim?', qHow:'Bir yere nasıl giderim?', phHow:'Nereyi ziyaret etmek istiyorsunuz?', popular:'En çok sorulanlar', carQ:'Arabanız var mı?', carYes:'Arabam var', carNo:'Arabam yok',
   xDescCar:'{d} çevresindedir. Aracınızla doğrudan gidebilirsiniz; yolu ve süreyi harita uygulamanız gösterir.',
   dutyNow:'Şu an eczanelerin mesai saatleri dışında (akşam ya da hafta sonu). Yalnızca nöbetçi eczane açıktır; adresi her eczanenin kapısında da yazar.', dutyBtn:'Nöbetçi eczaneyi bul', dutyList:'Nöbetçi eczane listesi',
   dutyHours:'Eczaneler hafta içi {a}–{b} arasında açıktır. Bu saatlerin dışında, hafta sonu ve resmî tatillerde yalnızca nöbetçi eczane hizmet verir.',
-  intro:'Bir simgeye dokunun; güzergâhı ve süreyi görün.', rec:'Önerilen',
+  intro:'Bir simgeye dokunun; güzergâhı, süreyi ve ücreti görün.', rec:'Önerilen',
   cats:{sights:'Yürüyerek gezilecek yerler', far:'Çanakkale çevresinde', services:'Acil ihtiyaçlar', transport:'Ulaşım'},
   back:'Geri', office:'Turizm Danışma',
   under:'100 m’den az', several:'yakında birden fazla',
-  mWalk:'Yürüyerek', mBus:'{l} şehir içi otobüsü', mTaxi:'Taksi', mFerry:'Feribotla geçiş', free:'Ücretsiz', mins:'≈ {m} dk', busFare:'Kentkart {a} · banka kartı {b}', busNote:'yaklaşık {f} dakikada bir; bekleme süresi hariç', est:'Mesafe ve süreler tahminidir.', homeWalk:'yürüyerek {m} dk',
+  mWalk:'Yürüyerek', mBus:'{l} şehir içi otobüsü', mTaxi:'Taksi', mFerry:'Feribotla geçiş', free:'Ücretsiz', mins:'≈ {m} dk', busFare:'Kentkart {a} · banka kartı {b}', busNote:'yaklaşık {f} dakikada bir; bekleme süresi hariç', est:'Mesafe, süre ve ücretler tahminidir.', homeWalk:'yürüyerek {m} dk',
   openIn:'Rotayı harita uygulamanızda açın', openStop:'Durağa yürüme rotası', findIn:'Harita uygulamanızda arayın', gName:'Google Haritalar', aName:'Apple Haritalar', yName:'Yandex Haritalar',
   sStart:'İskele Meydanı’ndaki Turizm Danışma Bürosu’ndan yola çıkın.', sWalk:'{n} için yürüyün: {d}, {t}. Yolu telefonunuzdan izlemek için aşağıdan rotayı açın.', sArrive:'Varış: {n}.',
   sTaxi1:'En yakın taksi durağından taksiye binin; durağın yerini danışma masamıza sorabilirsiniz.', sTaxi2:'{n} için yolculuk: {d}, {t}. Ücreti taksimetre belirler; binmeden önce şoförden tahmini tutarı sorun.', taxiFare:'taksimetreye göre',
-  fSort:'Yakından uzağa', fWalk:'Yürüyerek', fNoFerry:'Feribotsuz', fOne:'Tek araçla', ph:'Yer arayın (ör. müze, ATM)', nRes:'{n} yer, yakından uzağa', clear:'Temizle', none:'Uygun yer bulunamadı. Başka bir kelime deneyin ya da bir filtreyi kaldırın.',
+  fSort:'Yakından uzağa', fWalk:'Yürüyerek', fOne:'Tek araçla', ph:'Yer arayın (ör. Troya Müzesi, Otogar, müze, ATM)', nRes:'{n} yer, yakından uzağa', clear:'Temizle', none:'Uygun yer bulunamadı. Başka bir kelime deneyin ya da bir filtreyi kaldırın.',
   full:'Türkçe', start:'Yol tarifini başlat',
   mCar:'Kendi aracı­nızla', carCost:'yalnızca yakıt', carCostF:'yakıt + feribot', sCar1:'Harita uygulamanızda araç rotasını başlatın.', sCar2:'{n} için sürüş: {d}, {t}.', sCarFerry:'Güzergâhta Boğaz’ı geçen arabalı feribot vardır: otomobil başına yaklaşık {c} TL.', ask:'danışmaya sorun', mBusD:'Ç9 + ilçe otobüsü',
   sDb1:'Büronun yanındaki duraktan Ç9 ile otogara gidin: yaklaşık 15 dk, {f}.', sDb2:'Otogardan {n} otobüsüne ya da minibüsüne binin. Günün saatlerini ve ücreti danışma masamıza sorun.', dDesc:'{n}, Çanakkale’nin ilçelerindendir. Şehir merkezinden nasıl gidileceği aşağıdadır.',
@@ -1501,21 +1330,21 @@ tr:{name:'TR', brand:'Çanakkale Turizm Danışma', kicker:'ŞEHİR REHBERİ', t
   xDesc:'{d} çevresindedir. Önce aşağıdaki “{d}: nasıl gidilir” bağlantısına bakın; yolun son bölümü için genellikle taksi, tur ya da kendi aracınız gerekir.', xDescC:'Çanakkale merkezinde ya da merkeze yakındır.', toVia:'{d}: nasıl gidilir', inArea:'{d} çevresi', centre:'şehir merkezi',
   how:'Nasıl gidilir', locate:'Konumumu göster', locErr:'Konumunuz alınamadı.', theme:'Açık ve koyu görünüm arasında geç',
   draft:'Taslak: yerler ve ayrıntılar büro tarafından henüz kontrol ediliyor.',
-  foot:'Çanakkale Turizm Danışma Bürosu. Mesafe ve süreler tahminidir; güncel bilgi için danışma masasına sorun.'},
+  foot:'Çanakkale Turizm Danışma Bürosu. Mesafe, süre ve ücretler tahminidir; güncel bilgi için danışma masasına sorun.'},
 de:{name:'DE', brand:'Touristeninformation Çanakkale', kicker:'STADTFÜHRER', title:'Stadtplan Çanakkale', h1:'Was möchten Sie wissen?',
-  qWhere:'Wohin kann ich jetzt gehen?', qHow:'Wie komme ich dorthin?', phHow:'Wohin möchten Sie?', popular:'Am häufigsten gefragt', carQ:'Haben Sie ein Auto?', carYes:'Ich habe ein Auto', carNo:'Ich habe kein Auto',
+  qWhere:'Was kann ich besuchen?', qHow:'Wie komme ich dorthin?', phHow:'Was möchten Sie besuchen?', popular:'Am häufigsten gefragt', carQ:'Haben Sie ein Auto?', carYes:'Ich habe ein Auto', carNo:'Ich habe kein Auto',
   xDescCar:'Im Raum {d}. Sie können direkt mit dem Auto hinfahren; Ihre Karten-App zeigt Strecke und Fahrzeit.',
   dutyNow:'Die Apotheken sind jetzt geschlossen (abends oder am Wochenende). Geöffnet ist nur die Notdienstapotheke (nöbetçi eczane); ihre Adresse hängt auch an jeder Apothekentür.', dutyBtn:'Notdienstapotheke finden', dutyList:'Liste der Notdienstapotheken',
   dutyHours:'Apotheken sind werktags von {a} bis {b} Uhr geöffnet. Außerhalb dieser Zeiten, am Wochenende und an Feiertagen hat nur die Notdienstapotheke (nöbetçi eczane) geöffnet.',
-  intro:'Tippen Sie auf ein Symbol und sehen Sie Route und Dauer.', rec:'Empfohlen',
+  intro:'Tippen Sie auf ein Symbol und sehen Sie Route, Dauer und Preis.', rec:'Empfohlen',
   cats:{sights:'Sehenswertes zu Fuß', far:'Rund um Çanakkale', services:'Dringend benötigt', transport:'Verkehr'},
   back:'Zurück', office:'Touristeninformation',
   under:'unter 100 m', several:'mehrere in der Nähe',
-  mWalk:'Zu Fuß', mBus:'Stadtbus {l}', mTaxi:'Taxi', mFerry:'Überfahrt mit der Fähre', free:'Kostenlos', mins:'≈ {m} Min.', busFare:'{a} Kentkart · {b} Bankkarte', busNote:'etwa alle {f} Min.; ohne Wartezeit', est:'Entfernungen und Zeiten sind Schätzwerte.', homeWalk:'{m} Min. zu Fuß',
+  mWalk:'Zu Fuß', mBus:'Stadtbus {l}', mTaxi:'Taxi', mFerry:'Überfahrt mit der Fähre', free:'Kostenlos', mins:'≈ {m} Min.', busFare:'{a} Kentkart · {b} Bankkarte', busNote:'etwa alle {f} Min.; ohne Wartezeit', est:'Entfernungen, Zeiten und Preise sind Schätzwerte.', homeWalk:'{m} Min. zu Fuß',
   openIn:'Route in Ihrer Karten-App öffnen', openStop:'Fußweg zur Haltestelle', findIn:'In Ihrer Karten-App suchen', gName:'Google Maps', aName:'Apple Karten', yName:'Yandex Maps',
   sStart:'Starten Sie an der Touristeninformation am Fährplatz (İskele Meydanı).', sWalk:'Gehen Sie zu Fuß zu {n}: {d}, {t}. Öffnen Sie unten die Route, um ihr auf dem Telefon zu folgen.', sArrive:'Ankunft: {n}.',
   sTaxi1:'Nehmen Sie ein Taxi am nächsten Taxistand; wo er ist, erfahren Sie an unserem Schalter.', sTaxi2:'Fahrt zu {n}: {d}, {t}. Der Preis richtet sich nach dem Taxameter; fragen Sie den Fahrer vor der Abfahrt nach einer Schätzung.', taxiFare:'nach Taxameter',
-  fSort:'Nächste zuerst', fWalk:'Zu Fuß', fNoFerry:'Ohne Fähre', fOne:'Höchstens ein Fahrzeug', ph:'Ort suchen (z. B. Museum, Bargeld)', nRes:'{n} Orte, die nächsten zuerst', clear:'Zurücksetzen', none:'Kein passender Ort. Versuchen Sie ein anderes Wort oder entfernen Sie einen Filter.',
+  fSort:'Nächste zuerst', fWalk:'Zu Fuß', fOne:'Höchstens ein Fahrzeug', ph:'Ort suchen (z. B. Troja-Museum, Otogar, Museum, Bargeld)', nRes:'{n} Orte, die nächsten zuerst', clear:'Zurücksetzen', none:'Kein passender Ort. Versuchen Sie ein anderes Wort oder entfernen Sie einen Filter.',
   full:'Deutsch', start:'Route starten',
   mCar:'Mit dem eigenen Auto', carCost:'nur Kraftstoff', carCostF:'Kraftstoff + Fähre', sCar1:'Starten Sie die Autoroute in Ihrer Karten-App.', sCar2:'Fahrt nach {n}: {d}, {t}.', sCarFerry:'Zur Route gehört die Autofähre über die Dardanellen: etwa {c} TL pro Auto.', ask:'am Schalter fragen', mBusD:'Ç9 + Regionalbus',
   sDb1:'Fahren Sie mit dem Stadtbus Ç9 von der Haltestelle neben dem Büro zum Otogar: etwa 15 Min., {f}.', sDb2:'Nehmen Sie am Otogar den Bus oder Minibus nach {n}. Abfahrtszeiten und Fahrpreis erfahren Sie an unserem Schalter.', dDesc:'{n} ist einer der Landkreise der Provinz Çanakkale. Unten steht, wie Sie vom Stadtzentrum dorthin kommen.',
@@ -1525,21 +1354,21 @@ de:{name:'DE', brand:'Touristeninformation Çanakkale', kicker:'STADTFÜHRER', t
   xDesc:'Im Raum {d}. Sehen Sie zuerst, wie Sie nach {d} kommen; für das letzte Stück brauchen Sie meist ein Taxi, eine Tour oder ein eigenes Auto.', xDescC:'Im Zentrum von Çanakkale oder in der Nähe.', toVia:'So kommen Sie nach {d}', inArea:'Raum {d}', centre:'Stadtzentrum',
   how:'So kommen Sie hin', locate:'Meinen Standort anzeigen', locErr:'Ihr Standort ist nicht verfügbar.', theme:'Zwischen heller und dunkler Ansicht wechseln',
   draft:'Entwurf: Orte und Angaben werden noch vom Büro geprüft.',
-  foot:'Touristeninformation Çanakkale. Entfernungen und Zeiten sind Schätzwerte; aktuelle Angaben erhalten Sie am Schalter.'},
+  foot:'Touristeninformation Çanakkale. Entfernungen, Zeiten und Preise sind Schätzwerte; aktuelle Angaben erhalten Sie am Schalter.'},
 fr:{name:'FR', brand:'Office de tourisme de Çanakkale', kicker:'GUIDE DE LA VILLE', title:'Plan de Çanakkale', h1:'Que souhaitez-vous savoir ?',
-  qWhere:'Où puis-je aller maintenant ?', qHow:'Comment y aller ?', phHow:'Où voulez-vous aller ?', popular:'Les plus demandés', carQ:'Avez-vous une voiture ?', carYes:'J’ai une voiture', carNo:'Je n’ai pas de voiture',
+  qWhere:'Que puis-je visiter ?', qHow:'Comment y aller ?', phHow:'Que voulez-vous visiter ?', popular:'Les plus demandés', carQ:'Avez-vous une voiture ?', carYes:'J’ai une voiture', carNo:'Je n’ai pas de voiture',
   xDescCar:'Dans le secteur de {d}. Vous pouvez y aller directement en voiture ; votre application de cartes indique la route et la durée.',
   dutyNow:'Les pharmacies sont fermées en ce moment (soir ou week-end). Seule la pharmacie de garde (nöbetçi eczane) est ouverte ; son adresse est aussi affichée sur la porte de chaque pharmacie.', dutyBtn:'Trouver la pharmacie de garde', dutyList:'Liste des pharmacies de garde',
   dutyHours:'Les pharmacies sont ouvertes en semaine de {a} à {b}. En dehors de ces horaires, le week-end et les jours fériés, seule la pharmacie de garde (nöbetçi eczane) est ouverte.',
-  intro:'Touchez une icône pour voir l’itinéraire et la durée.', rec:'Recommandé',
+  intro:'Touchez une icône pour voir l’itinéraire, la durée et le prix.', rec:'Recommandé',
   cats:{sights:'À visiter à pied', far:'Autour de Çanakkale', services:'Besoins urgents', transport:'Se déplacer'},
   back:'Retour', office:'Office de tourisme',
   under:'moins de 100 m', several:'plusieurs à proximité',
-  mWalk:'À pied', mBus:'Bus de ville {l}', mTaxi:'Taxi', mFerry:'Traversée en ferry', free:'Gratuit', mins:'≈ {m} min', busFare:'{a} Kentkart · {b} carte bancaire', busNote:'environ toutes les {f} min ; attente non comprise', est:'Les distances et les durées sont des estimations.', homeWalk:'{m} min à pied',
+  mWalk:'À pied', mBus:'Bus de ville {l}', mTaxi:'Taxi', mFerry:'Traversée en ferry', free:'Gratuit', mins:'≈ {m} min', busFare:'{a} Kentkart · {b} carte bancaire', busNote:'environ toutes les {f} min ; attente non comprise', est:'Les distances, durées et tarifs sont des estimations.', homeWalk:'{m} min à pied',
   openIn:'Ouvrir l’itinéraire dans votre application de cartes', openStop:'Itinéraire à pied jusqu’à l’arrêt', findIn:'Chercher dans votre application de cartes', gName:'Google Maps', aName:'Plans (Apple)', yName:'Yandex Maps',
   sStart:'Partez de l’office de tourisme, sur la place de l’embarcadère (İskele Meydanı).', sWalk:'Marchez jusqu’à {n} : {d}, {t}. Ouvrez l’itinéraire ci-dessous pour le suivre sur votre téléphone.', sArrive:'Arrivée : {n}.',
   sTaxi1:'Prenez un taxi à la station la plus proche ; demandez-nous où elle se trouve.', sTaxi2:'Trajet jusqu’à {n} : {d}, {t}. Le prix est fixé par le taximètre ; demandez une estimation au chauffeur avant de partir.', taxiFare:'au taximètre',
-  fSort:'Du plus proche au plus loin', fWalk:'À pied', fNoFerry:'Sans ferry', fOne:'Un seul véhicule', ph:'Chercher un lieu (ex. musée, espèces)', nRes:'{n} lieux, du plus proche au plus loin', clear:'Effacer', none:'Aucun lieu ne correspond. Essayez un autre mot ou retirez un filtre.',
+  fSort:'Du plus proche au plus loin', fWalk:'À pied', fOne:'Un seul véhicule', ph:'Chercher un lieu (ex. Musée de Troie, Otogar, musée, espèces)', nRes:'{n} lieux, du plus proche au plus loin', clear:'Effacer', none:'Aucun lieu ne correspond. Essayez un autre mot ou retirez un filtre.',
   full:'Français', start:'Démarrer l’itinéraire',
   mCar:'Avec votre voiture', carCost:'carburant seul', carCostF:'carburant + ferry', sCar1:'Lancez l’itinéraire en voiture dans votre application de cartes.', sCar2:'Trajet jusqu’à {n} : {d}, {t}.', sCarFerry:'L’itinéraire comprend le ferry pour voitures qui traverse les Dardanelles : environ {c} TL par voiture.', ask:'à demander au comptoir', mBusD:'Ç9 + bus régional',
   sDb1:'Prenez le bus de ville Ç9 à l’arrêt à côté de l’office jusqu’à l’Otogar : environ 15 min, {f}.', sDb2:'À l’Otogar, prenez le bus ou le minibus pour {n}. Demandez les horaires du jour et le tarif à notre comptoir.', dDesc:'{n} est l’un des districts de la province de Çanakkale. Voici comment s’y rendre depuis le centre-ville.',
@@ -1549,21 +1378,21 @@ fr:{name:'FR', brand:'Office de tourisme de Çanakkale', kicker:'GUIDE DE LA VIL
   xDesc:'Dans le secteur de {d}. Voyez d’abord comment rejoindre {d} ; pour la dernière partie, il faut en général un taxi, une excursion ou votre voiture.', xDescC:'Au centre de Çanakkale ou à proximité.', toVia:'Comment aller à {d}', inArea:'secteur de {d}', centre:'centre-ville',
   how:'Comment s’y rendre', locate:'Afficher ma position', locErr:'Votre position est indisponible.', theme:'Basculer entre thème clair et sombre',
   draft:'Brouillon : les lieux et les détails sont encore en cours de vérification.',
-  foot:'Office de tourisme de Çanakkale. Les distances et les durées sont des estimations ; demandez les informations du jour au comptoir.'},
+  foot:'Office de tourisme de Çanakkale. Les distances, durées et tarifs sont des estimations ; demandez les informations du jour au comptoir.'},
 es:{name:'ES', brand:'Oficina de Turismo de Çanakkale', kicker:'GUÍA DE LA CIUDAD', title:'Mapa de Çanakkale', h1:'¿Qué desea saber?',
-  qWhere:'¿Adónde puedo ir ahora?', qHow:'¿Cómo llego allí?', phHow:'¿Adónde quiere ir?', popular:'Lo más preguntado', carQ:'¿Tiene coche?', carYes:'Tengo coche', carNo:'No tengo coche',
+  qWhere:'¿Qué puedo visitar?', qHow:'¿Cómo llego allí?', phHow:'¿Qué quiere visitar?', popular:'Lo más preguntado', carQ:'¿Tiene coche?', carYes:'Tengo coche', carNo:'No tengo coche',
   xDescCar:'En la zona de {d}. Puede ir directamente en coche; su aplicación de mapas muestra la ruta y el tiempo.',
   dutyNow:'Las farmacias están cerradas ahora (noche o fin de semana). Solo abre la farmacia de guardia (nöbetçi eczane); su dirección figura también en la puerta de cada farmacia.', dutyBtn:'Buscar la farmacia de guardia', dutyList:'Lista de farmacias de guardia',
   dutyHours:'Las farmacias abren los días laborables de {a} a {b}. Fuera de ese horario, los fines de semana y los festivos solo abre la farmacia de guardia (nöbetçi eczane).',
-  intro:'Toque un icono para ver la ruta y el tiempo.', rec:'Recomendado',
+  intro:'Toque un icono para ver la ruta, el tiempo y el precio.', rec:'Recomendado',
   cats:{sights:'Para visitar a pie', far:'Alrededores de Çanakkale', services:'Necesidades urgentes', transport:'Cómo moverse'},
   back:'Volver', office:'Oficina de turismo',
   under:'menos de 100 m', several:'varios cerca',
-  mWalk:'A pie', mBus:'Autobús urbano {l}', mTaxi:'Taxi', mFerry:'Travesía en ferri', free:'Gratis', mins:'≈ {m} min', busFare:'{a} Kentkart · {b} tarjeta bancaria', busNote:'cada {f} min aprox.; sin contar la espera', est:'Las distancias y los tiempos son estimaciones.', homeWalk:'{m} min a pie',
+  mWalk:'A pie', mBus:'Autobús urbano {l}', mTaxi:'Taxi', mFerry:'Travesía en ferri', free:'Gratis', mins:'≈ {m} min', busFare:'{a} Kentkart · {b} tarjeta bancaria', busNote:'cada {f} min aprox.; sin contar la espera', est:'Las distancias, los tiempos y las tarifas son estimaciones.', homeWalk:'{m} min a pie',
   openIn:'Abrir la ruta en su aplicación de mapas', openStop:'Ruta a pie hasta la parada', findIn:'Buscar en su aplicación de mapas', gName:'Google Maps', aName:'Apple Maps', yName:'Yandex Maps',
   sStart:'Salga de la oficina de turismo, en la plaza del embarcadero (İskele Meydanı).', sWalk:'Camine hasta {n}: {d}, {t}. Abra la ruta de abajo para seguirla en su teléfono.', sArrive:'Llegada: {n}.',
   sTaxi1:'Tome un taxi en la parada más cercana; pregunte en nuestro mostrador dónde está.', sTaxi2:'Trayecto hasta {n}: {d}, {t}. El precio lo marca el taxímetro; pida una estimación al conductor antes de salir.', taxiFare:'según taxímetro',
-  fSort:'De cerca a lejos', fWalk:'A pie', fNoFerry:'Sin ferri', fOne:'Un solo vehículo', ph:'Buscar un lugar (p. ej. museo, cajero)', nRes:'{n} lugares, de cerca a lejos', clear:'Borrar', none:'Ningún lugar coincide. Pruebe otra palabra o quite un filtro.',
+  fSort:'De cerca a lejos', fWalk:'A pie', fOne:'Un solo vehículo', ph:'Buscar un lugar (p. ej. Museo de Troya, Otogar, museo, cajero)', nRes:'{n} lugares, de cerca a lejos', clear:'Borrar', none:'Ningún lugar coincide. Pruebe otra palabra o quite un filtro.',
   full:'Español', start:'Iniciar la ruta',
   mCar:'En su propio coche', carCost:'solo combustible', carCostF:'combustible + ferri', sCar1:'Inicie la ruta en coche en su aplicación de mapas.', sCar2:'Trayecto hasta {n}: {d}, {t}.', sCarFerry:'La ruta incluye el ferri para coches que cruza los Dardanelos: unos {c} TL por coche.', ask:'pregunte en el mostrador', mBusD:'Ç9 + autobús comarcal',
   sDb1:'Tome el autobús urbano Ç9 en la parada junto a la oficina hasta el Otogar: unos 15 min, {f}.', sDb2:'En el Otogar tome el autobús o minibús a {n}. Pregunte en nuestro mostrador por los horarios del día y la tarifa.', dDesc:'{n} es uno de los distritos de la provincia de Çanakkale. A continuación, cómo llegar desde el centro.',
@@ -1573,24 +1402,24 @@ es:{name:'ES', brand:'Oficina de Turismo de Çanakkale', kicker:'GUÍA DE LA CIU
   xDesc:'En la zona de {d}. Vea primero cómo llegar a {d}; para el último tramo suele hacer falta un taxi, una excursión o su propio coche.', xDescC:'En el centro de Çanakkale o cerca.', toVia:'Cómo llegar a {d}', inArea:'zona de {d}', centre:'centro de la ciudad',
   how:'Cómo llegar', locate:'Mostrar mi ubicación', locErr:'Su ubicación no está disponible.', theme:'Cambiar entre tema claro y oscuro',
   draft:'Borrador: la oficina aún está revisando los lugares y los detalles.',
-  foot:'Oficina de Turismo de Çanakkale. Las distancias y los tiempos son estimaciones; pregunte en el mostrador por los datos del día.'}
+  foot:'Oficina de Turismo de Çanakkale. Las distancias, los tiempos y las tarifas son estimaciones; pregunte en el mostrador por los datos del día.'}
 };
 /* ---- four more languages: Bulgarian, Russian, Greek, Arabic ----
    Interface texts are below. Texts of the places are in XL further down, looked up by their English text. */
 const MORE_UI = {
 bg:{name:'BG', brand:'Туристически център Чанаккале', kicker:'ГРАДСКИ ПЪТЕВОДИТЕЛ', title:'Пътеводител за Чанаккале', h1:'Какво искате да попитате?',
-  qWhere:'Къде мога да отида сега?', qHow:'Как да стигна дотам?', phHow:'Къде искате да отидете?', popular:'Най-често питани', carQ:'Имате ли автомобил?', carYes:'Имам авто­мобил', carNo:'Нямам авто­мобил',
+  qWhere:'Какво мога да посетя?', qHow:'Как да стигна дотам?', phHow:'Какво искате да посетите?', popular:'Най-често питани', carQ:'Имате ли автомобил?', carYes:'Имам авто­мобил', carNo:'Нямам авто­мобил',
   xDescCar:'В района на {d}. Можете да стигнете направо с автомобила си; приложението ви за карти показва пътя и времето.',
   dutyNow:'В момента аптеките са затворени (вечер или уикенд). Работи само дежурната аптека (nöbetçi eczane); адресът ѝ е изписан и на вратата на всяка аптека.', dutyBtn:'Намери дежурната аптека', dutyList:'Списък на дежурните аптеки',
   dutyHours:'Аптеките работят в делнични дни от {a} до {b}. Извън тези часове, през уикенда и на официални празници работи само дежурната аптека (nöbetçi eczane).',
-  intro:'Докоснете картинка, за да видите маршрута и времето.', rec:'Препоръчано',
+  intro:'Докоснете картинка, за да видите маршрута, времето и цената.', rec:'Препоръчано',
   cats:{sights:'Забележителности пеша', far:'Около Чанаккале', services:'Спешни нужди', transport:'Транспорт'},
   back:'Назад', office:'Туристически център', under:'под 100 м', several:'няколко наблизо',
-  mWalk:'Пеша', mBus:'Градски автобус {l}', mTaxi:'Такси', mFerry:'С ферибот', free:'Безплатно', mins:'≈ {m} мин', busFare:'{a} с Kentkart · {b} с банкова карта', busNote:'на около {f} мин; без времето за чакане', est:'Разстоянията и времената са приблизителни.', homeWalk:'{m} мин пеша',
+  mWalk:'Пеша', mBus:'Градски автобус {l}', mTaxi:'Такси', mFerry:'С ферибот', free:'Безплатно', mins:'≈ {m} мин', busFare:'{a} с Kentkart · {b} с банкова карта', busNote:'на около {f} мин; без времето за чакане', est:'Разстоянията, времената и цените са приблизителни.', homeWalk:'{m} мин пеша',
   openIn:'Отворете маршрута в приложението си за карти', openStop:'Пешеходен маршрут до спирката', findIn:'Търсете в приложението си за карти', gName:'Google Maps', aName:'Apple Maps', yName:'Yandex Maps',
   sStart:'Тръгнете от Туристическия информационен център на площада при ферибота (İskele Meydanı).', sWalk:'Вървете до {n}: {d}, {t}. Отворете маршрута по-долу, за да го следвате на телефона си.', sArrive:'Пристигане: {n}.',
   sTaxi1:'Вземете такси от най-близката стоянка; попитайте на нашето гише къде се намира.', sTaxi2:'Пътуване до {n}: {d}, {t}. Цената се определя от таксиметъра; преди да тръгнете, попитайте шофьора за приблизителна сума.', taxiFare:'по таксиметър',
-  fSort:'Най-близките първо', fWalk:'Пеша', fNoFerry:'Без ферибот', fOne:'Най-много едно превозно средство', ph:'Търсете място (напр. музей, банкомат)', nRes:'{n} места, най-близките първо', clear:'Изчисти', none:'Няма съвпадения. Опитайте с друга дума или махнете филтър.',
+  fSort:'Най-близките първо', fWalk:'Пеша', fOne:'Най-много едно превозно средство', ph:'Търсете място (напр. Музей на Троя, Otogar, музей, банкомат)', nRes:'{n} места, най-близките първо', clear:'Изчисти', none:'Няма съвпадения. Опитайте с друга дума или махнете филтър.',
   full:'Български', start:'Започни маршрута',
   mCar:'Със собствен авто­мобил', carCost:'само гориво', carCostF:'гориво + ферибот', sCar1:'Стартирайте маршрута за кола в приложението си за карти.', sCar2:'Пътуване с кола до {n}: {d}, {t}.', sCarFerry:'Маршрутът включва автомобилен ферибот през Дарданелите: около {c} TL на автомобил.', ask:'попитайте на гишето', mBusD:'Ç9 + междуселищен автобус',
   sDb1:'Вземете градски автобус Ç9 от спирката до туристическия център до автогарата (Otogar): около 15 мин, {f}.', sDb2:'От автогарата вземете автобус или минибус до {n}. Попитайте на нашето гише за днешното разписание и цената.', dDesc:'{n} е една от общините на провинция Чанаккале. По-долу е описано как да стигнете дотам от центъра на града.',
@@ -1598,23 +1427,23 @@ bg:{name:'BG', brand:'Туристически център Чанаккале',
   gduT:'Разписание и цени на фериботите', gduP:'Фериботите се обслужват от GESTAŞ. Преди да тръгнете, проверете днешните курсове и актуалните цени на официалния сайт.', gduTimes:'Разписание', gduFares:'Цени',
   how:'Как да стигнете', locate:'Покажи моето местоположение', locErr:'Местоположението ви не е достъпно.', theme:'Смяна между светъл и тъмен изглед',
   draft:'Чернова: местата и подробностите все още се проверяват от центъра.',
-  foot:'Туристически информационен център Чанаккале. Разстоянията и времената са приблизителни; попитайте на гишето за актуална информация.',
+  foot:'Туристически информационен център Чанаккале. Разстоянията, времената и цените са приблизителни; попитайте на гишето за актуална информация.',
   nFound:'{n} резултата, най-подходящите първо', mBusC:'Ç9 + междуградски автобус', sCb2:'От автогарата вземете междуградски автобус до {n}. Билети се продават в офисите на автобусните фирми и онлайн; вижте „Автобусни фирми“.', sCarNo:'Приложението ви за карти показва разстоянието и времето за пътуване до {n}.', cDesc:'Как да стигнете от Чанаккале до {n}.',
   xDesc:'В района на {d}. Първо вижте как да стигнете до {d}; за последната част обикновено е нужно такси, екскурзия или собствен автомобил.', xDescC:'В центъра на Чанаккале или наблизо.', toVia:'Как да стигнете до {d}', inArea:'район {d}', centre:'център на града'},
 
 ru:{name:'RU', brand:'Туристический центр Чанаккале', kicker:'ПУТЕВОДИТЕЛЬ', title:'Путеводитель по Чанаккале', h1:'Что вы хотите узнать?',
-  qWhere:'Куда можно пойти сейчас?', qHow:'Как туда добраться?', phHow:'Куда вы хотите поехать?', popular:'Чаще всего спрашивают', carQ:'У вас есть автомобиль?', carYes:'Есть авто­мобиль', carNo:'Нет авто­мобиля',
+  qWhere:'Что я могу посетить?', qHow:'Как туда добраться?', phHow:'Что вы хотите посетить?', popular:'Чаще всего спрашивают', carQ:'У вас есть автомобиль?', carYes:'Есть авто­мобиль', carNo:'Нет авто­мобиля',
   xDescCar:'В районе {d}. Туда можно доехать прямо на автомобиле; приложение карт покажет дорогу и время в пути.',
   dutyNow:'Сейчас аптеки закрыты (вечер или выходные). Работает только дежурная аптека (nöbetçi eczane); её адрес указан также на двери каждой аптеки.', dutyBtn:'Найти дежурную аптеку', dutyList:'Список дежурных аптек',
   dutyHours:'Аптеки работают по будням с {a} до {b}. В остальное время, в выходные и праздничные дни работает только дежурная аптека (nöbetçi eczane).',
-  intro:'Нажмите на значок, чтобы увидеть маршрут и время.', rec:'Рекомендуем',
+  intro:'Нажмите на значок, чтобы увидеть маршрут, время и стоимость.', rec:'Рекомендуем',
   cats:{sights:'Достопримечательности пешком', far:'В окрестностях Чанаккале', services:'Срочные нужды', transport:'Транспорт'},
   back:'Назад', office:'Туристический центр', under:'менее 100 м', several:'несколько поблизости',
-  mWalk:'Пешком', mBus:'Городской автобус {l}', mTaxi:'Такси', mFerry:'На пароме', free:'Бесплатно', mins:'≈ {m} мин', busFare:'{a} по Kentkart · {b} банковской картой', busNote:'примерно каждые {f} мин; без учёта ожидания', est:'Расстояния и время указаны приблизительно.', homeWalk:'{m} мин пешком',
+  mWalk:'Пешком', mBus:'Городской автобус {l}', mTaxi:'Такси', mFerry:'На пароме', free:'Бесплатно', mins:'≈ {m} мин', busFare:'{a} по Kentkart · {b} банковской картой', busNote:'примерно каждые {f} мин; без учёта ожидания', est:'Расстояния, время и цены указаны приблизительно.', homeWalk:'{m} мин пешком',
   openIn:'Откройте маршрут в приложении карт', openStop:'Пешеходный маршрут до остановки', findIn:'Найдите в приложении карт', gName:'Google Карты', aName:'Apple Карты', yName:'Яндекс Карты',
   sStart:'Начните от Туристического информационного центра на паромной площади (İskele Meydanı).', sWalk:'Идите до места «{n}»: {d}, {t}. Откройте маршрут ниже, чтобы следовать ему на телефоне.', sArrive:'Прибытие: {n}.',
   sTaxi1:'Возьмите такси на ближайшей стоянке; где она находится, подскажут на нашей стойке.', sTaxi2:'Поездка до места «{n}»: {d}, {t}. Стоимость определяется по таксометру; перед поездкой спросите у водителя примерную сумму.', taxiFare:'по таксометру',
-  fSort:'Сначала ближайшие', fWalk:'Пешком', fNoFerry:'Без парома', fOne:'Не более одного транспорта', ph:'Поиск места (например, музей, банкомат)', nRes:'Мест: {n}, сначала ближайшие', clear:'Сбросить', none:'Ничего не найдено. Попробуйте другое слово или уберите фильтр.',
+  fSort:'Сначала ближайшие', fWalk:'Пешком', fOne:'Не более одного транспорта', ph:'Поиск места (например, Музей Трои, Otogar, музей, банкомат)', nRes:'Мест: {n}, сначала ближайшие', clear:'Сбросить', none:'Ничего не найдено. Попробуйте другое слово или уберите фильтр.',
   full:'Русский', start:'Проложить маршрут',
   mCar:'На своём авто­мобиле', carCost:'только топливо', carCostF:'топливо + паром', sCar1:'Запустите автомобильный маршрут в приложении карт.', sCar2:'Поездка до места «{n}»: {d}, {t}.', sCarFerry:'Маршрут включает автомобильный паром через Дарданеллы: около {c} TL за автомобиль.', ask:'уточните на стойке', mBusD:'Ç9 + районный автобус',
   sDb1:'Доезжайте городским автобусом Ç9 от остановки рядом с туристическим центром до автовокзала (Otogar): около 15 мин, {f}.', sDb2:'На автовокзале сядьте на автобус или маршрутку до {n}. Расписание на сегодня и стоимость уточните на нашей стойке.', dDesc:'{n} — один из районов провинции Чанаккале. Ниже описано, как добраться туда из центра города.',
@@ -1622,23 +1451,23 @@ ru:{name:'RU', brand:'Туристический центр Чанаккале',
   gduT:'Расписание и цены паромов', gduP:'Паромы обслуживает компания GESTAŞ. Перед поездкой проверьте сегодняшние рейсы и актуальные цены на официальном сайте.', gduTimes:'Расписание', gduFares:'Цены',
   how:'Как добраться', locate:'Показать моё местоположение', locErr:'Не удалось определить ваше местоположение.', theme:'Переключить светлую и тёмную тему',
   draft:'Черновик: места и сведения ещё проверяются центром.',
-  foot:'Туристический информационный центр Чанаккале. Расстояния и время указаны приблизительно; актуальную информацию уточняйте на стойке.',
+  foot:'Туристический информационный центр Чанаккале. Расстояния, время и цены указаны приблизительно; актуальную информацию уточняйте на стойке.',
   nFound:'Результатов: {n}, сначала самые подходящие', mBusC:'Ç9 + междугородный автобус', sCb2:'На автовокзале сядьте на междугородный автобус до {n}. Билеты продаются в офисах автобусных компаний и онлайн; см. «Автобусные компании».', sCarNo:'Расстояние и время в пути до {n} покажет ваше приложение карт.', cDesc:'Как добраться из Чанаккале до {n}.',
   xDesc:'В районе {d}. Сначала посмотрите, как добраться до {d}; на последнем участке обычно нужны такси, экскурсия или свой автомобиль.', xDescC:'В центре Чанаккале или рядом.', toVia:'Как добраться: {d}', inArea:'район {d}', centre:'центр города'},
 
 el:{name:'EL', brand:'Τουριστικές Πληροφορίες Τσανάκκαλε', kicker:'ΟΔΗΓΟΣ ΠΟΛΗΣ', title:'Οδηγός Τσανάκκαλε', h1:'Τι θέλετε να ρωτήσετε;',
-  qWhere:'Πού μπορώ να πάω τώρα;', qHow:'Πώς θα πάω εκεί;', phHow:'Πού θέλετε να πάτε;', popular:'Οι πιο συχνές ερωτήσεις', carQ:'Έχετε αυτοκίνητο;', carYes:'Έχω αυτο­κίνητο', carNo:'Δεν έχω αυτο­κίνητο',
+  qWhere:'Τι μπορώ να επισκεφθώ;', qHow:'Πώς θα πάω εκεί;', phHow:'Τι θέλετε να επισκεφθείτε;', popular:'Οι πιο συχνές ερωτήσεις', carQ:'Έχετε αυτοκίνητο;', carYes:'Έχω αυτο­κίνητο', carNo:'Δεν έχω αυτο­κίνητο',
   xDescCar:'Στην περιοχή: {d}. Μπορείτε να πάτε απευθείας με το αυτοκίνητό σας· η εφαρμογή χαρτών σας δείχνει τη διαδρομή και τον χρόνο.',
   dutyNow:'Τα φαρμακεία είναι κλειστά αυτή την ώρα (βράδυ ή Σαββατοκύριακο). Ανοιχτό είναι μόνο το εφημερεύον φαρμακείο (nöbetçi eczane)· η διεύθυνσή του αναγράφεται και στην πόρτα κάθε φαρμακείου.', dutyBtn:'Βρείτε το εφημερεύον φαρμακείο', dutyList:'Λίστα εφημερευόντων φαρμακείων',
   dutyHours:'Τα φαρμακεία είναι ανοιχτά τις καθημερινές {a}–{b}. Εκτός αυτών των ωρών, τα Σαββατοκύριακα και τις αργίες λειτουργεί μόνο το εφημερεύον φαρμακείο (nöbetçi eczane).',
-  intro:'Πατήστε ένα εικονίδιο για να δείτε τη διαδρομή και τον χρόνο.', rec:'Προτείνεται',
+  intro:'Πατήστε ένα εικονίδιο για να δείτε τη διαδρομή, τον χρόνο και το κόστος.', rec:'Προτείνεται',
   cats:{sights:'Αξιοθέατα με τα πόδια', far:'Γύρω από το Τσανάκκαλε', services:'Άμεσες ανάγκες', transport:'Μετακινήσεις'},
   back:'Πίσω', office:'Γραφείο Τουρισμού', under:'κάτω από 100 μ.', several:'αρκετά κοντά',
-  mWalk:'Με τα πόδια', mBus:'Αστικό λεωφορείο {l}', mTaxi:'Ταξί', mFerry:'Με το φέρι', free:'Δωρεάν', mins:'≈ {m} λεπτά', busFare:'{a} με Kentkart · {b} με τραπεζική κάρτα', busNote:'περίπου κάθε {f} λεπτά· δεν περιλαμβάνεται η αναμονή', est:'Οι αποστάσεις και οι χρόνοι είναι κατά προσέγγιση.', homeWalk:'{m} λεπτά με τα πόδια',
+  mWalk:'Με τα πόδια', mBus:'Αστικό λεωφορείο {l}', mTaxi:'Ταξί', mFerry:'Με το φέρι', free:'Δωρεάν', mins:'≈ {m} λεπτά', busFare:'{a} με Kentkart · {b} με τραπεζική κάρτα', busNote:'περίπου κάθε {f} λεπτά· δεν περιλαμβάνεται η αναμονή', est:'Οι αποστάσεις, οι χρόνοι και οι τιμές είναι κατά προσέγγιση.', homeWalk:'{m} λεπτά με τα πόδια',
   openIn:'Ανοίξτε τη διαδρομή στην εφαρμογή χαρτών σας', openStop:'Διαδρομή με τα πόδια έως τη στάση', findIn:'Αναζήτηση στην εφαρμογή χαρτών σας', gName:'Google Maps', aName:'Apple Maps', yName:'Yandex Maps',
   sStart:'Ξεκινήστε από το Γραφείο Τουριστικών Πληροφοριών στην πλατεία του φέρι (İskele Meydanı).', sWalk:'Περπατήστε έως: {n} — {d}, {t}. Ανοίξτε τη διαδρομή παρακάτω για να την ακολουθήσετε στο κινητό σας.', sArrive:'Άφιξη: {n}.',
   sTaxi1:'Πάρτε ταξί από την κοντινότερη πιάτσα· ρωτήστε στο γκισέ μας πού βρίσκεται.', sTaxi2:'Διαδρομή έως: {n} — {d}, {t}. Η τιμή ορίζεται από το ταξίμετρο· ρωτήστε τον οδηγό για μια εκτίμηση πριν ξεκινήσετε.', taxiFare:'με ταξίμετρο',
-  fSort:'Πρώτα τα κοντινότερα', fWalk:'Με τα πόδια', fNoFerry:'Χωρίς φέρι', fOne:'Το πολύ ένα όχημα', ph:'Αναζήτηση τόπου (π.χ. μουσείο, ATM)', nRes:'{n} τόποι, πρώτα οι κοντινότεροι', clear:'Καθαρισμός', none:'Δεν βρέθηκε τόπος. Δοκιμάστε άλλη λέξη ή αφαιρέστε ένα φίλτρο.',
+  fSort:'Πρώτα τα κοντινότερα', fWalk:'Με τα πόδια', fOne:'Το πολύ ένα όχημα', ph:'Αναζήτηση τόπου (π.χ. Μουσείο Troia, Otogar, μουσείο, ATM)', nRes:'{n} τόποι, πρώτα οι κοντινότεροι', clear:'Καθαρισμός', none:'Δεν βρέθηκε τόπος. Δοκιμάστε άλλη λέξη ή αφαιρέστε ένα φίλτρο.',
   full:'Ελληνικά', start:'Έναρξη διαδρομής',
   mCar:'Με το δικό σας αυτο­κίνητο', carCost:'μόνο καύσιμα', carCostF:'καύσιμα + φέρι', sCar1:'Ξεκινήστε τη διαδρομή με αυτοκίνητο στην εφαρμογή χαρτών σας.', sCar2:'Οδηγήστε έως: {n} — {d}, {t}.', sCarFerry:'Η διαδρομή περιλαμβάνει το οχηματαγωγό που διασχίζει τα Δαρδανέλλια: περίπου {c} TL ανά αυτοκίνητο.', ask:'ρωτήστε στο γκισέ', mBusD:'Ç9 + τοπικό λεωφορείο',
   sDb1:'Πάρτε το αστικό λεωφορείο Ç9 από τη στάση δίπλα στο γραφείο έως τον σταθμό λεωφορείων (Otogar): περίπου 15 λεπτά, {f}.', sDb2:'Στον σταθμό πάρτε το λεωφορείο ή το μίνι μπας για {n}. Ρωτήστε στο γκισέ μας για τα σημερινά δρομολόγια και την τιμή.', dDesc:'{n}: μία από τις επαρχίες του νομού Τσανάκκαλε. Παρακάτω θα δείτε πώς φτάνετε εκεί από το κέντρο της πόλης.',
@@ -1646,23 +1475,23 @@ el:{name:'EL', brand:'Τουριστικές Πληροφορίες Τσανάκ
   gduT:'Δρομολόγια και τιμές φέρι', gduP:'Τα φέρι εκτελούνται από την GESTAŞ. Πριν ξεκινήσετε, ελέγξτε τα σημερινά δρομολόγια και τις ισχύουσες τιμές στον επίσημο ιστότοπο.', gduTimes:'Δρομολόγια', gduFares:'Τιμές',
   how:'Πώς θα πάτε', locate:'Εμφάνιση της θέσης μου', locErr:'Η θέση σας δεν είναι διαθέσιμη.', theme:'Εναλλαγή φωτεινού και σκούρου θέματος',
   draft:'Προσχέδιο: οι τόποι και οι λεπτομέρειες ελέγχονται ακόμη από το γραφείο.',
-  foot:'Γραφείο Τουριστικών Πληροφοριών Τσανάκκαλε. Οι αποστάσεις και οι χρόνοι είναι κατά προσέγγιση· ρωτήστε στο γκισέ για τα σημερινά στοιχεία.',
+  foot:'Γραφείο Τουριστικών Πληροφοριών Τσανάκκαλε. Οι αποστάσεις, οι χρόνοι και οι τιμές είναι κατά προσέγγιση· ρωτήστε στο γκισέ για τα σημερινά στοιχεία.',
   nFound:'{n} αποτελέσματα, πρώτα τα πιο σχετικά', mBusC:'Ç9 + υπεραστικό λεωφορείο', sCb2:'Στον σταθμό πάρτε υπεραστικό λεωφορείο για {n}. Εισιτήρια πωλούνται στα γραφεία των εταιρειών λεωφορείων και διαδικτυακά· δείτε «Εταιρείες λεωφορείων».', sCarNo:'Η εφαρμογή χαρτών σας δείχνει την απόσταση και τον χρόνο οδήγησης έως: {n}.', cDesc:'Πώς θα πάτε από το Τσανάκκαλε προς: {n}.',
   xDesc:'Στην περιοχή: {d}. Δείτε πρώτα πώς φτάνετε εκεί· για το τελευταίο τμήμα χρειάζεται συνήθως ταξί, οργανωμένη εκδρομή ή δικό σας αυτοκίνητο.', xDescC:'Στο κέντρο του Τσανάκκαλε ή κοντά.', toVia:'Πώς θα πάτε: {d}', inArea:'περιοχή {d}', centre:'κέντρο πόλης'},
 
 ar:{name:'AR', brand:'مكتب الاستعلامات السياحية في جناق قلعة', kicker:'دليل المدينة', title:'دليل جناق قلعة', h1:'ماذا تريد أن تسأل؟',
-  qWhere:'إلى أين يمكنني الذهاب الآن؟', qHow:'كيف أصل إلى هناك؟', phHow:'إلى أين تريد الذهاب؟', popular:'الأكثر سؤالًا', carQ:'هل لديك سيارة؟', carYes:'لدي سيارة', carNo:'ليس لدي سيارة',
+  qWhere:'ما الذي يمكنني زيارته؟', qHow:'كيف أصل إلى هناك؟', phHow:'ما الذي تريد زيارته؟', popular:'الأكثر سؤالًا', carQ:'هل لديك سيارة؟', carYes:'لدي سيارة', carNo:'ليس لدي سيارة',
   xDescCar:'في منطقة {d}. يمكنك الذهاب مباشرةً بسيارتك؛ يعرض تطبيق الخرائط لديك الطريق ومدة القيادة.',
   dutyNow:'الصيدليات مغلقة الآن (مساءً أو في عطلة نهاية الأسبوع). تعمل الصيدلية المناوبة فقط (nöbetçi eczane)، وعنوانها مكتوب أيضًا على باب كل صيدلية.', dutyBtn:'ابحث عن الصيدلية المناوبة', dutyList:'قائمة الصيدليات المناوبة',
   dutyHours:'تعمل الصيدليات في أيام الأسبوع من {a} إلى {b}. خارج هذه الأوقات وفي عطلة نهاية الأسبوع والعطل الرسمية تعمل الصيدلية المناوبة فقط (nöbetçi eczane).',
-  intro:'اضغط على أيقونة لمعرفة الطريق والوقت.', rec:'موصى به',
+  intro:'اضغط على أيقونة لمعرفة الطريق والوقت والتكلفة.', rec:'موصى به',
   cats:{sights:'معالم تُزار سيرًا على الأقدام', far:'في محيط جناق قلعة', services:'احتياجات عاجلة', transport:'التنقل'},
   back:'رجوع', office:'مكتب السياحة', under:'أقل من 100 م', several:'عدة أماكن قريبة',
-  mWalk:'سيرًا على الأقدام', mBus:'حافلة المدينة {l}', mTaxi:'سيارة أجرة', mFerry:'بالعبّارة', free:'مجانًا', mins:'≈ {m} دقيقة', busFare:'{a} ببطاقة Kentkart · {b} بالبطاقة المصرفية', busNote:'كل {f} دقيقة تقريبًا؛ لا يشمل وقت الانتظار', est:'المسافات والأوقات تقديرية.', homeWalk:'{m} دقيقة سيرًا',
+  mWalk:'سيرًا على الأقدام', mBus:'حافلة المدينة {l}', mTaxi:'سيارة أجرة', mFerry:'بالعبّارة', free:'مجانًا', mins:'≈ {m} دقيقة', busFare:'{a} ببطاقة Kentkart · {b} بالبطاقة المصرفية', busNote:'كل {f} دقيقة تقريبًا؛ لا يشمل وقت الانتظار', est:'المسافات والأوقات والأسعار تقديرية.', homeWalk:'{m} دقيقة سيرًا',
   openIn:'افتح المسار في تطبيق الخرائط لديك', openStop:'مسار المشي إلى موقف الحافلة', findIn:'ابحث في تطبيق الخرائط لديك', gName:'خرائط Google', aName:'خرائط Apple', yName:'خرائط Yandex',
   sStart:'انطلق من مكتب الاستعلامات السياحية في ساحة العبّارات (İskele Meydanı).', sWalk:'امشِ إلى {n}: {d}، {t}. افتح المسار أدناه لتتبعه على هاتفك.', sArrive:'الوصول: {n}.',
   sTaxi1:'استقل سيارة أجرة من أقرب موقف؛ اسأل في مكتبنا عن مكانه.', sTaxi2:'الرحلة إلى {n}: {d}، {t}. تُحدَّد الأجرة بالعدّاد؛ اسأل السائق عن التكلفة التقديرية قبل الانطلاق.', taxiFare:'حسب العدّاد',
-  fSort:'الأقرب أولًا', fWalk:'سيرًا على الأقدام', fNoFerry:'بدون عبّارة', fOne:'وسيلة نقل واحدة على الأكثر', ph:'ابحث عن مكان (مثل: متحف، صراف آلي)', nRes:'{n} مكانًا، الأقرب أولًا', clear:'مسح', none:'لا يوجد مكان مطابق. جرّب كلمة أخرى أو أزل أحد عوامل التصفية.',
+  fSort:'الأقرب أولًا', fWalk:'سيرًا على الأقدام', fOne:'وسيلة نقل واحدة على الأكثر', ph:'ابحث عن مكان (مثل: متحف تروي، أوتوجار، متحف، صراف آلي)', nRes:'{n} مكانًا، الأقرب أولًا', clear:'مسح', none:'لا يوجد مكان مطابق. جرّب كلمة أخرى أو أزل أحد عوامل التصفية.',
   full:'العربية', start:'ابدأ المسار',
   mCar:'بسيارتك الخاصة', carCost:'الوقود فقط', carCostF:'الوقود + العبّارة', sCar1:'ابدأ مسار القيادة في تطبيق الخرائط لديك.', sCar2:'القيادة إلى {n}: {d}، {t}.', sCarFerry:'يتضمن المسار عبّارة السيارات عبر مضيق الدردنيل: نحو {c} ليرة تركية للسيارة.', ask:'اسأل في المكتب', mBusD:'Ç9 + حافلة الأقضية',
   sDb1:'استقل حافلة المدينة Ç9 من الموقف المجاور للمكتب إلى محطة الحافلات (Otogar): نحو 15 دقيقة، {f}.', sDb2:'من محطة الحافلات استقل الحافلة أو الحافلة الصغيرة إلى {n}. اسأل في مكتبنا عن مواعيد اليوم والأجرة.', dDesc:'{n} إحدى أقضية ولاية جناق قلعة. تجد أدناه طريقة الوصول إليها من مركز المدينة.',
@@ -1670,7 +1499,7 @@ ar:{name:'AR', brand:'مكتب الاستعلامات السياحية في جن
   gduT:'مواعيد العبّارات وأسعارها', gduP:'تشغّل شركة GESTAŞ العبّارات. قبل الانطلاق تحقّق من رحلات اليوم والأسعار الحالية على موقعها الرسمي.', gduTimes:'المواعيد', gduFares:'الأسعار',
   how:'كيف تصل', locate:'إظهار موقعي', locErr:'تعذّر تحديد موقعك.', theme:'التبديل بين الوضع الفاتح والداكن',
   draft:'مسودة: الأماكن والتفاصيل ما زالت قيد المراجعة من المكتب.',
-  foot:'مكتب الاستعلامات السياحية في جناق قلعة. المسافات والأوقات تقديرية؛ اسأل في المكتب عن معلومات اليوم.',
+  foot:'مكتب الاستعلامات السياحية في جناق قلعة. المسافات والأوقات والأسعار تقديرية؛ اسأل في المكتب عن معلومات اليوم.',
   nFound:'{n} نتيجة، الأنسب أولًا', mBusC:'Ç9 + حافلة بين المدن', sCb2:'من محطة الحافلات استقل حافلة بين المدن إلى {n}. تُباع التذاكر في مكاتب شركات الحافلات وعبر الإنترنت؛ انظر «شركات الحافلات».', sCarNo:'يعرض تطبيق الخرائط لديك المسافة ومدة القيادة إلى {n}.', cDesc:'كيف تصل من جناق قلعة إلى {n}.',
   xDesc:'في منطقة {d}. اطّلع أولًا على طريقة الوصول إلى {d}؛ يحتاج الجزء الأخير عادةً إلى سيارة أجرة أو جولة منظمة أو سيارتك الخاصة.', xDescC:'في مركز مدينة جناق قلعة أو بالقرب منه.', toVia:'طريقة الوصول إلى {d}', inArea:'منطقة {d}', centre:'مركز المدينة'}
 };
@@ -1719,28 +1548,18 @@ const XL_ROWS = {
 'Çanakkale’s historic synagogue in the old town. A visit may need to be arranged in advance; ask at our desk.':['Историческата синагога на Чанаккале в стария град. За посещение може да е нужна предварителна уговорка; попитайте на нашето гише.','Историческая синагога Чанаккале в старом городе. Для посещения может потребоваться предварительная договорённость; уточните на нашей стойке.','Η ιστορική συναγωγή του Τσανάκκαλε στην παλιά πόλη. Για την επίσκεψη ίσως χρειάζεται προηγούμενη συνεννόηση· ρωτήστε στο γκισέ μας.','الكنيس التاريخي في البلدة القديمة بجناق قلعة. قد تتطلب الزيارة ترتيبًا مسبقًا؛ اسأل في مكتبنا.'],
 'Minibus':['Минибус','Маршрутка','Μίνι μπας','حافلة صغيرة'],
 'Troy Museum':['Музей на Троя','Музей Трои','Μουσείο Τροίας','متحف طروادة'],
-'Museum of the finds from ancient Troy, outside the city, about 1 km from the archaeological site. The museum and the site are separate places.':['Музей с находките от древна Троя, извън града, на около 1 км от археологическия обект. Музеят и обектът са отделни места.','Музей находок из древней Трои, за городом, примерно в 1 км от археологического памятника. Музей и памятник — разные места.','Μουσείο με τα ευρήματα της αρχαίας Τροίας, εκτός πόλης, περίπου 1 χλμ. από τον αρχαιολογικό χώρο. Το μουσείο και ο αρχαιολογικός χώρος είναι ξεχωριστοί χώροι.','متحف مكتشفات طروادة القديمة، خارج المدينة، على بُعد نحو كيلومتر واحد من الموقع الأثري. المتحف والموقع مكانان منفصلان.'],
-'Archaeological Site of Troy':['Археологически обект Троя','Археологический памятник Троя','Αρχαιολογικός χώρος της Τροίας','موقع طروادة الأثري'],
-'Troy site':['Разкопки на Троя','Раскопки Трои','Αρχαία Τροία','موقع طروادة'],
-'The ruins of ancient Troy, a UNESCO World Heritage Site. About 1 km from the Troy Museum; the two are separate places.':['Руините на древна Троя, обект на световното наследство на ЮНЕСКО. На около 1 км от Музея на Троя; това са две отделни места.','Руины древней Трои, объект Всемирного наследия ЮНЕСКО. Примерно в 1 км от Музея Трои; это два разных места.','Τα ερείπια της αρχαίας Τροίας, μνημείο παγκόσμιας κληρονομιάς της UNESCO. Περίπου 1 χλμ. από το Μουσείο Τροίας· είναι δύο ξεχωριστοί χώροι.','أطلال طروادة القديمة، من مواقع التراث العالمي لليونسكو. تبعد نحو كيلومتر واحد عن متحف طروادة؛ وهما مكانان منفصلان.'],
-'Get off at the archaeological site of Troy.':['Слезте при археологическия обект Троя.','Выходите у археологического памятника Троя.','Κατεβείτε στον αρχαιολογικό χώρο της Τροίας.','انزل عند موقع طروادة الأثري.'],
+'Museum of the finds from ancient Troy, outside the city next to the archaeological site.':['Музей с находките от древна Троя, извън града, до археологическия обект.','Музей находок древней Трои, за городом, рядом с местом раскопок.','Μουσείο με τα ευρήματα της αρχαίας Τροίας, έξω από την πόλη, δίπλα στον αρχαιολογικό χώρο.','متحف يضم مكتشفات طروادة القديمة، خارج المدينة بجوار الموقع الأثري.'],
 'Eceabat ferry':['Ферибот за Еджеабат','Паром в Эджеабат','Φέρι για Έτζεαμπατ','عبّارة إيجه آباد'],
 'Ferry to Eceabat':['Ферибот за Еджеабат','Паром в Эджеабат','Φέρι για Έτζεαμπατ','العبّارة إلى إيجه آباد'],
 'Ferries across the Dardanelles to Eceabat leave from this pier, next to our office.':['Фериботите през Дарданелите за Еджеабат тръгват от този кей, до нашия център.','Паромы через Дарданеллы в Эджеабат отправляются с этого причала, рядом с нашим центром.','Τα φέρι που διασχίζουν τα Δαρδανέλλια προς το Έτζεαμπατ αναχωρούν από αυτή την αποβάθρα, δίπλα στο γραφείο μας.','تنطلق العبّارات التي تعبر مضيق الدردنيل إلى إيجه آباد من هذا الرصيف المجاور لمكتبنا.'],
-'City bus stop (İskele)':['Спирка на градските автобуси (İskele)','Остановка городских автобусов (İskele)','Στάση αστικών λεωφορείων (İskele)','موقف حافلات المدينة (İskele)'],
-'City bus stop':['Автобусна спирка','Автобусная остановка','Στάση λεωφορείου','موقف الحافلات'],
-'The city bus stop nearest to our office, called “İskele”, about 100 m away. Lines Ç1, Ç3, Ç5, Ç7, Ç8, Ç9, Ç11K and ÇT3 and the Güzelyalı and Çınarlı buses stop here. Ç9 goes to the intercity bus terminal (Otogar) about every 30 minutes; Ç8 goes to the airport.':['Най-близката до офиса спирка на градските автобуси, наречена „İskele“, на около 100 м. Тук спират линии Ç1, Ç3, Ç5, Ç7, Ç8, Ç9, Ç11K и ÇT3, както и автобусите за Güzelyalı и Çınarlı. Ç9 пътува до автогарата (Otogar) на около 30 минути, а Ç8 – до летището.','Ближайшая к офису остановка городских автобусов «İskele», примерно в 100 м. Здесь останавливаются маршруты Ç1, Ç3, Ç5, Ç7, Ç8, Ç9, Ç11K и ÇT3, а также автобусы в Güzelyalı и Çınarlı. Ç9 идёт до автовокзала (Otogar) примерно каждые 30 минут, Ç8 — в аэропорт.','Η πλησιέστερη στο γραφείο στάση αστικών λεωφορείων, με όνομα «İskele», περίπου 100 μ. μακριά. Εδώ σταματούν οι γραμμές Ç1, Ç3, Ç5, Ç7, Ç8, Ç9, Ç11K και ÇT3, καθώς και τα λεωφορεία για Güzelyalı και Çınarlı. Το Ç9 πηγαίνει στον σταθμό υπεραστικών λεωφορείων (Otogar) περίπου κάθε 30 λεπτά· το Ç8 πηγαίνει στο αεροδρόμιο.','أقرب موقف لحافلات المدينة إلى المكتب، واسمه «İskele»، على بُعد نحو 100 متر. تتوقف هنا الخطوط Ç1 وÇ3 وÇ5 وÇ7 وÇ8 وÇ9 وÇ11K وÇT3 وكذلك حافلات Güzelyalı وÇınarlı. تتجه الحافلة Ç9 إلى محطة الحافلات (Otogar) كل 30 دقيقة تقريبًا، وتتجه Ç8 إلى المطار.'],
+'Ç9 bus stop (to the bus terminal)':['Спирка на Ç9 (за автогарата)','Остановка Ç9 (до автовокзала)','Στάση Ç9 (προς τον σταθμό λεωφορείων)','موقف Ç9 (إلى محطة الحافلات)'],
+'Ç9 stop':['Спирка Ç9','Остановка Ç9','Στάση Ç9','موقف Ç9'],
+'City bus Ç9 to the intercity bus terminal (Otogar) leaves from this stop, called “İskele”, about every 30 minutes.':['Градският автобус Ç9 за автогарата (Otogar) тръгва от тази спирка, наречена „İskele“, на около 30 минути.','Городской автобус Ç9 до автовокзала (Otogar) отправляется с этой остановки «İskele» примерно каждые 30 минут.','Το αστικό λεωφορείο Ç9 προς τον σταθμό υπεραστικών λεωφορείων (Otogar) αναχωρεί από αυτή τη στάση, με όνομα «İskele», περίπου κάθε 30 λεπτά.','تنطلق حافلة المدينة Ç9 إلى محطة الحافلات (Otogar) من هذا الموقف المسمّى «İskele» كل 30 دقيقة تقريبًا.'],
 'Otogar':['Автогара (Otogar)','Авто­вокзал (Otogar)','Otogar','محطة الحافلات (Otogar)'],
 'Ç9 stop (İskele)':['Спирка Ç9 (İskele)','Остановка Ç9 (İskele)','Στάση Ç9 (İskele)','موقف Ç9 (İskele)'],
 'Intercity bus terminal (Otogar)':['Автогара (Otogar)','Автовокзал (Otogar)','Σταθμός υπεραστικών λεωφορείων (Otogar)','محطة الحافلات بين المدن (Otogar)'],
 'Çanakkale’s intercity bus terminal, east of the centre. City bus Ç9 goes there.':['Автогарата на Чанаккале, източно от центъра. Дотам стига градският автобус Ç9.','Автовокзал Чанаккале, к востоку от центра. Туда идёт городской автобус Ç9.','Ο σταθμός υπεραστικών λεωφορείων του Τσανάκκαλε, ανατολικά του κέντρου. Εκεί φτάνει το αστικό λεωφορείο Ç9.','محطة الحافلات بين المدن في جناق قلعة، شرق المركز. تصل إليها حافلة المدينة Ç9.'],
 'Minibus stop for Troy':['Спирка на минибусите за Троя','Остановка маршруток в Трою','Στάση μίνι μπας για την Τροία','موقف الحافلات الصغيرة إلى طروادة'],
-'City bus':['Градски автобус','Городской автобус','Αστικό λεωφορείο','حافلة المدينة'],
-'Walk to the city bus stop beside the office (İskele): about 100 m.':['Отидете пеша до спирката на градските автобуси до офиса (İskele): около 100 м.','Дойдите до остановки городских автобусов рядом с офисом (İskele): около 100 м.','Περπατήστε έως τη στάση αστικών λεωφορείων δίπλα στο γραφείο (İskele): περίπου 100 μ.','امشِ إلى موقف حافلات المدينة بجانب المكتب (İskele): نحو 100 متر.'],
-'Ask the driver or our desk which bus passes the Troy minibus stop, and pay with a Kentkart or a contactless bank card.':['Попитайте шофьора или на нашето гише кой автобус минава покрай спирката на минибусите за Троя и платете с Kentkart или безконтактна банкова карта.','Спросите у водителя или на нашей стойке, какой автобус проходит мимо остановки маршруток в Трою, и оплатите картой Kentkart или бесконтактной банковской картой.','Ρωτήστε τον οδηγό ή στο γκισέ μας ποιο λεωφορείο περνά από τη στάση των μίνι μπας για την Τροία και πληρώστε με Kentkart ή ανέπαφη τραπεζική κάρτα.','اسأل السائق أو مكتبنا عن الحافلة التي تمرّ بموقف الحافلات الصغيرة إلى طروادة، وادفع ببطاقة Kentkart أو ببطاقة مصرفية لا تلامسية.'],
-'Get off at the stop nearest to the Troy minibus stop.':['Слезте на спирката, която е най-близо до спирката на минибусите за Троя.','Выйдите на остановке, ближайшей к остановке маршруток в Трою.','Κατεβείτε στη στάση που είναι πιο κοντά στη στάση των μίνι μπας για την Τροία.','انزل في أقرب موقف إلى موقف الحافلات الصغيرة إلى طروادة.'],
-'City centre on foot':['Центърът пеша','Центр города пешком','Το κέντρο με τα πόδια','وسط المدينة سيرًا على الأقدام'],
-'A walk from our office through four sights of the centre: the Naval Museum, the City Museum, the Trojan Horse on the waterfront and the Ceramic Museum.':['Разходка от нашия офис до четири забележителности в центъра: Военноморския музей, Градския музей, Троянския кон на крайбрежната алея и Музея на керамиката.','Прогулка от нашего офиса к четырём достопримечательностям центра: Военно-морской музей, Городской музей, Троянский конь на набережной и Музей керамики.','Ένας περίπατος από το γραφείο μας σε τέσσερα αξιοθέατα του κέντρου: το Ναυτικό Μουσείο, το Μουσείο της Πόλης, τον Δούρειο Ίππο στην παραλιακή και το Μουσείο Κεραμικής.','نزهة من مكتبنا إلى أربعة معالم في وسط المدينة: المتحف البحري، ومتحف المدينة، وحصان طروادة على الكورنيش، ومتحف الخزف.'],
 'Troy minibus':['Минибус за Троя','Маршрутка в Трою','Μίνι μπας Τροίας','حافلة طروادة'],
 'Minibuses to Troy and the Troy Museum leave from this stop. Ask at our desk for today’s times and the fare.':['От тази спирка тръгват минибусите за Троя и Музея на Троя. Попитайте на нашето гише за днешното разписание и цената.','С этой остановки отправляются маршрутки в Трою и к Музею Трои. Расписание на сегодня и стоимость уточните на нашей стойке.','Από αυτή τη στάση αναχωρούν τα μίνι μπας για την Τροία και το Μουσείο Τροίας. Ρωτήστε στο γκισέ μας για τα σημερινά δρομολόγια και την τιμή.','تنطلق من هذا الموقف الحافلات الصغيرة إلى طروادة ومتحف طروادة. اسأل في مكتبنا عن مواعيد اليوم والأجرة.'],
 'Gökçeada ferry (Kabatepe pier)':['Ферибот за Гьокчеада (кей Кабатепе)','Паром на Гёкчеаду (причал Кабатепе)','Φέρι για την Ίμβρο (αποβάθρα Kabatepe)','عبّارة غوكتشه أدا (رصيف كاباتبه)'],
@@ -1778,6 +1597,8 @@ const XL_ROWS = {
 'fuel + bridge toll':['гориво + такса за моста','топливо + проезд по мосту','καύσιμα + διόδια γέφυρας','الوقود + رسوم الجسر'],
 'The fastest road is over the 1915 Çanakkale Bridge (toll). You can also take the car ferry to Eceabat and drive on from there.':['Най-бързият път е през моста „Чанаккале 1915“ (платен). Може и с автомобилния ферибот до Еджеабат и оттам по шосе.','Самый быстрый путь — через мост «Чанаккале-1915» (платный). Можно также переправиться автомобильным паромом в Эджеабат и ехать оттуда.','Η ταχύτερη διαδρομή είναι μέσω της γέφυρας «Τσανάκκαλε 1915» (με διόδια). Μπορείτε επίσης να περάσετε με το οχηματαγωγό στο Έτζεαμπατ και να συνεχίσετε από εκεί.','أسرع طريق عبر جسر «جناق قلعة 1915» (برسوم). يمكنك أيضًا العبور بعبّارة السيارات إلى إيجه آباد ومتابعة الطريق من هناك.'],
 'Intercity coach company. The buttons below find its ticket offices on the map; coaches leave from the Otogar.':['Междуградска автобусна фирма. Бутоните по-долу намират офисите ѝ на картата; автобусите тръгват от автогарата (Otogar).','Междугородная автобусная компания. Кнопки ниже найдут её кассы на карте; автобусы отправляются с автовокзала (Otogar).','Εταιρεία υπεραστικών λεωφορείων. Τα κουμπιά παρακάτω βρίσκουν τα πρακτορεία της στον χάρτη· τα λεωφορεία αναχωρούν από τον σταθμό (Otogar).','شركة حافلات بين المدن. الأزرار أدناه تعرض مكاتب تذاكرها على الخريطة؛ تنطلق الحافلات من محطة الحافلات (Otogar).'],
+'Martyrs Tour':['Шехитлик Тура','Мартирс Тур','Ενδιαφέρον Σηχιτλικ Тура','جولة الشهداء'],
+'To honor those who died in the Gallipoli Campaign. Guided tours of several memorial sites can be arranged by tourism agencies in the city centre and at our desk. The tour usually takes half a day.':['За да почетем паметта на загиналите в Галиполийската кампания. Екскурзии с водач на няколко места за възпоменание могат да бъдат организирани от туристическите агенции в центъра и на нашето гише. Турът обикновено отнема половин ден.','Чтобы отдать честь павшим в Галлипольской кампании. Экскурсии с гидом по нескольким мемориальным местам могут быть организованы туристическими агентствами в центре города и на нашей стойке. Тур обычно занимает полдня.','Για να τιμήσουμε τους πεσόντες στο Κύμα Gallipolli. Ξεναγήσεις σε αρκετές μνημειακές τοποθεσίες μπορούν να διακοπούν από τουριστικές υπηρεσίες στο κέντρο της πόλης και στο γραφείο μας. Η περιήγηση διαρκεί συνήθως μισή μέρα.','لتكريم الذين سقطوا في حملة غاليبولي. يمكن ترتيب جولات موجهة لعدة مواقع تذكارية من خلال وكالات السياحة في مركز المدينة ومكتبنا. عادة ما تستغرق الجولة نصف يوم.'],
 'Travel agencies in the centre sell guided tours to Troy and the Gallipoli battlefields. The buttons below find them on the map; ask at our desk about licensed agencies.':['Туристическите агенции в центъра предлагат екскурзии с водач до Троя и бойните полета на Галиполи. Бутоните по-долу ги намират на картата; попитайте на нашето гише за лицензираните агенции.','Турагентства в центре продают экскурсии с гидом в Трою и на поля сражений Галлиполи. Кнопки ниже найдут их на карте; о лицензированных агентствах спросите на нашей стойке.','Τα ταξιδιωτικά γραφεία στο κέντρο πωλούν ξεναγήσεις στην Τροία και στα πεδία μαχών της Καλλίπολης. Τα κουμπιά παρακάτω τα βρίσκουν στον χάρτη· ρωτήστε στο γκισέ μας για τα αδειοδοτημένα γραφεία.','تبيع وكالات السفر في المركز جولات مع مرشد إلى طروادة وميادين معارك غاليبولي. الأزرار أدناه تعرضها على الخريطة؛ اسأل في مكتبنا عن الوكالات المرخّصة.'],
 /* districts and cities: the local spelling stays in brackets so that signs can be recognised */
 'Eceabat':['Еджеабат (Eceabat)','Эджеабат (Eceabat)','Έτζεαμπατ (Eceabat)','إيجه آباد (Eceabat)'],
@@ -1826,144 +1647,6 @@ const XL_ROWS = {
 const XL = {bg:{}, ru:{}, el:{}, ar:{}};
 Object.keys(XL_ROWS).forEach(k => { ['bg','ru','el','ar'].forEach((l, i) => { XL[l][k] = XL_ROWS[k][i]; }); });
 
-/* texts of "near me" */
-const UI_NEAR = {
-en:{near:'Near me', nearAll:'See all of them in your maps app', home:'First screen', goesT:'Where the buses from this stop go', goesN:'Lines as listed by the municipality. Before you board, check the sign on the bus or ask the driver.', offNote:'Once opened, this guide also opens without the internet. The map, the weather and directions need a connection.', offNow:'You are offline: the saved guide is shown. The map, the weather and directions need the internet.', nearMaps:'Your maps app gives the most reliable answer here: the button below shows the nearest ones around you.', nearName:{pharmacy:'Pharmacy', taxi:'Taxi rank', busstop:'Bus stop', mosque:'Mosque'}, nearTitle:{pharmacy:'Nearest pharmacy', taxi:'Nearest taxi rank', busstop:'Nearest bus stop', mosque:'Nearest mosque'},
-  nearAsk:'Allow location access to see the one nearest to you. Your location is used only on this page and is not stored.', nearBtn:'Use my location', nearWait:'Finding your location…', nearLoad:'Looking for places near you…',
-  nearDenied:'Location access was not given. Allow it in your browser settings and try again, or search in your maps app.', nearNone:'No place was found close to you. Your maps app can search around you.',
-  nearYou:'You are here', nearMore:'Others nearby', nearOffice:'Nearest to our office', nearSrc:'Places come from OpenStreetMap and may be incomplete. Distances and times are estimates.', nearAgain:'Update my location'},
-tr:{near:'Yakınımda', nearAll:'Tümünü harita uygulamanızda görün', home:'Ana sayfa', goesT:'Bu duraktan nereye gidilir', goesN:'Hatlar belediyenin listesine göredir. Binmeden önce otobüsün tabelasına bakın ya da şoföre sorun.', offNote:'Bu rehber bir kez açıldıktan sonra internetsiz de açılır. Harita, hava durumu ve yol tarifi için bağlantı gerekir.', offNow:'Çevrimdışısınız: kayıtlı rehber gösteriliyor. Harita, hava durumu ve yol tarifi için internet gerekir.', nearMaps:'Bunun için en doğru sonucu harita uygulamanız verir: aşağıdaki düğme çevrenizdeki en yakın olanları gösterir.', nearName:{pharmacy:'Eczane', taxi:'Taksi durağı', busstop:'Otobüs durağı', mosque:'Cami'}, nearTitle:{pharmacy:'En yakın eczane', taxi:'En yakın taksi durağı', busstop:'En yakın otobüs durağı', mosque:'En yakın cami'},
-  nearAsk:'Size en yakın olanı görmek için konum erişimine izin verin. Konumunuz yalnızca bu sayfada kullanılır, kaydedilmez.', nearBtn:'Konumumu kullan', nearWait:'Konumunuz alınıyor…', nearLoad:'Yakınınızdaki yerler aranıyor…',
-  nearDenied:'Konum izni verilmedi. Tarayıcı ayarlarından izin verip yeniden deneyin ya da harita uygulamanızda arayın.', nearNone:'Yakınınızda kayıtlı bir yer bulunamadı. Harita uygulamanız çevrenizde arayabilir.',
-  nearYou:'Buradasınız', nearMore:'Yakındaki diğerleri', nearOffice:'Büroya en yakın', nearSrc:'Yerler OpenStreetMap verisidir; eksik olabilir. Mesafe ve süreler tahminidir.', nearAgain:'Konumumu güncelle'},
-de:{near:'In meiner Nähe', nearName:{pharmacy:'Apotheke', taxi:'Taxistand', busstop:'Bus­halte­stelle', mosque:'Moschee'}, nearTitle:{pharmacy:'Nächste Apotheke', taxi:'Nächster Taxistand', busstop:'Nächste Bushaltestelle', mosque:'Nächste Moschee'},
-  nearAsk:'Erlauben Sie den Zugriff auf Ihren Standort, um das nächstgelegene Ziel zu sehen. Ihr Standort wird nur auf dieser Seite verwendet und nicht gespeichert.', nearBtn:'Meinen Standort verwenden', nearWait:'Ihr Standort wird ermittelt …', nearLoad:'Orte in Ihrer Nähe werden gesucht …',
-  nearDenied:'Der Standortzugriff wurde nicht erlaubt. Erlauben Sie ihn in den Browser-Einstellungen und versuchen Sie es erneut, oder suchen Sie in Ihrer Karten-App.', nearNone:'In Ihrer Nähe wurde kein Ort gefunden. Ihre Karten-App kann in Ihrer Umgebung suchen.',
-  nearYou:'Ihr Standort', nearMore:'Weitere in der Nähe', nearOffice:'Am nächsten zu unserem Büro', nearSrc:'Die Orte stammen aus OpenStreetMap und können unvollständig sein. Entfernungen und Zeiten sind Schätzwerte.', nearAgain:'Standort aktualisieren'},
-fr:{near:'Près de moi', nearName:{pharmacy:'Pharmacie', taxi:'Station de taxis', busstop:'Arrêt de bus', mosque:'Mosquée'}, nearTitle:{pharmacy:'Pharmacie la plus proche', taxi:'Station de taxis la plus proche', busstop:'Arrêt de bus le plus proche', mosque:'Mosquée la plus proche'},
-  nearAsk:'Autorisez l’accès à votre position pour voir le lieu le plus proche de vous. Votre position n’est utilisée que sur cette page et n’est pas enregistrée.', nearBtn:'Utiliser ma position', nearWait:'Recherche de votre position…', nearLoad:'Recherche des lieux près de vous…',
-  nearDenied:'L’accès à la position n’a pas été autorisé. Autorisez-le dans les réglages du navigateur et réessayez, ou cherchez dans votre application de cartes.', nearNone:'Aucun lieu n’a été trouvé près de vous. Votre application de cartes peut chercher autour de vous.',
-  nearYou:'Vous êtes ici', nearMore:'Autres à proximité', nearOffice:'Le plus proche de notre office', nearSrc:'Les lieux proviennent d’OpenStreetMap et peuvent être incomplets. Les distances et les durées sont des estimations.', nearAgain:'Actualiser ma position'},
-es:{near:'Cerca de mí', nearName:{pharmacy:'Farmacia', taxi:'Parada de taxis', busstop:'Parada de autobús', mosque:'Mezquita'}, nearTitle:{pharmacy:'Farmacia más cercana', taxi:'Parada de taxis más cercana', busstop:'Parada de autobús más cercana', mosque:'Mezquita más cercana'},
-  nearAsk:'Permita el acceso a su ubicación para ver el lugar más cercano a usted. Su ubicación solo se usa en esta página y no se guarda.', nearBtn:'Usar mi ubicación', nearWait:'Buscando su ubicación…', nearLoad:'Buscando lugares cerca de usted…',
-  nearDenied:'No se permitió el acceso a la ubicación. Permítalo en los ajustes del navegador e inténtelo de nuevo, o busque en su aplicación de mapas.', nearNone:'No se encontró ningún lugar cerca de usted. Su aplicación de mapas puede buscar a su alrededor.',
-  nearYou:'Usted está aquí', nearMore:'Otros cercanos', nearOffice:'El más cercano a nuestra oficina', nearSrc:'Los lugares proceden de OpenStreetMap y pueden estar incompletos. Las distancias y los tiempos son estimaciones.', nearAgain:'Actualizar mi ubicación'},
-bg:{near:'Близо до мен', nearName:{pharmacy:'Аптека', taxi:'Таксиметрова стоянка', busstop:'Автобусна спирка', mosque:'Джамия'}, nearTitle:{pharmacy:'Най-близката аптека', taxi:'Най-близката таксиметрова стоянка', busstop:'Най-близката автобусна спирка', mosque:'Най-близката джамия'},
-  nearAsk:'Разрешете достъп до местоположението си, за да видите най-близкото до вас място. Местоположението ви се използва само на тази страница и не се запазва.', nearBtn:'Използвай моето местоположение', nearWait:'Определяне на местоположението ви…', nearLoad:'Търсене на места близо до вас…',
-  nearDenied:'Достъпът до местоположението не беше разрешен. Разрешете го в настройките на браузъра и опитайте отново или потърсете в приложението си за карти.', nearNone:'Близо до вас не беше намерено място. Приложението ви за карти може да потърси около вас.',
-  nearYou:'Вие сте тук', nearMore:'Други наблизо', nearOffice:'Най-близо до нашия офис', nearSrc:'Местата са от OpenStreetMap и може да са непълни. Разстоянията и времената са приблизителни.', nearAgain:'Обнови местоположението ми'},
-ru:{near:'Рядом со мной', nearName:{pharmacy:'Аптека', taxi:'Стоянка такси', busstop:'Автобусная остановка', mosque:'Мечеть'}, nearTitle:{pharmacy:'Ближайшая аптека', taxi:'Ближайшая стоянка такси', busstop:'Ближайшая автобусная остановка', mosque:'Ближайшая мечеть'},
-  nearAsk:'Разрешите доступ к геопозиции, чтобы увидеть ближайшее к вам место. Ваша геопозиция используется только на этой странице и не сохраняется.', nearBtn:'Использовать мою геопозицию', nearWait:'Определяем вашу геопозицию…', nearLoad:'Ищем места рядом с вами…',
-  nearDenied:'Доступ к геопозиции не разрешён. Разрешите его в настройках браузера и повторите попытку или поищите в приложении карт.', nearNone:'Рядом с вами ничего не найдено. Приложение карт может поискать вокруг вас.',
-  nearYou:'Вы здесь', nearMore:'Другие поблизости', nearOffice:'Ближайшее к нашему офису', nearSrc:'Места взяты из OpenStreetMap, список может быть неполным. Расстояния и время приблизительные.', nearAgain:'Обновить геопозицию'},
-el:{near:'Κοντά μου', nearName:{pharmacy:'Φαρμα­κείο', taxi:'Πιάτσα ταξί', busstop:'Στάση λεωφο­ρείου', mosque:'Τζαμί'}, nearTitle:{pharmacy:'Πλησιέστερο φαρμακείο', taxi:'Πλησιέστερη πιάτσα ταξί', busstop:'Πλησιέστερη στάση λεωφορείου', mosque:'Πλησιέστερο τζαμί'},
-  nearAsk:'Επιτρέψτε την πρόσβαση στην τοποθεσία σας για να δείτε το πλησιέστερο σε εσάς σημείο. Η τοποθεσία σας χρησιμοποιείται μόνο σε αυτή τη σελίδα και δεν αποθηκεύεται.', nearBtn:'Χρήση της τοποθεσίας μου', nearWait:'Εντοπισμός της τοποθεσίας σας…', nearLoad:'Αναζήτηση σημείων κοντά σας…',
-  nearDenied:'Δεν δόθηκε πρόσβαση στην τοποθεσία. Επιτρέψτε την στις ρυθμίσεις του προγράμματος περιήγησης και δοκιμάστε ξανά ή αναζητήστε στην εφαρμογή χαρτών σας.', nearNone:'Δεν βρέθηκε σημείο κοντά σας. Η εφαρμογή χαρτών σας μπορεί να αναζητήσει γύρω σας.',
-  nearYou:'Βρίσκεστε εδώ', nearMore:'Άλλα κοντινά', nearOffice:'Πλησιέστερο στο γραφείο μας', nearSrc:'Τα σημεία προέρχονται από το OpenStreetMap και ενδέχεται να μην είναι πλήρη. Οι αποστάσεις και οι χρόνοι είναι κατά προσέγγιση.', nearAgain:'Ενημέρωση της τοποθεσίας μου'},
-ar:{near:'بالقرب مني', nearName:{pharmacy:'صيدلية', taxi:'موقف سيارات الأجرة', busstop:'موقف الحافلات', mosque:'مسجد'}, nearTitle:{pharmacy:'أقرب صيدلية', taxi:'أقرب موقف لسيارات الأجرة', busstop:'أقرب موقف للحافلات', mosque:'أقرب مسجد'},
-  nearAsk:'اسمح بالوصول إلى موقعك لترى أقرب مكان إليك. يُستخدم موقعك في هذه الصفحة فقط ولا يُحفظ.', nearBtn:'استخدم موقعي', nearWait:'جارٍ تحديد موقعك…', nearLoad:'جارٍ البحث عن أماكن قريبة منك…',
-  nearDenied:'لم يُسمح بالوصول إلى الموقع. اسمح به من إعدادات المتصفح وحاول مرة أخرى، أو ابحث في تطبيق الخرائط لديك.', nearNone:'لم يُعثر على مكان قريب منك. يمكن لتطبيق الخرائط لديك البحث حولك.',
-  nearYou:'أنت هنا', nearMore:'أماكن قريبة أخرى', nearOffice:'الأقرب إلى مكتبنا', nearSrc:'الأماكن مأخوذة من OpenStreetMap وقد تكون غير مكتملة. المسافات والأوقات تقديرية.', nearAgain:'تحديث موقعي'}
-};
-Object.keys(UI_NEAR).forEach(l => { Object.assign(UI[l], UI_NEAR[l]); UI[l].cats.near = UI_NEAR[l].near; });
-
-/* texts of "suggestions for right now" */
-const UI_TIPS = {
-en:{tips:'Suggestions for right now', tipSet:'Sunset {t}', tipNote:'These suggestions are produced automatically from the time of day and the weather forecast. They can be wrong and the information may be out of date; check before you go.', tipSrc:'Weather: Open-Meteo',
-  wx:{clear:'Clear', cloudy:'Cloudy', fog:'Fog', rain:'Rain', snow:'Snow', storm:'Thunderstorm'},
-  rIn:'Rain is expected: a visit indoors', rHotIn:'Very hot outside: a visit indoors', rCold:'Cold or windy outside: a visit indoors', rOut:'Good weather for it', rSun:'Sunset in about {m} min; best seen from the waterfront', rEve:'Pleasant in the evening',
-  rDay:'Enough daylight left for this trip', rSea:'A hot day: beaches and shade', rNight:'Late at night: urgent needs first', rCheck:'check the closing time', wWind:'Strong wind: ferries may be delayed or cancelled. Check today’s sailings before you go.'},
-tr:{tips:'Şu an için öneriler', tipSet:'Gün batımı {t}', tipNote:'Bu öneriler saate ve hava tahminine göre otomatik üretilir. Hata olabilir, bilgiler güncelliğini yitirmiş olabilir; gitmeden önce teyit edin.', tipSrc:'Hava durumu: Open-Meteo',
-  wx:{clear:'Açık', cloudy:'Bulutlu', fog:'Sisli', rain:'Yağmurlu', snow:'Karlı', storm:'Gök gürültülü sağanak'},
-  rIn:'Yağmur bekleniyor: kapalı mekân ziyareti', rHotIn:'Dışarısı çok sıcak: kapalı mekân ziyareti', rCold:'Dışarısı soğuk ya da rüzgârlı: kapalı mekân ziyareti', rOut:'Hava buna uygun', rSun:'Gün batımına yaklaşık {m} dk; en güzel kordondan izlenir', rEve:'Akşam saatinde keyiflidir',
-  rDay:'Bu gezi için gün ışığı yeterli', rSea:'Sıcak bir gün: plajlar ve gölge', rNight:'Gece geç saat: önce acil ihtiyaçlar', rCheck:'kapanış saatini kontrol edin', wWind:'Kuvvetli rüzgâr: feribot seferleri gecikebilir ya da iptal olabilir. Yola çıkmadan önce günün seferlerini teyit edin.'},
-de:{tips:'Vorschläge für jetzt', tipSet:'Sonnenuntergang {t}', tipNote:'Diese Vorschläge werden automatisch aus Uhrzeit und Wettervorhersage erstellt. Sie können Fehler enthalten, und die Angaben können veraltet sein; bitte prüfen Sie sie, bevor Sie losgehen.', tipSrc:'Wetter: Open-Meteo',
-  wx:{clear:'Klar', cloudy:'Bewölkt', fog:'Nebel', rain:'Regen', snow:'Schnee', storm:'Gewitter'},
-  rIn:'Regen erwartet: ein Besuch drinnen', rHotIn:'Draußen sehr heiß: ein Besuch drinnen', rCold:'Draußen kalt oder windig: ein Besuch drinnen', rOut:'Das Wetter passt dazu', rSun:'Sonnenuntergang in etwa {m} Min.; am schönsten von der Uferpromenade', rEve:'Am Abend angenehm',
-  rDay:'Genug Tageslicht für diesen Ausflug', rSea:'Ein heißer Tag: Strände und Schatten', rNight:'Spät in der Nacht: zuerst das Dringende', rCheck:'Schließzeit prüfen', wWind:'Starker Wind: Fähren können sich verspäten oder ausfallen. Prüfen Sie vor der Abfahrt die heutigen Verbindungen.'},
-fr:{tips:'Suggestions pour maintenant', tipSet:'Coucher du soleil {t}', tipNote:'Ces suggestions sont produites automatiquement à partir de l’heure et des prévisions météo. Elles peuvent comporter des erreurs et les informations peuvent ne plus être à jour ; vérifiez avant de partir.', tipSrc:'Météo : Open-Meteo',
-  wx:{clear:'Dégagé', cloudy:'Nuageux', fog:'Brouillard', rain:'Pluie', snow:'Neige', storm:'Orage'},
-  rIn:'Pluie prévue : une visite à l’intérieur', rHotIn:'Très chaud dehors : une visite à l’intérieur', rCold:'Froid ou venteux dehors : une visite à l’intérieur', rOut:'Le temps s’y prête', rSun:'Coucher du soleil dans environ {m} min ; à voir depuis le front de mer', rEve:'Agréable en soirée',
-  rDay:'Assez de lumière du jour pour cette excursion', rSea:'Journée chaude : plages et ombre', rNight:'Tard dans la nuit : d’abord l’essentiel', rCheck:'vérifiez l’heure de fermeture', wWind:'Vent fort : les ferries peuvent être retardés ou annulés. Vérifiez les traversées du jour avant de partir.'},
-es:{tips:'Sugerencias para ahora', tipSet:'Puesta de sol {t}', tipNote:'Estas sugerencias se generan automáticamente a partir de la hora y del pronóstico del tiempo. Pueden contener errores y la información puede estar desactualizada; compruébela antes de ir.', tipSrc:'Tiempo: Open-Meteo',
-  wx:{clear:'Despejado', cloudy:'Nublado', fog:'Niebla', rain:'Lluvia', snow:'Nieve', storm:'Tormenta'},
-  rIn:'Se espera lluvia: una visita en interior', rHotIn:'Mucho calor fuera: una visita en interior', rCold:'Frío o viento fuera: una visita en interior', rOut:'El tiempo acompaña', rSun:'Puesta de sol en unos {m} min; se ve mejor desde el paseo marítimo', rEve:'Agradable al anochecer',
-  rDay:'Queda luz de día suficiente para esta excursión', rSea:'Día caluroso: playas y sombra', rNight:'De madrugada: primero lo urgente', rCheck:'compruebe la hora de cierre', wWind:'Viento fuerte: los ferris pueden retrasarse o cancelarse. Compruebe las salidas de hoy antes de ir.'},
-bg:{tips:'Предложения за момента', tipSet:'Залез {t}', tipNote:'Тези предложения се създават автоматично според часа и прогнозата за времето. Възможни са грешки и информацията може да не е актуална; проверете, преди да тръгнете.', tipSrc:'Време: Open-Meteo',
-  wx:{clear:'Ясно', cloudy:'Облачно', fog:'Мъгла', rain:'Дъжд', snow:'Сняг', storm:'Гръмотевична буря'},
-  rIn:'Очаква се дъжд: посещение на закрито', rHotIn:'Навън е много горещо: посещение на закрито', rCold:'Навън е студено или ветровито: посещение на закрито', rOut:'Времето е подходящо', rSun:'Залез след около {m} мин; най-добре се вижда от крайбрежната алея', rEve:'Приятно вечер',
-  rDay:'Има достатъчно дневна светлина за това пътуване', rSea:'Горещ ден: плажове и сянка', rNight:'Късно през нощта: първо неотложните нужди', rCheck:'проверете часа на затваряне', wWind:'Силен вятър: фериботите може да закъснеят или да бъдат отменени. Проверете днешните курсове, преди да тръгнете.'},
-ru:{tips:'Предложения на данный момент', tipSet:'Закат {t}', tipNote:'Эти предложения создаются автоматически по времени суток и прогнозу погоды. В них возможны ошибки, а сведения могут быть устаревшими; уточняйте перед выходом.', tipSrc:'Погода: Open-Meteo',
-  wx:{clear:'Ясно', cloudy:'Облачно', fog:'Туман', rain:'Дождь', snow:'Снег', storm:'Гроза'},
-  rIn:'Ожидается дождь: лучше в помещении', rHotIn:'На улице очень жарко: лучше в помещении', rCold:'На улице холодно или ветрено: лучше в помещении', rOut:'Погода подходящая', rSun:'Закат примерно через {m} мин; лучше всего смотреть с набережной', rEve:'Приятно вечером',
-  rDay:'Светлого времени хватит на эту поездку', rSea:'Жаркий день: пляжи и тень', rNight:'Поздняя ночь: сначала самое необходимое', rCheck:'уточните время закрытия', wWind:'Сильный ветер: паромы могут задерживаться или отменяться. Уточните сегодняшние рейсы перед выходом.'},
-el:{tips:'Προτάσεις για τώρα', tipSet:'Δύση ηλίου {t}', tipNote:'Οι προτάσεις αυτές δημιουργούνται αυτόματα με βάση την ώρα και την πρόγνωση του καιρού. Μπορεί να περιέχουν λάθη και οι πληροφορίες μπορεί να μην είναι επίκαιρες· ελέγξτε πριν ξεκινήσετε.', tipSrc:'Καιρός: Open-Meteo',
-  wx:{clear:'Αίθριος', cloudy:'Συννεφιά', fog:'Ομίχλη', rain:'Βροχή', snow:'Χιόνι', storm:'Καταιγίδα'},
-  rIn:'Αναμένεται βροχή: επίσκεψη σε κλειστό χώρο', rHotIn:'Πολλή ζέστη έξω: επίσκεψη σε κλειστό χώρο', rCold:'Κρύο ή αέρας έξω: επίσκεψη σε κλειστό χώρο', rOut:'Ο καιρός είναι κατάλληλος', rSun:'Δύση ηλίου σε περίπου {m} λεπτά· φαίνεται καλύτερα από την παραλιακή', rEve:'Ευχάριστο το βράδυ',
-  rDay:'Αρκετό φως ημέρας για αυτή την εκδρομή', rSea:'Ζεστή μέρα: παραλίες και σκιά', rNight:'Αργά τη νύχτα: πρώτα τα επείγοντα', rCheck:'ελέγξτε την ώρα κλεισίματος', wWind:'Ισχυρός άνεμος: τα φέρι μπορεί να καθυστερήσουν ή να ακυρωθούν. Ελέγξτε τα σημερινά δρομολόγια πριν ξεκινήσετε.'},
-ar:{tips:'اقتراحات لهذه اللحظة', tipSet:'غروب الشمس {t}', tipNote:'تُنشأ هذه الاقتراحات تلقائيًا بحسب الوقت وتوقعات الطقس. قد تحتوي على أخطاء وقد تكون المعلومات غير محدَّثة؛ تحقَّق قبل الذهاب.', tipSrc:'الطقس: Open-Meteo',
-  wx:{clear:'صافٍ', cloudy:'غائم', fog:'ضباب', rain:'مطر', snow:'ثلج', storm:'عاصفة رعدية'},
-  rIn:'المطر متوقَّع: زيارة في مكان مغلق', rHotIn:'الجو حار جدًا في الخارج: زيارة في مكان مغلق', rCold:'الجو بارد أو عاصف في الخارج: زيارة في مكان مغلق', rOut:'الطقس مناسب لذلك', rSun:'غروب الشمس بعد نحو {m} دقيقة؛ أجمل ما يُرى من الكورنيش', rEve:'ممتع في المساء',
-  rDay:'ضوء النهار كافٍ لهذه الرحلة', rSea:'يوم حار: شواطئ وظل', rNight:'في وقت متأخر من الليل: الحاجات العاجلة أولًا', rCheck:'تحقَّق من موعد الإغلاق', wWind:'رياح قوية: قد تتأخر العبّارات أو تُلغى. تحقَّق من رحلات اليوم قبل الذهاب.'}
-};
-Object.keys(UI_TIPS).forEach(l => { Object.assign(UI[l], UI_TIPS[l]); });
-
-/* texts of the ready-made routes */
-const UI_ROUTES = {
-en:{routes:'Ready-made routes', rStops:'{n} stops', rWalkTot:'{d} on foot', rHours:'≈ {h} h {m} min', rVisit:'visit {t}', rFirst:'Directions to the first stop', rAll:'Open the whole route in your maps app', rBack:'Back to our office: {d}, {t}.',
-  rNote:'Visit times are typical lengths. Check the closing time of each place before you set off. Distances and times are estimates.'},
-tr:{routes:'Hazır rotalar', rStops:'{n} durak', rWalkTot:'yürüyerek {d}', rHours:'≈ {h} sa {m} dk', rVisit:'ziyaret {t}', rFirst:'İlk durağa yol tarifi', rAll:'Tüm rotayı harita uygulamanızda açın', rBack:'Büroya dönüş: {d}, {t}.',
-  rNote:'Ziyaret süreleri ortalamadır. Yola çıkmadan önce her yerin kapanış saatini kontrol edin. Mesafe ve süreler tahminidir.'},
-de:{routes:'Fertige Routen', rStops:'{n} Stationen', rWalkTot:'{d} zu Fuß', rHours:'≈ {h} Std. {m} Min.', rVisit:'Besuch {t}', rFirst:'Route zur ersten Station', rAll:'Die ganze Route in Ihrer Karten-App öffnen', rBack:'Zurück zu unserem Büro: {d}, {t}.',
-  rNote:'Die Besuchszeiten sind Richtwerte. Prüfen Sie vor dem Aufbruch die Schließzeit jedes Ortes. Entfernungen und Zeiten sind Schätzwerte.'},
-fr:{routes:'Itinéraires tout prêts', rStops:'{n} étapes', rWalkTot:'{d} à pied', rHours:'≈ {h} h {m} min', rVisit:'visite {t}', rFirst:'Itinéraire vers la première étape', rAll:'Ouvrir tout l’itinéraire dans votre application de cartes', rBack:'Retour à notre office : {d}, {t}.',
-  rNote:'Les durées de visite sont indicatives. Vérifiez l’heure de fermeture de chaque lieu avant de partir. Les distances et les durées sont des estimations.'},
-es:{routes:'Rutas preparadas', rStops:'{n} paradas', rWalkTot:'{d} a pie', rHours:'≈ {h} h {m} min', rVisit:'visita {t}', rFirst:'Ruta a la primera parada', rAll:'Abrir toda la ruta en su aplicación de mapas', rBack:'Vuelta a nuestra oficina: {d}, {t}.',
-  rNote:'Los tiempos de visita son orientativos. Compruebe la hora de cierre de cada lugar antes de salir. Las distancias y los tiempos son estimaciones.'},
-bg:{routes:'Готови маршрути', rStops:'{n} спирки', rWalkTot:'{d} пеша', rHours:'≈ {h} ч {m} мин', rVisit:'посещение {t}', rFirst:'Маршрут до първата спирка', rAll:'Отворете целия маршрут в приложението си за карти', rBack:'Обратно до нашия офис: {d}, {t}.',
-  rNote:'Времето за посещение е ориентировъчно. Проверете часа на затваряне на всяко място, преди да тръгнете. Разстоянията и времената са приблизителни.'},
-ru:{routes:'Готовые маршруты', rStops:'остановок: {n}', rWalkTot:'{d} пешком', rHours:'≈ {h} ч {m} мин', rVisit:'осмотр {t}', rFirst:'Маршрут до первой остановки', rAll:'Откройте весь маршрут в приложении карт', rBack:'Обратно до нашего офиса: {d}, {t}.',
-  rNote:'Время осмотра указано ориентировочно. Перед выходом уточните время закрытия каждого места. Расстояния и время приблизительные.'},
-el:{routes:'Έτοιμες διαδρομές', rStops:'{n} στάσεις', rWalkTot:'{d} με τα πόδια', rHours:'≈ {h} ώ. {m} λ.', rVisit:'επίσκεψη {t}', rFirst:'Οδηγίες για την πρώτη στάση', rAll:'Ανοίξτε όλη τη διαδρομή στην εφαρμογή χαρτών σας', rBack:'Επιστροφή στο γραφείο μας: {d}, {t}.',
-  rNote:'Οι χρόνοι επίσκεψης είναι ενδεικτικοί. Ελέγξτε την ώρα κλεισίματος κάθε χώρου πριν ξεκινήσετε. Οι αποστάσεις και οι χρόνοι είναι κατά προσέγγιση.'},
-ar:{routes:'مسارات جاهزة', rStops:'{n} محطات', rWalkTot:'{d} سيرًا', rHours:'≈ {h} س {m} د', rVisit:'الزيارة {t}', rFirst:'الاتجاهات إلى المحطة الأولى', rAll:'افتح المسار كاملًا في تطبيق الخرائط لديك', rBack:'العودة إلى مكتبنا: {d}، {t}.',
-  rNote:'مدد الزيارة تقريبية. تحقَّق من موعد إغلاق كل مكان قبل الانطلاق. المسافات والأوقات تقديرية.'}
-};
-Object.keys(UI_ROUTES).forEach(l => { Object.assign(UI[l], UI_ROUTES[l]); });
-
-/* texts of the closing-time note and of guided tours */
-const UI_NOW = {
-en:{pCheck:'Check the closing time before you go.', rTour:'Guided tours start every day at {t}; {m} to go. Ask a tour agency.', rTourNext:'For tomorrow: guided tours start every day at {t}. Book at a tour agency.'},
-tr:{pCheck:'Gitmeden önce kapanış saatini kontrol edin.', rTour:'Rehberli turların başlangıcı her gün {t}; kalan süre {m}. Tur acentelerine sorun.', rTourNext:'Yarın için: rehberli turların başlangıcı her gün {t}. Tur acentesinden yer ayırtın.'},
-de:{pCheck:'Prüfen Sie vor dem Besuch die Schließzeit.', rTour:'Geführte Touren beginnen täglich um {t}; noch {m}. Fragen Sie bei einem Touranbieter.', rTourNext:'Für morgen: Geführte Touren beginnen täglich um {t}. Buchen Sie bei einem Touranbieter.'},
-fr:{pCheck:'Vérifiez l’heure de fermeture avant d’y aller.', rTour:'Les visites guidées partent chaque jour à {t} ; encore {m}. Renseignez-vous auprès d’une agence.', rTourNext:'Pour demain : les visites guidées partent chaque jour à {t}. Réservez auprès d’une agence.'},
-es:{pCheck:'Compruebe la hora de cierre antes de ir.', rTour:'Las visitas guiadas salen cada día a las {t}; faltan {m}. Pregunte en una agencia.', rTourNext:'Para mañana: las visitas guiadas salen cada día a las {t}. Reserve en una agencia.'},
-bg:{pCheck:'Проверете часа на затваряне, преди да тръгнете.', rTour:'Обиколките с екскурзовод започват всеки ден в {t}; остават {m}. Попитайте в туристическа агенция.', rTourNext:'За утре: обиколките с екскурзовод започват всеки ден в {t}. Запазете място в туристическа агенция.'},
-ru:{pCheck:'Перед выходом уточните время закрытия.', rTour:'Экскурсии с гидом начинаются каждый день в {t}; осталось {m}. Спросите в турагентстве.', rTourNext:'На завтра: экскурсии с гидом начинаются каждый день в {t}. Забронируйте в турагентстве.'},
-el:{pCheck:'Ελέγξτε την ώρα κλεισίματος πριν πάτε.', rTour:'Οι ξεναγήσεις ξεκινούν κάθε μέρα στις {t}· απομένουν {m}. Ρωτήστε σε ένα ταξιδιωτικό γραφείο.', rTourNext:'Για αύριο: οι ξεναγήσεις ξεκινούν κάθε μέρα στις {t}. Κάντε κράτηση σε ταξιδιωτικό γραφείο.'},
-ar:{pCheck:'تحقَّق من موعد الإغلاق قبل الذهاب.', rTour:'تبدأ الجولات المصحوبة بمرشد كل يوم الساعة {t}؛ بقي {m}. اسأل وكالة سياحية.', rTourNext:'للغد: تبدأ الجولات المصحوبة بمرشد كل يوم الساعة {t}. احجز لدى وكالة سياحية.'}
-};
-Object.keys(UI_NOW).forEach(l => { Object.assign(UI[l], UI_NOW[l]); });
-const UI_APP = {
-en:{appT:'Add the guide to your phone', appP:'Put the guide on your home screen and open it like an app. Once it has been opened it also works without the internet; when the connection returns it updates itself.',
-  appBtn:'Install as an app', appIosT:'iPhone and iPad (Safari)', appAndT:'Android (Chrome)', appN:'Maps, the weather and directions still need the internet.', onNow:'You are back online: the guide is being updated.',
-  appIos:['Tap the Share button at the bottom of Safari (a square with an arrow pointing up).','Scroll down and choose “Add to Home Screen”.','Tap “Add”. The guide appears on your home screen.'],
-  appAnd:['Tap the menu at the top right of Chrome (three dots).','Choose “Add to Home screen” or “Install app”.','Tap “Install” or “Add”. The guide appears on your home screen.']},
-tr:{appT:'Rehberi telefonunuza ekleyin', appP:'Rehberi ana ekranınıza ekleyin, bir uygulama gibi açın. Bir kez açıldıktan sonra internetsiz de çalışır; bağlantı gelince kendini günceller.',
-  appBtn:'Uygulama olarak yükle', appIosT:'iPhone ve iPad (Safari)', appAndT:'Android (Chrome)', appN:'Harita, hava durumu ve yol tarifi için yine internet gerekir.', onNow:'Yeniden çevrimiçisiniz: rehber güncelleniyor.',
-  appIos:['Safari’nin altındaki Paylaş düğmesine dokunun (yukarı oklu kare).','Aşağı kaydırıp “Ana Ekrana Ekle”yi seçin.','“Ekle”ye dokunun. Rehber ana ekranınızda görünür.'],
-  appAnd:['Chrome’un sağ üstündeki menüye dokunun (üç nokta).','“Ana ekrana ekle” ya da “Uygulamayı yükle”yi seçin.','“Yükle” ya da “Ekle”ye dokunun. Rehber ana ekranınızda görünür.']}
-};
-Object.keys(UI_APP).forEach(l => { Object.assign(UI[l], UI_APP[l]); });
-const UI_DOL = {
-en:{mWalkDol:'On foot + dolmuş (shared minibus)', mTaxiDol:'Taxi + dolmuş', payDriver:'fare paid to the driver', dolNote:'waiting time not included; ask the driver when the last dolmuş returns', dolCta:'Directions to the dolmuş stop', dolFact:'dolmuş stop {d}',
-  sDolWalk:'Walk to the {n}: {d}, {t}.', sDolTaxi:'Take a taxi to the {n}: {d}, {t}.', sDolRide:'Take the dolmuş to {n}: {t}. Pay the driver.'},
-tr:{mWalkDol:'Yürüyüş + dolmuş', mTaxiDol:'Taksi + dolmuş', payDriver:'ücret şoföre ödenir', dolNote:'bekleme süresi hariç; son dolmuşun dönüş saatini şoföre sorun', dolCta:'Dolmuş durağına yol tarifi', dolFact:'dolmuş durağı {d}',
-  sDolWalk:'{n} için yürüyün: {d}, {t}.', sDolTaxi:'{n} için taksiye binin: {d}, {t}.', sDolRide:'{n} dolmuşuna binin: {t}. Ücreti şoföre ödeyin.'}
-};
-Object.keys(UI_DOL).forEach(l => { Object.assign(UI[l], UI_DOL[l]); });
-LANGS.forEach(l => { Object.keys(UI.en).forEach(k => { if (!(k in UI[l])) UI[l][k] = UI.en[k]; }); });      /* not yet translated: English */
-
 /* ============================ end of data ============================ */
 
 const COLORS = {sights:'#b4470a', far:'#a3264d', transport:'#5b2fc0', services:'#0f6b63', office:'#18242a'};
@@ -1989,12 +1672,7 @@ const li = () => LANGS.indexOf(lang);
 const byId = id => PLACES.find(x => x.id === id);
 /* a text in the page's language. The four extra languages are looked up in XL by the English text. */
 const xl = s => (XL[lang] && XL[lang][s.replace(/\u00ad/g, '')]) || s;
-const tx0 = a => typeof a === 'string' ? xl(a) : li() < a.length ? a[li()] : Array.isArray(a[0]) ? a[0].map(xl) : xl(a[0]);
-/* No prices are shown anywhere (they go out of date). The amounts are still in the texts of the data; here every clause that names an amount in TL is cut out. */
-function noFare(s){ if (typeof s !== 'string' || s.indexOf('TL') < 0) return s;
-  s = s.replace(/(\d)[.,](\d{3})(?!\d)/g, '$1$2').replace(/\s*\([^()]*\bTL\b[^()]*\)/g, '').replace(/\s*[:,،؛;·]\s*[^.:,،؛;!?·]*\bTL\b[^.!?]*(?=[.!?]|$)/g, '');
-  return /\bTL\b/.test(s) ? (s.match(/[^.!?]+[.!?]*\s*/g) || []).filter(x => !/\bTL\b/.test(x)).join('').trim() : s; }
-const tx = a => { const r = tx0(a); return Array.isArray(r) ? r.map(x => Array.isArray(x) ? x.map(noFare) : noFare(x)) : noFare(r); };
+const tx = a => typeof a === 'string' ? xl(a) : li() < a.length ? a[li()] : Array.isArray(a[0]) ? a[0].map(xl) : xl(a[0]);
 
 function metres(a, b){ const R = 6371000, r = Math.PI/180, dLa = (b.lat-a.lat)*r, dLo = (b.lng-a.lng)*r;
   const h = Math.sin(dLa/2)**2 + Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(dLo/2)**2; return 2*R*Math.asin(Math.sqrt(h)); }
@@ -2003,7 +1681,7 @@ function distText(m){ const t = UI[lang], u = UNITS[lang] || ['m','km']; if (m <
   return (m < 10000 ? (m/1000).toFixed(1) : Math.round(m/1000)).toString().replace('.', lang === 'en' || lang === 'ar' ? '.' : ',') + ' ' + u[1]; }
 function roadM(p){ return p.road || metres(OFFICE, p) * RATES.detour; }
 function approx(m){ return m < 100 ? UI[lang].under : '≈ ' + distText(m); }
-const fillT = (s, o) => noFare(s.replace(/\{(\w)\}/g, (m, k) => o[k] ?? m));
+const fillT = (s, o) => s.replace(/\{(\w)\}/g, (m, k) => o[k] ?? m);
 
 /* links that hand the journey over to the phone's maps apps: Google, Apple and Yandex.
    No starting point is given, so each app routes from where the visitor is standing. */
@@ -2017,11 +1695,6 @@ function findLinks(q){ const e = encodeURIComponent(q); return [
   ['aName', 'https://maps.apple.com/?q=' + e + '&sll=' + OFFICE.lat + ',' + OFFICE.lng],
   ['yName', 'https://yandex.com/maps/?text=' + e + '&ll=' + OFFICE.lng + ',' + OFFICE.lat + '&z=16']]; }
 
-function nearLinks(q){ const e = encodeURIComponent(q); return [
-  ['gName', 'https://www.google.com/maps/search/?api=1&query=' + e],
-  ['aName', 'https://maps.apple.com/?q=' + e],
-  ['yName', 'https://yandex.com/maps/?text=' + e]]; }
-
 /* the ways to get to a place; each has a time, a fare and its own steps */
 function options(p){ const t = UI[lang]; let o = []; if (p.kind !== 'pin') return o; const r = roadM(p), n = tx(p.name), d = approx(r);
   if (!p.ferry && !p.noDist && r <= RATES.walkMaxM){ const m = Math.max(1, Math.round(r / RATES.walkMPerMin)), tm = t.mins.replace('{m}', m);
@@ -2031,17 +1704,11 @@ function options(p){ const t = UI[lang]; let o = []; if (p.kind !== 'pin') retur
       tm = t.mins.replace('{m}', p.bus.rideMin + toStop), fare = t.busFare.replace('{a}', RATES.busCard + ' TL').replace('{b}', RATES.busBank + ' TL');
     o.push({mode:'bus', title:t.mBus.replace('{l}', p.bus.line), note:p.bus.every ? t.busNote.replace('{f}', p.bus.every) : '', time:tm, cost:RATES.busCard + '–' + RATES.busBank + ' TL',
       links:p.stop ? mapLinks(p.stop, 'walk') : [mapLinks(p, 'transit')[2]], linksTitle:p.stop ? t.openStop : t.openIn,
-      steps:tx(p.steps || [[]]).map((x, i) => [x, i === 1 ? ride : ''])}); }
+      steps:tx(p.steps || [[]]).map((x, i) => [x, i === 1 ? ride + ' · ' + fare : ''])}); }
   const startAt = (id, how) => { const q = byId(id); return q ? {links:mapLinks(q, how || 'walk'), linksTitle:fillT(t.openStart, {n:short(q)})} : {links:mapLinks(p, how || 'walk')}; };
   if (p.viaOtogar){ const city = p.viaOtogar === 'city';      /* 'city': an intercity coach from the Otogar; otherwise a district bus */
     o.push({mode:'bus', title:city ? t.mBusC : t.mBusD, time:'', cost:city ? '' : t.ask, ...startAt('c9-stop'),
       steps:[[fillT(t.sDb1, {f:RATES.busCard + '–' + RATES.busBank + ' TL'})], [fillT(city ? t.sCb2 : t.sDb2, {n})], [fillT(t.sArrive, {n})]]}); }
-  if (p.dolmus && byId(p.dolmus.from)){ const s = byId(p.dolmus.from), sr = roadM(s), wm = Math.max(1, Math.round(sr / RATES.walkMPerMin)), tm = s.driveMin || Math.round(sr / 1000 / 25 * 60) + 2,
-      ride = p.dolmus.ride, mins = m => t.mins.replace('{m}', m), sn = tx(s.name), last = [[fillT(t.sDolRide, {n, t:mins(ride)})], [fillT(t.sArrive, {n})]];
-    if (sr <= RATES.walkMaxM) o.push({mode:'bus', title:t.mWalkDol, time:mins(wm + ride), cost:t.payDriver, note:t.dolNote, cta:t.dolCta, links:mapLinks(s, 'walk'), linksTitle:fillT(t.openStart, {n:short(s)}),
-      steps:[[fillT(t.sDolWalk, {n:sn, d:approx(sr), t:mins(wm)})]].concat(last)});
-    if (CAR !== true) o.push({mode:'taxi', title:t.mTaxiDol, time:mins(tm + ride), cost:t.taxiFare + ' + ' + t.payDriver, note:t.dolNote, cta:t.dolCta, links:mapLinks(s, 'drive'), linksTitle:fillT(t.openStart, {n:short(s)}),
-      steps:[[fillT(t.sDolTaxi, {n:sn, d:approx(sr), t:mins(tm)})]].concat(last)}); }
   (p.more || []).forEach(x => o.push({mode:x.mode, title:x.title ? tx(x.title) : t['m' + x.mode[0].toUpperCase() + x.mode.slice(1)], time:x.min ? t.mins.replace('{m}', x.min) : '',
     cost:x.cost === 'ask' ? t.ask : Array.isArray(x.cost) ? tx(x.cost) : x.cost, ...(x.from ? startAt(x.from, x.go) : {links:mapLinks(p, x.go || 'walk')}), steps:x.steps ? tx(x.steps).map(y => [y]) : []}));
   const drive = t.mins.replace('{m}', p.driveMin || Math.round(r / 1000 / 25 * 60) + 2);
@@ -2055,15 +1722,14 @@ function options(p){ const t = UI[lang]; let o = []; if (p.kind !== 'pin') retur
     o.push({mode:'car', title:t.mCar, time:drive, cost:p.carCost ? tx(p.carCost) : p.ferry ? t.carCostF : t.carCost, links:mapLinks(p, 'drive'),
       steps:[[t.sCar1]].concat(note ? [[note]] : [], [[fillT(t.sCar2, {n, d, t:drive})], [fillT(t.sArrive, {n})]])}); }
   /* the answer to "do you have a car?": with a car no taxi is offered, and the own car comes first unless the place is within walking distance; without a car the own-car way is left out */
-  if (CAR === true){ o = o.filter(x => x.mode !== 'taxi' || x.cta); const i = o.findIndex(x => x.mode === 'car'); if (i > 0 && !o.some(x => x.mode === 'walk')) o.unshift(o.splice(i, 1)[0]); }
+  if (CAR === true){ o = o.filter(x => x.mode !== 'taxi'); const i = o.findIndex(x => x.mode === 'car'); if (i > 0 && !o.some(x => x.mode === 'walk')) o.unshift(o.splice(i, 1)[0]); }
   if (CAR === false) o = o.filter(x => x.mode !== 'car');
-  if (p.taxiFirst){ const i = o.findIndex(x => x.mode === 'taxi'); if (i > 0) o.unshift(o.splice(i, 1)[0]); }      /* the hospital: the taxi before the bus */
   return o; }
 /* via: the district or place an 'extra' place is reached from */
 const viaOf = p => p.via && p.via !== 'centre' && p.via !== 'walk' ? byId(p.via) : null;
 function facts(p){ const t = UI[lang]; if (p.noDist) return [];
   if (p.x) return [viaOf(p) ? fillT(t.inArea, {d:short(viaOf(p))}) : t.centre];
-  return p.kind === 'search' ? [t.several] : [approx(roadM(p))].concat(p.dolmus && byId(p.dolmus.from) ? [fillT(t.dolFact, {d:approx(roadM(byId(p.dolmus.from)))})] : []); }
+  return p.kind === 'search' ? [t.several] : [approx(roadM(p))]; }
 function summary(p){ return facts(p).concat(options(p).map(o => o.home || o.title)).join(' · '); }
 
 /* ---------- maps ---------- */
@@ -2145,7 +1811,7 @@ const members = g => GROUPS[g].ids ? GROUPS[g].ids.map(byId).filter(Boolean) : P
 const groupsOf = p => Object.keys(GROUPS).filter(k => p.group === k || (GROUPS[k].ids || []).includes(p.id));
 /* search and planning filters */
 const F = {q:'', sort:false, walk:false, noferry:false, one:false};
-const FILTERS = [['sort','fSort'], ['walk','fWalk'], ['noferry','fNoFerry'], ['one','fOne']];
+const FILTERS = [['sort','fSort'], ['walk','fWalk'], ['one','fOne']];
 const fold = x => x.toLocaleLowerCase('tr').normalize('NFD').replace(/[\u0300-\u036f\u00ad]/g, '').replace(/ı/g, 'i');
 /* every spelling of a text, in all nine languages, so that a search works whatever language the page is in */
 const allTx = a => !a ? [] : (typeof a === 'string' ? [a] : a.slice()).concat(XLANGS.map(l => XL[l][(typeof a === 'string' ? a : a[0]).replace(/­/g, '')] || ''));
@@ -2212,7 +1878,7 @@ function renderChips(){
   $('#chips').innerHTML = FILTERS.map(f => '<button type="button" class="chip" data-f="' + f[0] + '" aria-pressed="' + F[f[0]] + '">' + esc(UI[lang][f[1]]) + '</button>').join('');
   $('#q').placeholder = UI[lang].phHow; $('#q').setAttribute('aria-label', UI[lang].phHow); $('#clear').textContent = UI[lang].clear;
   document.querySelectorAll('.askbtn').forEach(b => b.setAttribute('aria-selected', String(b.dataset.m === MODE)));
-  $('#paneHow').hidden = MODE !== 'how'; $('#paneWhere').hidden = true; }      /* the planning filters are switched off; 'MODE !== \'where\'' in place of 'true' shows them again */
+  $('#paneHow').hidden = MODE !== 'how'; $('#paneWhere').hidden = MODE !== 'where'; }
 $('#ask').addEventListener('click', e => { const b = e.target.closest('.askbtn'); if (!b) return; MODE = b.dataset.m; renderChips(); renderHome(); if (MODE === 'how') $('#q').focus(); });
 $('#chips').addEventListener('click', e => { const b = e.target.closest('.chip'); if (!b) return; F[b.dataset.f] = !F[b.dataset.f]; renderChips(); renderHome(); });
 $('#q').addEventListener('input', e => { F.q = e.target.value; renderHome(); });
@@ -2221,31 +1887,19 @@ $('#clear').addEventListener('click', () => { if (MODE === 'how'){ F.q = ''; $('
 const short = x => tx(x.label || x.name).replace(/\s*\(.*\)$/, '');
 const card = p => '<li><a class="card" style="--c:var(--' + p.cat + ')" href="#/p/' + p.id + '"><span class="big">' + sized(p.icon, 32) + '</span><span class="txt"><b>' + esc(tx(p.name)) + '</b><small>' + esc(summary(p)) + '</small></span><span class="go">' + ICONS.chevron + '</span></a></li>';
 /* a picture on the first screen: a place, or a group ('g:<key>') */
-const pick = k => { if (k.startsWith('r:')){ const R = routeById(k.slice(2)); return R && routeLegs(R).legs.length ? {x:{icon:R.icon, name:R.name}, r:R, c:R.cat, href:'#/r/' + R.id} : null; }
-  if (k.startsWith('n:')){ const id = k.slice(2), K = NEAR.kinds[id], t = UI[lang];
-    return K ? {x:{icon:K.icon, name:t.nearTitle[id], label:t.nearName[id]}, n:true, c:'near', href:'#/n/' + id} : null; }
-  const g = k.startsWith('g:') && GROUPS[k.slice(2)], x = g || byId(k); return x ? {x, g, c:g ? g.cat : x.cat, href:'#/' + (g ? 'g/' + k.slice(2) : 'p/' + x.id)} : null; };
+const pick = k => { const g = k.startsWith('g:') && GROUPS[k.slice(2)], x = g || byId(k); return x ? {x, g, c:g ? g.cat : x.cat, href:'#/' + (g ? 'g/' + k.slice(2) : 'p/' + x.id)} : null; };
 const tiles = (list, own) => '<div class="icons">' + list.map(pick).filter(Boolean).map(k => '<a class="icon"' + (own ? ' style="--c:var(--' + k.c + ')"' : '') + ' href="' + k.href + '"><span class="big">' + sized(k.x.icon, 38) + '</span><b>' + esc(short(k.x)) + '</b></a>').join('') + '</div>';
-const cards = list => '<ul class="list">' + list.map(pick).filter(Boolean).map(k => '<li><a class="card" style="--c:var(--' + k.c + ')" href="' + k.href + '"><span class="big">' + sized(k.x.icon, 32) + '</span><span class="txt"><b>' + esc(tx(k.x.name)) + '</b>' + (k.r ? '<small>' + esc(routeSum(k.r)) + '</small>' : '') + '</span><span class="go">' + ICONS.chevron + '</span></a></li>').join('') + '</ul>';
 const listOf = found => found.length ? '<ul class="list">' + found.map(card).join('') + '</ul>' : '<p class="none">' + esc(UI[lang].none) + '</p>';
 /* first screen. "How do I get to ...?": a search, with the most asked places while nothing is typed.
    "Where can I go?": pictures by need, three to a row; with a planning filter it becomes one list, nearest first. */
-let INSTALL = null;      /* Android: the browser's own install question, when it offers one */
-const isApp = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
-function renderApp(){ const t = UI[lang], box = $('#appbox'), ol = a => '<ol class="steps">' + a.map(x => '<li><span>' + esc(x) + '</span></li>').join('') + '</ol>';
-  const ios = '<details' + (isIOS ? ' open' : '') + '><summary>' + esc(t.appIosT) + '</summary>' + ol(t.appIos) + '</details>', and = '<details' + (!isIOS && !INSTALL ? ' open' : '') + '><summary>' + esc(t.appAndT) + '</summary>' + ol(t.appAnd) + '</details>';
-  box.innerHTML = '<h2><i></i>' + esc(t.appT) + '</h2><p>' + esc(t.appP) + '</p>' + (INSTALL ? '<button type="button" class="btn primary" id="install">' + esc(t.appBtn) + '</button>' : '') + (isIOS ? ios + and : and + ios) + '<p class="est">' + esc(t.appN) + '</p>'; }
-addEventListener('beforeinstallprompt', e => { e.preventDefault(); INSTALL = e; renderApp(); });
-addEventListener('appinstalled', () => { INSTALL = null; $('#appbox').hidden = true; });
 function renderHome(){ const t = UI[lang];
-  $('#appbox').hidden = isApp() || MODE !== 'where' || F.sort || F.walk || F.noferry || F.one; if (!$('#appbox').hidden) renderApp();
   if (MODE === 'how'){ const q = F.q.trim(); $('#count').hidden = !q;
     if (!q){ $('#needs').innerHTML = '<section style="--c:var(--accent)"><h2><i></i>' + esc(t.popular) + '</h2>' + tiles(POPULAR, true) + '</section>'; return; }
     const found = search(PLACES, q); $('#countText').textContent = t.nFound.replace('{n}', found.length); $('#needs').innerHTML = listOf(found); return; }
   const listing = F.sort || F.walk || F.noferry || F.one; $('#count').hidden = !listing;
   if (listing){ const found = PLACES.filter(matches).sort((a, b) => far(a) - far(b));
     $('#countText').textContent = t.nRes.replace('{n}', found.length); $('#needs').innerHTML = listOf(found); return; }
-  $('#needs').innerHTML = tipsBlock() + HOME.map(s => '<section style="--c:var(--' + s.cat + ')"><h2><i></i>' + esc(s.title ? t[s.title] : t.cats[s.cat]) + '</h2>' + (s.cards ? cards(s.cards) : tiles(s.tiles)) + '</section>').join('');
+  $('#needs').innerHTML = HOME.map(s => '<section style="--c:var(--' + s.cat + ')"><h2><i></i>' + esc(t.cats[s.cat]) + '</h2>' + tiles(s.tiles) + '</section>').join('');
 }
 /* second screen, only for groups: the places behind one picture (big pictures for a few, a compact list for many) */
 function renderGroup(g){ const G = GROUPS[g], list = members(g).slice(); if (!G.ids) list.sort((a, b) => far(a) - far(b));
@@ -2257,7 +1911,7 @@ function linkRow(links, title){ const t = UI[lang];
   return '<div class="openin">' + esc(title) + '</div><div class="apps">' + links.map(l => '<a class="btn" target="_blank" rel="noopener" href="' + esc(l[1]) + '">' + esc(t[l[0]]) + '</a>').join('') + '</div>'; }
 /* a link from one place to another screen of the guide: "how to get to <place>", or a group */
 function seeCard(k){ const s = pick(k); if (!s) return '';
-  return '<a class="card see" style="--c:var(--' + s.c + ')" href="' + s.href + '"><span class="big">' + sized(s.x.icon, 32) + '</span><span class="txt"><b>' + esc(s.g ? tx(s.g.name) : s.n ? s.x.name : s.r ? tx(s.x.name) : fillT(UI[lang].toVia, {d:short(s.x)})) + '</b></span><span class="go">' + ICONS.chevron + '</span></a>'; }
+  return '<a class="card see" style="--c:var(--' + s.c + ')" href="' + s.href + '"><span class="big">' + sized(s.x.icon, 32) + '</span><span class="txt"><b>' + esc(s.g ? tx(s.g.name) : fillT(UI[lang].toVia, {d:short(s.x)})) + '</b></span><span class="go">' + ICONS.chevron + '</span></a>'; }
 /* "Do you have a car?" is asked on the first place a visitor opens; the answer is kept and can be changed on every place */
 let CAR = null; try { const c = localStorage.getItem('guide-car'); CAR = c === '1' ? true : c === '0' ? false : null; } catch(e){}
 function carBox(){ const t = UI[lang], b = (v, icon, label) => '<button type="button" class="carbtn" data-car="' + v + '" aria-pressed="' + (CAR === (v === 1)) + '">' + sized(icon, 28) + '<span>' + esc(label) + '</span></button>';
@@ -2276,7 +1930,6 @@ function renderSheet(p){
   const desc = p.desc ? tx(p.desc) : p.noDist ? fillT(t.cDesc, {n}) : p.x ? (v ? fillT(CAR === true ? t.xDescCar : t.xDesc, {d:short(v)}) : t.xDescC) : fillT(t.dDesc, {n});
   let h = '<div class="cat" style="--c:var(--' + c + ')"><i></i>' + esc(t.cats[c]) + '</div><h2>' + esc(n) + '</h2><p>' + esc(desc) + '</p>';
   const fs = facts(p); if (fs.length) h += '<ul class="facts">' + fs.map(f => '<li>' + esc(f) + '</li>').join('') + '</ul>';
-  if (p.all) h += '<div class="hours all"><p>' + esc(tx(p.all.note)) + '</p><a class="btn primary" target="_blank" rel="noopener" href="' + esc(nearLinks(p.all.q)[isIOS ? 1 : 0][1]) + '">' + esc(tx(p.all.btn)) + '</a></div>';
   h += carBox();
   if (CAR === null){ $('#sheetTop').innerHTML = h; $('#sheet').innerHTML = ''; return; }      /* the directions follow the answer */
   const ops = options(p), mine = l => l.length > 1 ? l[isIOS ? 1 : 0] : l[0];      /* the visitor's own maps app: Apple on iPhone, Google elsewhere */
@@ -2286,214 +1939,27 @@ function renderSheet(p){
   const links = ops.length ? null : routed ? nameLinks(p.q, p.via === 'walk' ? 'walk' : 'drive') : findLinks(p.q);
   if (closed) h += '<div class="duty"><p>' + esc(t.dutyNow) + '</p>' + cta(mine(findLinks(p.duty.q)), t.dutyBtn) + list + '</div>';
   else if (ops.length){ const o = ops[0];
-    h += '<div class="best" style="--c:var(--' + c + ')"><span class="ico">' + sized(o.mode, 24) + '</span><span class="txt"><small>' + esc(t.rec) + '</small><b>' + esc(o.title) + '</b></span><span class="val"><b>' + esc(o.time) + '</b></span></div>' +
-      cta(mine(o.links), o.cta || (o.mode === 'bus' && p.stop ? t.openStop : t.start)); }
+    h += '<div class="best" style="--c:var(--' + c + ')"><span class="ico">' + sized(o.mode, 24) + '</span><span class="txt"><small>' + esc(t.rec) + '</small><b>' + esc(o.title) + '</b></span><span class="val"><b>' + esc(o.time) + '</b><small>' + esc(o.cost) + '</small></span></div>' +
+      cta(mine(o.links), o.mode === 'bus' && p.stop ? t.openStop : t.start); }
   else { if (v && CAR === false) h += seeCard(p.via); h += cta(mine(links), routed ? t.start : t.findIn); }
   if (p.hours && !closed) h += '<div class="hours"><p>' + esc(fillT(t.dutyHours, {a:p.hours.from, b:p.hours.to})) + '</p>' + list + '</div>';
-  if (!p.hours && SUIT[p.id] && (SUIT[p.id].in || SUIT[p.id].hrs)) h += '<div class="hours"><p>' + esc(t.pCheck) + '</p></div>';
   $('#sheetTop').innerHTML = h; h = '';
   if (ops.length) h += '<div class="how">' + esc(t.how) + '</div><div class="opts" style="--c:var(--' + c + ')">' + ops.map((o, i) =>
-      '<details class="opt"' + (i === 0 && !closed ? ' open' : '') + '><summary><span class="ico">' + ICONS[o.mode] + '</span><span class="txt"><b>' + esc(o.title) + '</b>' + (i === 0 && ops.length > 1 && !closed ? '<span class="rec">' + esc(t.rec) + '</span>' : '') + '</span><span class="val"><b>' + esc(o.time) + '</b></span><span class="go">' + ICONS.chevron + '</span>' + (o.note ? '<span class="note">' + esc(o.note) + '</span>' : '') + '</summary><div class="body">' +
+      '<details class="opt"' + (i === 0 && !closed ? ' open' : '') + '><summary><span class="ico">' + ICONS[o.mode] + '</span><span class="txt"><b>' + esc(o.title) + '</b>' + (i === 0 && ops.length > 1 && !closed ? '<span class="rec">' + esc(t.rec) + '</span>' : '') + '</span><span class="val"><b>' + esc(o.time) + '</b><small>' + esc(o.cost) + '</small></span><span class="go">' + ICONS.chevron + '</span>' + (o.note ? '<span class="note">' + esc(o.note) + '</span>' : '') + '</summary><div class="body">' +
       (o.steps.length ? '<ol class="steps">' + o.steps.map(x => '<li><span>' + esc(x[0]) + (x[1] ? '<small>' + esc(x[1]) + '</small>' : '') + '</span></li>').join('') + '</ol>' : '') +
       linkRow(o.links, o.linksTitle || t.openIn) + '</div></details>').join('') + '</div>' + (p.noDist ? '' : '<p class="est">' + esc(t.est) + '</p>');
   else h += linkRow(links, routed ? t.openIn : t.findIn);
-  if (p.goes) h += '<div class="how gap">' + esc(t.goesT || UI.en.goesT) + '</div><ul class="goes">' + p.goes.map(g => '<li>' + (g.id && byId(g.id) ? '<a href="#/p/' + g.id + '"><b>' + esc(tx(g.to)) + '</b></a>' : '<b>' + esc(tx(g.to)) + '</b>') + '<span>' + esc(g.lines) + '</span></li>').join('') + '</ul><p class="est">' + esc(t.goesN || UI.en.goesN) + '</p>';
   h += (p.see || []).map(seeCard).join('');
   if (hasFerry(p) || p.group === 'ferry' || ops.some(o => o.mode === 'ferry'))
     h += '<div class="gdu"><div class="how">' + esc(t.gduT) + '</div><p>' + esc(t.gduP) + '</p><div class="apps"><a class="btn" target="_blank" rel="noopener" href="' + FERRY_SITE.times + '">' + esc(t.gduTimes) + '</a><a class="btn" target="_blank" rel="noopener" href="' + FERRY_SITE.fares + '">' + esc(t.gduFares) + '</a></div></div>';
   $('#sheet').innerHTML = h;
 }
 
-/* ---------- ready-made routes ---------- */
-const routeById = id => ROUTES.find(r => r.id === id);
-const durText = m => { const t = UI[lang]; m = Math.round(m / 5) * 5; return m < 60 ? t.mins.replace('{m}', m) : (m % 60 ? t.rHours : t.rHours.split(' {m}')[0]).replace('{h}', Math.floor(m / 60)).replace('{m}', m % 60); };      /* whole hours are written without minutes */
-const walkMin = m => Math.max(1, Math.round(m / RATES.walkMPerMin));
-/* the legs of a route: for each stop the walk from the stop before it (the first from the office) and the length of the visit */
-function routeLegs(R){ let prev = OFFICE, walkM = 0, visit = 0;
-  const legs = R.stops.map(byId).filter(p => p && p.kind === 'pin').map(p => { const m = metres(prev, p) * RATES.detour, v = (SUIT[p.id] && SUIT[p.id].min) || 30; walkM += m; visit += v; prev = p; return {p, m, v}; });
-  return {legs, walkM, backM:legs.length ? metres(prev, OFFICE) * RATES.detour : 0, total:walkM / RATES.walkMPerMin + visit}; }
-const routeSum = R => { const t = UI[lang], Q = routeLegs(R); return [t.rStops.replace('{n}', Q.legs.length), t.rWalkTot.replace('{d}', distText(Q.walkM)), durText(Q.total)].join(' · '); };
-function renderRoute(R){ const t = UI[lang], Q = routeLegs(R), c = R.cat, lls = Q.legs.map(x => x.p.lat + ',' + x.p.lng);
-  $('#sheetTop').innerHTML = '<div class="cat" style="--c:var(--' + c + ')"><i></i>' + esc(t.routes) + '</div><h2>' + esc(tx(R.name)) + '</h2><p>' + esc(tx(R.desc)) + '</p>' +
-    '<ul class="facts">' + [t.rStops.replace('{n}', Q.legs.length), t.rWalkTot.replace('{d}', distText(Q.walkM)), durText(Q.total)].map(f => '<li>' + esc(f) + '</li>').join('') + '</ul>' +
-    '<a class="btn primary cta" target="_blank" rel="noopener" href="' + esc(mapLinks(Q.legs[0].p, 'walk')[isIOS ? 1 : 0][1]) + '">' + esc(t.rFirst) + '</a>';
-  /* the whole walk in one link: Google and Yandex take several stops, Apple Maps does not */
-  const all = [['gName', 'https://www.google.com/maps/dir/?api=1&destination=' + lls[lls.length - 1] + (lls.length > 1 ? '&waypoints=' + lls.slice(0, -1).join('%7C') : '') + '&travelmode=walking'],
-    ['yName', 'https://yandex.com/maps/?rtext=~' + lls.join('~') + '&rtt=pd']];
-  $('#sheet').innerHTML = '<ul class="list">' + Q.legs.map((x, i) => '<li><a class="card" style="--c:var(--' + x.p.cat + ')" href="#/p/' + x.p.id + '"><span class="big num">' + (i + 1) + '</span><span class="txt"><b>' + esc(tx(x.p.name)) + '</b><small>' +
-      esc(approx(x.m) + ' · ' + t.homeWalk.replace('{m}', walkMin(x.m)) + ' · ' + t.rVisit.replace('{t}', t.mins.replace('{m}', x.v))) + '</small></span><span class="go">' + ICONS.chevron + '</span></a></li>').join('') + '</ul>' +
-    '<p class="est">' + esc(fillT(t.rBack, {d:approx(Q.backM), t:t.homeWalk.replace('{m}', walkMin(Q.backM))})) + '</p>' + linkRow(all, t.rAll) + '<p class="est" style="margin-top:14px">' + esc(t.rNote) + '</p>'; }
-function drawRoute(R){ const Q = routeLegs(R), pts = [[OFFICE.lat, OFFICE.lng]].concat(Q.legs.map(x => [x.p.lat, x.p.lng]));
-  if (!placeMap) placeMap = makeMap('placeMap');
-  placeMap._layer.clearLayers(); placeMap.invalidateSize();
-  L.polyline(pts, {color:COLORS[R.cat], weight:4, opacity:.75, dashArray:'2 10', lineCap:'round'}).addTo(placeMap._layer);
-  Q.legs.forEach((x, i) => L.marker([x.p.lat, x.p.lng], {icon:pin(x.p.cat, String(i + 1), true), keyboard:false, zIndexOffset:400}).addTo(placeMap._layer)
-    .bindTooltip(tx(x.p.label || x.p.name), {direction:'top', offset:[0,-17], className:'lbl'}));
-  /* the office without its label, which would cover the first stops */
-  L.marker(pts[0], {icon:pin('office', 'i', true), keyboard:false, zIndexOffset:300}).addTo(placeMap._layer).bindTooltip(UI[lang].office, {direction:'bottom', offset:[0,14], className:'lbl'});
-  placeMap._bounds = pts; placeMap.fitBounds(pts, {padding:[45,45], maxZoom:17}); }
-
-/* ---------- suggestions for right now ---------- */
-const hm2m = s => +s.slice(0, 2) * 60 + +s.slice(3, 5), m2hm = m => String(Math.floor(m / 60) % 24).padStart(2, '0') + ':' + String(Math.floor(m % 60)).padStart(2, '0');
-/* sunrise and sunset in Çanakkale, in minutes after midnight (local time); used when the forecast has not arrived */
-function sunTimes(){ const d = new Date(), n = Math.floor((d - Date.UTC(d.getUTCFullYear(), 0, 0)) / 864e5), r = Math.PI / 180, g = 2 * Math.PI / 365 * (n - 1);
-  const eq = 229.18 * (0.000075 + 0.001868 * Math.cos(g) - 0.032077 * Math.sin(g) - 0.014615 * Math.cos(2 * g) - 0.040849 * Math.sin(2 * g));
-  const dec = 0.006918 - 0.399912 * Math.cos(g) + 0.070257 * Math.sin(g) - 0.006758 * Math.cos(2 * g) + 0.000907 * Math.sin(2 * g) - 0.002697 * Math.cos(3 * g) + 0.00148 * Math.sin(3 * g);
-  const ha = Math.acos(Math.cos(90.833 * r) / (Math.cos(WEATHER.lat * r) * Math.cos(dec)) - Math.tan(WEATHER.lat * r) * Math.tan(dec)) / r;
-  return {rise:720 - 4 * (WEATHER.lng + ha) - eq + 180, set:720 - 4 * (WEATHER.lng - ha) - eq + 180}; }      /* + 180: Türkiye keeps UTC+3 all year */
-/* the weather: WX = {temp, kind, mm, wind, gust, prob, sunrise, sunset}, or null while it is not known */
-let WX = null, WXSTATE = 'idle';
-const wxKind = c => c <= 1 ? 'clear' : c <= 3 ? 'cloudy' : c <= 48 ? 'fog' : c >= 95 ? 'storm' : (c >= 71 && c <= 77) || c === 85 || c === 86 ? 'snow' : 'rain';
-function wxRead(j){ const c = j.current, at = s => { const m = /T(\d\d):(\d\d)/.exec(s || ''); return m ? +m[1] * 60 + +m[2] : null; };
-  if (!c || typeof c.temperature_2m !== 'number' || typeof c.weather_code !== 'number') throw new Error('no weather');
-  const H = j.hourly || {}, i = (H.time || []).findIndex(x => String(x).slice(0, 13) === String(c.time).slice(0, 13));
-  const prob = i >= 0 && H.precipitation_probability ? Math.max(0, ...H.precipitation_probability.slice(i, i + 3).filter(x => typeof x === 'number')) : 0;
-  return {temp:Math.round(c.temperature_2m), kind:wxKind(c.weather_code), mm:+c.precipitation || 0, wind:+c.wind_speed_10m || 0, gust:+c.wind_gusts_10m || 0, prob,
-    sunrise:at(j.daily && j.daily.sunrise && j.daily.sunrise[0]), sunset:at(j.daily && j.daily.sunset && j.daily.sunset[0])}; }
-function wxLoad(){ if (WXSTATE !== 'idle') return; WXSTATE = 'ok';
-  const pv = new URLSearchParams(location.search).get('wx');
-  if (pv){ const v = pv.split(',').map(Number); if (v.length >= 2 && v.every(x => !isNaN(x))){ const kind = wxKind(v[0]);
-    WX = {temp:v[1], kind, mm:['rain','snow','storm'].includes(kind) ? 1 : 0, wind:v[2] || 0, gust:v[3] || 0, prob:v[4] || 0, sunrise:null, sunset:null}; return; } }
-  try { const s = JSON.parse(localStorage.getItem('guide-wx') || 'null'); if (s && s.w && Date.now() - s.t < WEATHER.keepMin * 6e4){ WX = s.w; return; } } catch(e){}
-  WXSTATE = 'load'; const ac = new AbortController(), tm = setTimeout(() => ac.abort(), 8000);
-  fetch(WEATHER.url + '?latitude=' + WEATHER.lat + '&longitude=' + WEATHER.lng + '&current=temperature_2m,precipitation,weather_code,wind_speed_10m,wind_gusts_10m&hourly=precipitation_probability&daily=sunrise,sunset&forecast_days=2&timezone=Europe%2FIstanbul', {signal:ac.signal})
-    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then(j => { WX = wxRead(j); WXSTATE = 'ok'; try { localStorage.setItem('guide-wx', JSON.stringify({t:Date.now(), w:WX})); } catch(e){}
-      if (!$('#home').hidden && MODE === 'where') renderHome(); })
-    .catch(() => { WXSTATE = 'fail'; }).finally(() => clearTimeout(tm)); }
-/* up to three places that fit the hour and the weather, each with the reason it was chosen */
-function tips(){ const t = UI[lang], W = WX, sun = sunTimes(), n = trNow(), now = hm2m(n.hm), rise = W && W.sunrise != null ? W.sunrise : sun.rise, set = W && W.sunset != null ? W.sunset : sun.set;
-  const dawn = rise - 90, day = now >= dawn && now <= set, wet = !!W && (W.mm >= WEATHER.rainMm || W.prob >= WEATHER.rainProb || ['rain','snow','storm'].includes(W.kind)),
-    hot = !!W && W.temp >= WEATHER.hot, cold = !!W && W.temp <= WEATHER.cold, windy = !!W && (W.wind >= WEATHER.wind || W.gust >= WEATHER.gust), out = {W, set, windy, list:[]};
-  if (now >= 23 * 60 || now < dawn){ out.list = ['n:pharmacy','n:taxi','hospital'].filter(pick).map(k => ({k, why:t.rNight})); return out; }
-  const from = hm2m(WEATHER.dayFrom), to = hm2m(WEATHER.dayTo);
-  Object.keys(SUIT).forEach((k, i) => { const s = SUIT[k], P = byId(k); let sc = 0, why = '', check = false;
-    if (!pick(k)) return;
-    if (s.in || s.hrs){      /* a place with opening hours: the walk there and the visit must fit before it closes */
-      const go = P && P.kind === 'pin' && !s.far ? roadM(P) / RATES.walkMPerMin : 0;
-      if (P && P.hours){ if (!P.hours.days.includes(n.day) || now < hm2m(P.hours.from) || now + go + s.min > hm2m(P.hours.to)) return; }
-      else { if (now < from || now + go + s.min > to) return; check = true; } }
-    if (s.tour && CAR !== true){ const st = hm2m(s.tour), left = st - now, href = s.via && byId(s.via) ? '#/p/' + s.via : '';      /* a guided tour with a fixed start */
-      if (left >= 20) out.list.push({k, sc:6, i, far:1, href, why:fillT(t.rTour, {t:s.tour, m:durText(left).replace(/\.$/, '')})});
-      else out.list.push({k, sc:.5, i, far:0, href, why:fillT(t.rTourNext, {t:s.tour})});
-      return; }
-    if (s.far){ if (!day || now + s.min > set + 30) return; why = t.rDay; if (now < 11 * 60) sc += 2;      /* a trip out of town is best started in the morning */
-      if (CAR === true) sc += 1; if (CAR === false && k !== 'troy-site' && k !== 'troy-museum') sc -= 2; }      /* without a car only Troy has its own minibus */
-    if (s.in){ if (wet){ sc += 4; why = t.rIn; } else if (hot){ sc += 3; why = t.rHotIn; } else if (cold || windy){ sc += 3; why = t.rCold; } else sc += 1; }
-    if (s.out){
-      if (!day){ if (!s.eve) return; sc += 3; why = t.rEve; }
-      else if (wet) sc -= 3;
-      else if (hot){ if (s.sea){ sc += 3; why = t.rSea; } else sc -= 1; }
-      else if (cold || windy) sc -= 1;
-      else { sc += W ? 2 : 1; if (W && !s.far) why = t.rOut; }      /* the weather is only named when it is known */
-      if (day && s.sun && !wet && set - now <= 75){ sc += 5; why = t.rSun.replace('{m}', Math.max(5, Math.round((set - now) / 5) * 5)); } }
-    if (sc > 0) out.list.push({k, sc, i, far:s.far ? 1 : 0, why, check}); });
-  out.list.sort((a, b) => b.sc - a.sc || a.far - b.far || a.i - b.i);
-  /* at most two trips out of town, and not a group together with one of its own far places */
-  const seen = []; let nf = 0; out.list = out.list.filter(x => { if (x.far){ const P = byId(x.k), G = x.k.startsWith('g:') ? x.k.slice(2) : null;
-      if (nf >= 2 || seen.some(k => (P && groupsOf(P).includes(k.slice(2)) && k.startsWith('g:')) || (G && byId(k) && groupsOf(byId(k)).includes(G)))) return false; nf++; }
-    seen.push(x.k); return true; }).slice(0, 3); return out; }
-function tipsBlock(){ const t = UI[lang], T = tips(); if (!T.list.length) return '';
-  const chips = [trNow().hm].concat(T.W ? [T.W.temp + ' °C', t.wx[T.W.kind]] : [], [t.tipSet.replace('{t}', m2hm(T.set))]);
-  const cardOf = x => { const s = pick(x.k), nm = s.g ? tx(s.g.name) : s.n ? s.x.name : tx(s.x.name), ck = x.check ? t.rCheck : '';
-    const base = s.r ? routeSum(s.r) : x.why || (s.g || s.n ? '' : summary(s.x)), why = base ? base + (ck ? ' · ' + ck : '') : ck ? ck[0].toLocaleUpperCase(lang) + ck.slice(1) : '';
-    return '<li><a class="card" style="--c:var(--' + s.c + ')" href="' + (x.href || s.href) + '"><span class="big">' + sized(s.x.icon, 32) + '</span><span class="txt"><b>' + esc(nm) + '</b>' + (why ? '<small>' + esc(why) + '</small>' : '') + '</span><span class="go">' + ICONS.chevron + '</span></a></li>'; };
-  return '<section class="tips" style="--c:var(--accent)"><h2><i></i>' + esc(t.tips) + '</h2><ul class="facts">' + chips.map(c => '<li>' + esc(c) + '</li>').join('') + '</ul>' +
-    (T.windy ? '<div class="hours"><p>' + esc(t.wWind) + '</p><a class="btn" target="_blank" rel="noopener" href="' + FERRY_SITE.times + '">' + esc(t.gduTimes) + '</a></div>' : '') +
-    '<ul class="list">' + T.list.map(cardOf).join('') + '</ul><p class="est tipnote">' + esc(t.tipNote) + (T.W ? ' <a target="_blank" rel="noopener" href="https://open-meteo.com/">' + esc(t.tipSrc) + '</a>' : '') + '</p></section>'; }
-
-/* ---------- near me ---------- */
-/* ME: where the visitor is, kept only while the page is open. LOC: 'idle', 'wait', 'denied' or 'error'. */
-let ME = null, LOC = 'idle', ASKED = false, NEARSEEN = '';
-const onNear = () => /^#\/n\//.test(location.hash);
-function locate(quiet){
-  if (!navigator.geolocation){ if (!quiet){ LOC = 'error'; route(); } return; }
-  if (!quiet){ LOC = 'wait'; route(); }
-  navigator.geolocation.getCurrentPosition(p => { const was = ME; ME = {lat:p.coords.latitude, lng:p.coords.longitude, t:Date.now()}; LOC = 'idle';
-      if (onNear() && (!quiet || !was || metres(was, ME) > 25)) route(); },
-    e => { if (quiet) return; LOC = e.code === 1 ? 'denied' : 'error'; if (onNear()) route(); },
-    {enableHighAccuracy:true, timeout:10000, maximumAge:30000}); }
-/* the places of the NEAR area, from the phone's store or from OpenStreetMap. NEARSTATE: 'idle', 'load', 'ok' or 'fail'. */
-let NEARDATA = null, NEARSTATE = 'idle', NEARFAIL = 0;
-function nearLoad(){ if (NEARSTATE !== 'idle') return;
-  const ks = Object.keys(NEAR.kinds).filter(k => !NEAR.kinds[k].list.length && !NEAR.kinds[k].maps), sig = NEAR.area.join() + '|' + ks.map(k => NEAR.kinds[k].osm).join();
-  if (!ks.length){ NEARDATA = {}; NEARSTATE = 'ok'; return; }
-  try { const s = JSON.parse(localStorage.getItem('guide-near') || 'null');
-    if (s && s.sig === sig && Date.now() - s.t < NEAR.keepDays * 864e5){ NEARDATA = s.d; NEARSTATE = 'ok'; return; } } catch(e){}
-  NEARSTATE = 'load'; const tags = ks.map(k => NEAR.kinds[k].osm.split('=')), box = '(' + NEAR.area.join(',') + ')';
-  const q = '[out:json][timeout:15];(' + tags.map(g => 'nwr["' + g[0] + '"="' + g[1] + '"]' + box + ';').join('') + ');out tags center;';
-  const ask = i => { if (i >= NEAR.servers.length) return Promise.reject(new Error('no server'));
-    const ac = new AbortController(), tm = setTimeout(() => ac.abort(), 12000);
-    return fetch(NEAR.servers[i], {method:'POST', body:new URLSearchParams({data:q}), signal:ac.signal})
-      .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-      .then(j => { if (!Array.isArray(j.elements) || (j.remark && !j.elements.length)) throw new Error('empty'); return j; })
-      .finally(() => clearTimeout(tm)).catch(() => ask(i + 1)); };
-  ask(0).then(j => { const d = {}; ks.forEach(k => { d[k] = []; });
-      j.elements.forEach(e => { const c = e.center || e, g = e.tags || {}, i = tags.findIndex(x => g[x[0]] === x[1]);
-        if (i >= 0 && typeof c.lat === 'number' && typeof c.lon === 'number') d[ks[i]].push([+c.lat.toFixed(5), +c.lon.toFixed(5), String(g.name || '').slice(0, 60)]); });
-      NEARDATA = d; NEARSTATE = 'ok'; try { localStorage.setItem('guide-near', JSON.stringify({t:Date.now(), sig, d})); } catch(e){} })
-    .catch(() => { NEARSTATE = 'fail'; NEARFAIL = Date.now(); })
-    .then(() => { if (onNear()) route(); }); }
-/* the screen of one NEAR kind. Returns the nearest place when there is one to draw on the map. */
-function renderNear(k){ const t = UI[lang], K = NEAR.kinds[k], a = NEAR.area, mine = l => l[isIOS ? 1 : 0];
-  const cta = (link, label) => '<a class="btn primary cta" target="_blank" rel="noopener" href="' + esc(link[1]) + '">' + esc(label) + '</a>';
-  const H = K.hoursOf && byId(K.hoursOf), closed = !!(H && H.duty && !isOpen(H)), dutyList = H && H.duty && H.duty.list ? '<a class="btn" target="_blank" rel="noopener" href="' + esc(H.duty.list) + '">' + esc(t.dutyList) + '</a>' : '';
-  const duty = closed ? '<div class="duty"><p>' + esc(t.dutyNow) + '</p>' + cta(mine(findLinks(H.duty.q)), t.dutyBtn) + dutyList + '</div>' : '';
-  const office = K.office && byId(K.office) ? '<div class="how gap">' + esc(t.nearOffice) + '</div>' + seeCard(K.office) : K.officeQ ? linkRow(findLinks(K.officeQ), t.nearOffice) : '';
-  const maps = msg => '<p class="none">' + esc(msg) + '</p>' + cta(mine(nearLinks(K.q)), t.findIn), wait = msg => '<p class="none" role="status">' + esc(msg) + '</p>';
-  const again = '<button type="button" class="btn" data-loc>' + ICONS.locate + '<span>' + esc(t.nearAgain) + '</span></button>';
-  let top = '<div class="cat" style="--c:var(--near)"><i></i>' + esc(t.near) + '</div><h2>' + esc(t.nearTitle[k]) + '</h2>' + duty, low = '', best = null;
-  if (K.maps && !K.list.length){ $('#sheetTop').innerHTML = top + '<p>' + esc(t.nearMaps || UI.en.nearMaps) + '</p>' + cta(mine(nearLinks(K.q)), t.findIn); $('#sheet').innerHTML = linkRow(nearLinks(K.q), t.findIn) + office; return null; }
-  if (!ME){
-    if (LOC === 'wait') top += wait(t.nearWait);
-    else { top += '<p>' + esc(LOC === 'denied' ? t.nearDenied : LOC === 'error' ? t.locErr + ' ' + t.nearAsk : t.nearAsk) + '</p><button type="button" class="btn primary cta" data-loc>' + ICONS.locate + '<span>' + esc(t.nearBtn) + '</span></button>';
-      low = linkRow(nearLinks(K.q), t.findIn) + office; }
-  } else if (ME.lat < a[0] || ME.lat > a[2] || ME.lng < a[1] || ME.lng > a[3]){ top += maps(t.nearNone); low = linkRow(nearLinks(K.q), t.findIn) + again; }
-  else {
-    if (!K.list.length && NEARSTATE === 'fail' && Date.now() - NEARFAIL > 30000) NEARSTATE = 'idle';
-    if (!K.list.length) nearLoad();
-    const pts = K.list.length ? K.list : NEARSTATE === 'ok' ? NEARDATA[k] || [] : null;
-    if (!pts){ if (NEARSTATE === 'load') top += wait(t.nearLoad); else { top += maps(t.nearNone); low = linkRow(nearLinks(K.q), t.findIn) + again + office; } }
-    else { const to = x => x.named && pts.filter(p => p[2] === x.name).length === 1 ? nameLinks(x.name + ', Çanakkale', 'walk') : mapLinks(x, 'walk');      /* two places of one name: by position */
-      const ls = pts.map(p => ({lat:p[0], lng:p[1], named:!!p[2], name:p[2] || t.nearName[k].replace(/­/g, ''), m:metres(ME, {lat:p[0], lng:p[1]}) * RATES.detour})).sort((x, y) => x.m - y.m).filter(x => x.m <= NEAR.maxM).slice(0, 3);
-      const walk = x => Math.max(1, Math.round(x.m / RATES.walkMPerMin));
-      if (!ls.length){ top += maps(t.nearNone); low = linkRow(nearLinks(K.q), t.findIn) + again + office; }
-      else { best = ls[0]; best.others = ls.slice(1); best.all = pts;
-        top += '<div class="best" style="--c:var(--' + K.cat + ')"><span class="ico">' + sized(K.icon, 24) + '</span><span class="txt"><small>' + esc(t.mWalk) + '</small><b>' + esc(best.name) + '</b></span><span class="val"><b>' + esc(t.mins.replace('{m}', walk(best))) + '</b><small>' + esc(approx(best.m)) + '</small></span></div>' +
-          cta(mine(to(best)), t.start) + (H && H.hours && !closed ? '<div class="hours"><p>' + esc(fillT(t.dutyHours, {a:H.hours.from, b:H.hours.to})) + '</p>' + dutyList + '</div>' : '');
-        low = linkRow(to(best), t.openIn) +
-          (ls.length > 1 ? '<div class="how gap">' + esc(t.nearMore) + '</div><ul class="list">' + ls.slice(1).map(x => '<li><a class="card" style="--c:var(--' + K.cat + ')" target="_blank" rel="noopener" href="' + esc(mine(to(x))[1]) + '"><span class="big">' + sized(K.icon, 32) + '</span><span class="txt"><b>' + esc(x.name) + '</b><small>' + esc(approx(x.m) + ' · ' + t.homeWalk.replace('{m}', walk(x))) + '</small></span><span class="go">' + ICONS.chevron + '</span></a></li>').join('') + '</ul>' : '') + linkRow(nearLinks(K.q), t.nearAll || UI.en.nearAll) +
-          '<p class="est" style="margin-top:14px">' + esc(K.list.length && K.src !== 'osm' ? t.est : t.nearSrc) + '</p>' + again + office; } }
-  }
-  $('#sheetTop').innerHTML = top; $('#sheet').innerHTML = low; return best; }
-function drawNear(k, best){ const K = NEAR.kinds[k], pts = [[ME.lat, ME.lng], [best.lat, best.lng]], up = best.lat >= ME.lat;      /* the two labels point away from each other */
-  if (!placeMap) placeMap = makeMap('placeMap');
-  placeMap._layer.clearLayers(); placeMap.invalidateSize();
-  /* every other place of the kind within reach is marked with a dot; touching one shows its name */
-  (best.all || []).filter(p => (p[0] !== best.lat || p[1] !== best.lng) && metres(ME, {lat:p[0], lng:p[1]}) * RATES.detour <= NEAR.maxM).slice(0, 80)
-    .forEach(p => L.circleMarker([p[0], p[1]], {radius:7, color:'#fff', weight:2, fillColor:COLORS[K.cat], fillOpacity:.9}).addTo(placeMap._layer).bindTooltip(p[2] || UI[lang].nearName[k], {direction:'top', className:'lbl'}));
-  L.polyline(pts, {color:'#18242a', weight:3, opacity:.55, dashArray:'2 9', lineCap:'round'}).addTo(placeMap._layer);
-  L.circleMarker(pts[0], {radius:8, color:'#fff', weight:3, fillColor:'#1a73e8', fillOpacity:1}).addTo(placeMap._layer)
-    .bindTooltip(UI[lang].nearYou, {permanent:true, direction:up ? 'bottom' : 'top', offset:[0, up ? 10 : -10], className:'lbl'});
-  L.marker(pts[1], {icon:pin(K.cat, glyph(K.icon), true), keyboard:false, zIndexOffset:400}).addTo(placeMap._layer)
-    .bindTooltip(best.name, {permanent:true, direction:up ? 'top' : 'bottom', offset:[0, up ? -17 : 17], className:'lbl'});
-  placeMap._bounds = pts; placeMap.fitBounds(pts.concat((best.others || []).map(x => [x.lat, x.lng])), {paddingTopLeft:[50,70], paddingBottomRight:[50,50], maxZoom:17}); }      /* the next nearest ones are in view too */
-
 const here = () => (location.hash || '#/').replace(/^#$/, '#/');
 let trail = [here()], homeY = 0;      /* trail: the screens opened inside the guide, so Back never leaves it */
 function route(){
-  const mp = location.hash.match(/^#\/p\/([\w-]+)/), mc = location.hash.match(/^#\/g\/(\w+)/), mn = location.hash.match(/^#\/n\/(\w+)/);
-  const p = mp && byId(mp[1]), c = !p && mc && GROUPS[mc[1]] && members(mc[1]).length ? mc[1] : null, nk = mn && NEAR.kinds[mn[1]] ? mn[1] : null;
-  const mr = location.hash.match(/^#\/r\/([\w-]+)/), R = mr && routeById(mr[1]) && routeLegs(routeById(mr[1])).legs.length ? routeById(mr[1]) : null;
-  if (R){ $('#home').hidden = true; $('#cat').hidden = true; $('#place').hidden = false; $('#placeMap').hidden = false; NEARSEEN = '';
-    renderRoute(R); drawRoute(R); scrollTo(0, 0); document.title = tx(R.name) + ' · ' + UI[lang].brand; return; }
-  if (nk){      /* near me: the location is asked for once, when the visitor comes from a picture of the guide */
-    $('#home').hidden = true; $('#cat').hidden = true; $('#place').hidden = false; document.title = UI[lang].nearTitle[nk] + ' · ' + UI[lang].brand;
-    if (!ME && LOC === 'idle' && !ASKED && trail.length > 1 && !(NEAR.kinds[nk].maps && !NEAR.kinds[nk].list.length)){ ASKED = true; scrollTo(0, 0); locate(); return; }
-    if (ME && Date.now() - ME.t > 120000){ ME.t = Date.now(); locate(true); }
-    const best = renderNear(nk); $('#placeMap').hidden = !best; if (best) drawNear(nk, best);
-    if (NEARSEEN !== location.hash){ NEARSEEN = location.hash; scrollTo(0, 0); } return; }
-  NEARSEEN = '';
+  const mp = location.hash.match(/^#\/p\/([\w-]+)/), mc = location.hash.match(/^#\/g\/(\w+)/);
+  const p = mp && byId(mp[1]), c = !p && mc && GROUPS[mc[1]] && members(mc[1]).length ? mc[1] : null;
   const showMap = !!p && p.kind === 'pin' && !p.noDist && CAR !== null;      /* the map is only shown for one fixed place with a known distance */
   $('#home').hidden = !!(p || c); $('#cat').hidden = !c; $('#place').hidden = !p; $('#placeMap').hidden = !showMap;
   if (p){ renderSheet(p); if (showMap) drawPlace(p); scrollTo(0, 0); document.title = tx(p.name) + ' · ' + UI[lang].brand; }
@@ -2501,20 +1967,13 @@ function route(){
   else { scrollTo(0, homeY); document.title = UI[lang].title + ' · ' + UI[lang].brand; }
 }
 document.addEventListener('click', e => {
-  if (e.target.closest('#homelink')){      /* the banner: back to the first screen as it was when the guide was opened */
-    MODE = 'where'; F.q = ''; $('#q').value = ''; homeY = 0; renderChips(); renderHome(); if (here() === '#/'){ e.preventDefault(); scrollTo(0, 0); } return; }
   const back = e.target.closest('.backbtn');
   if (back){ if (trail.length > 1){ e.preventDefault(); history.back(); } return; }
-  if (e.target.closest('#install') && INSTALL){ INSTALL.prompt(); INSTALL = null; return; }      /* "install as an app" */
-  if (e.target.closest('[data-loc]')){ ASKED = true; locate(); return; }      /* "use my location" */
   const car = e.target.closest('.carbtn');      /* the answer to "do you have a car?" */
   if (car){ CAR = car.dataset.car === '1'; try { localStorage.setItem('guide-car', CAR ? '1' : '0'); } catch(e2){} route(); return; }
   if (e.target.closest('#home a.icon, #home a.card')) homeY = scrollY; });
 addEventListener('hashchange', () => { const h = here(); if (trail.length > 1 && trail[trail.length - 2] === h) trail.pop(); else trail.push(h); route(); });
 
-/* the 'Back' bar sits right under the banner */
-function setHH(){ document.documentElement.style.setProperty('--hh', $('header.top').offsetHeight + 'px'); }
-addEventListener('resize', setHH);
 function toast(msg){ const d = document.createElement('div'); d.className = 'toast'; d.textContent = msg; d.setAttribute('role','status'); document.body.appendChild(d); setTimeout(() => d.remove(), 3200); }
 
 function setLang(c){
@@ -2522,8 +1981,6 @@ function setLang(c){
   document.querySelectorAll('[data-i18n]').forEach(n => { n.textContent = t[n.dataset.i18n]; });
   $('#lang').value = c;
   $('#theme').setAttribute('aria-label', t.theme);
-  $('#homelink').setAttribute('aria-label', t.home || UI.en.home); $('#homelink').title = t.home || UI.en.home; setHH();
-  $('#offnote').textContent = t.offNote || UI.en.offNote;
   [placeMap].forEach(m => { if (m && m._locBtn){ m._locBtn.setAttribute('aria-label', t.locate); m._locBtn.title = t.locate; } });
   PLACES.forEach(p => { delete p._hay; }); renderChips(); renderHome(); route();
 }
@@ -2536,21 +1993,6 @@ $('#theme').addEventListener('click', () => { const r = document.documentElement
 try { const th = localStorage.getItem('guide-theme'); if (th === 'light' || th === 'dark') document.documentElement.dataset.theme = th; } catch(e){}
 
 if (DRAFT) $('#draft').hidden = false;
-/* offline: sw.js keeps the page on the phone (needs https) */
-if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')){
-  navigator.serviceWorker.register('sw.js').then(() => { $('#offnote').hidden = false; }).catch(() => {}); }
-const offNow = () => toast(UI[lang].offNow || UI.en.offNow);
-addEventListener('offline', offNow); if (navigator.onLine === false) setTimeout(offNow, 600);
-let CHECKED = Date.now();
-function checkBuild(){ CHECKED = Date.now();
-  fetch('./?b=' + CHECKED, {cache:'no-store'}).then(r => r.ok ? r.text() : '').then(tx => { const m = /const BUILD  = '([^']+)'/.exec(tx);
-    if (!m || m[1] === BUILD) return; let done = ''; try { done = sessionStorage.getItem('guide-build') || ''; } catch(e){}
-    if (done === m[1]) return; try { sessionStorage.setItem('guide-build', m[1]); } catch(e){}      /* never twice for one version */
-    const show = () => location.reload();
-    if (window.caches) caches.open('guide-v1').then(c => c.put('./', new Response(tx, {headers:{'Content-Type':'text/html; charset=utf-8'}}))).then(show, show); else show(); }).catch(() => {}); }
-addEventListener('online', () => { toast(UI[lang].onNow); WXSTATE = 'idle'; wxLoad(); checkBuild(); });
-document.addEventListener('visibilitychange', () => { if (!document.hidden && navigator.onLine !== false && Date.now() - CHECKED > 30 * 6e4){ WXSTATE = 'idle'; wxLoad(); checkBuild(); } });      /* an app left open: looked at again after half an hour */
-wxLoad();
 setLang(lang);
 </script>
 </body>
