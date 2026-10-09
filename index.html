@@ -3,15 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Çanakkale guide map</title>
-<meta name="description" content="Çanakkale Turizm Danışma Bürosu şehir rehberi: gezilecek yerler, ulaşım, yol tarifi. Çanakkale Tourism Information city guide: sights, transport and directions.">
+<title>Çanakkale Şehir Rehberi · City Guide | Turizm Danışma</title>
+<link rel="canonical" href="https://muhit.in/">
+<meta name="description" content="Çanakkale Turizm Danışma Bürosu şehir rehberi: gezilecek yerler, ulaşım ve yol tarifleri. 9 dilde: Türkçe, English, Deutsch, Français, Español, Български, Русский, Ελληνικά, العربية.">
 <!-- While the guide is a draft it is kept out of search engines. Remove the next line when the office has checked the content (and set DRAFT = false below). -->
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#f1f5f6" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#101618" media="(prefers-color-scheme: dark)">
-<meta property="og:title" content="Çanakkale Turizm Danışma · Şehir Rehberi">
-<meta property="og:description" content="Nereye gidebilirim? Bir yere nasıl giderim? Çanakkale için yol tarifleri, 9 dilde.">
+<meta property="og:title" content="Çanakkale Şehir Rehberi · City Guide">
+<meta property="og:description" content="Gezilecek yerler, ulaşım ve yol tarifleri · Sights, transport and directions. 9 dil / 9 languages: TR · EN · DE · FR · ES · BG · RU · EL · AR">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://muhit.in/">
+<meta property="og:site_name" content="Çanakkale Turizm Danışma">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:locale:alternate" content="en_GB">
+<meta property="og:image" content="https://muhit.in/paylas.jpg">
+<meta property="og:image:secure_url" content="https://muhit.in/paylas.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Çanakkale Şehir Rehberi · City Guide · 9 dil / 9 languages">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Çanakkale Şehir Rehberi · City Guide">
+<meta name="twitter:description" content="Gezilecek yerler, ulaşım ve yol tarifleri · Sights, transport and directions. 9 dil / 9 languages.">
+<meta name="twitter:image" content="https://muhit.in/paylas.jpg">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes">
@@ -872,6 +887,13 @@ button.btn{width:100%;cursor:pointer}
 .appbox{margin-top:10px}
 .appbox p{margin:0 0 12px}
 .appbox .btn{margin:0 0 12px}
+.mapdl{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:560px){.mapdl{grid-template-columns:1fr}}
+.mapcard{display:flex;flex-direction:column;gap:6px;padding:10px 10px 14px;border:2px solid var(--line);border-radius:20px;background:var(--panel);text-decoration:none}
+.mapcard:hover{border-color:var(--c)}
+.mapcard img{display:block;width:100%;height:auto;border-radius:12px;background:#fff}
+.mapcard b{font-size:18.5px;line-height:1.25;padding:0 4px}
+.mapcard small{font-size:15.5px;line-height:1.3;color:var(--muted);padding:0 4px}
 .appbox details{margin:0 0 8px;padding:0 14px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
 .appbox summary{padding:14px 0;font-weight:700;font-size:18.5px;cursor:pointer}
 .appbox details .steps{margin:2px 0 14px}
@@ -903,7 +925,7 @@ button.btn{width:100%;cursor:pointer}
       <select class="langsel" id="lang" aria-label="Language"></select>
     </div>
   </header>
-  <section id="home">
+  <section id="home" data-nosnippet>
     <h1 data-i18n="h1"></h1>
     <div class="ask" id="ask" role="tablist">
       <button type="button" class="askbtn" data-m="where" role="tab"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M15.8 8.2l-2.2 5.4-5.4 2.2 2.2-5.4z"></path></svg><span data-i18n="qWhere"></span></button>
@@ -918,23 +940,30 @@ button.btn{width:100%;cursor:pointer}
     <div class="count" id="count" hidden><span id="countText"></span><button type="button" id="clear"></button></div>
     <div id="needs" class="needs"></div>
     <section class="needs appbox" id="appbox" style="--c:var(--accent)" hidden></section>
+    <section class="needs mapsbox" id="maps" style="--c:var(--accent)">
+      <h2><i></i><span data-i18n="mapsT"></span></h2>
+      <div class="mapdl">
+        <a class="mapcard" href="harita-ulasim.png" download="canakkale-ulasim-haritasi.png"><img src="harita-ulasim-k.jpg" alt="" width="800" height="437" loading="lazy"><b data-i18n="mapTr"></b><small><span data-i18n="mapDl"></span> · PNG 1.8 MB</small></a>
+        <a class="mapcard" href="harita-merkez.png" download="canakkale-sehir-merkezi-haritasi.png"><img src="harita-merkez-k.jpg" alt="" width="800" height="437" loading="lazy"><b data-i18n="mapCc"></b><small><span data-i18n="mapDl"></span> · PNG 1.3 MB</small></a>
+      </div>
+    </section>
     <p class="draft" id="draft" hidden data-i18n="draft"></p>
   </section>
 
-  <section id="cat" hidden>
+  <section id="cat" hidden data-nosnippet>
     <div class="bar"><a class="backbtn" id="backHome" href="#/"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg><span data-i18n="back"></span></a></div>
     <h1 id="catTitle"></h1>
     <div id="grid" class="grid"></div>
   </section>
 
-  <section id="place" hidden>
+  <section id="place" hidden data-nosnippet>
     <div class="bar"><a class="backbtn" id="back" href="#/"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg><span data-i18n="back"></span></a></div>
     <article class="sheet" id="sheetTop"></article>
     <div id="placeMap" class="map"></div>
     <article class="sheet" id="sheet"></article>
   </section>
 
-  <footer data-i18n="foot"></footer>
+  <footer data-nosnippet data-i18n="foot"></footer>
   <p class="offnote" id="offnote" hidden></p>
 </div>
 <noscript><p style="padding:16px">This page needs JavaScript.</p></noscript>
@@ -979,7 +1008,7 @@ button.btn{width:100%;cursor:pointer}
    stop          : optional {lat, lng, name:[...]} bus stop to walk to first
    ===================================================================== */
 const DRAFT  = true;
-const BUILD  = '2026-10-07 a';      /* changed with every new version: an open guide that comes back online reloads itself when this differs */
+const BUILD  = '2026-10-09 a';      /* changed with every new version: an open guide that comes back online reloads itself when this differs */
 const LANGS  = ['en','tr','de','fr','es','bg','ru','el','ar'];
 const XLANGS = ['bg','ru','el','ar'];      /* the languages whose place texts live in XL_ROWS */
 const OFFICE = {lat:40.1498833, lng:26.4024356};
@@ -1962,6 +1991,18 @@ tr:{mWalkDol:'Yürüyüş + dolmuş', mTaxiDol:'Taksi + dolmuş', payDriver:'üc
   sDolWalk:'{n} için yürüyün: {d}, {t}.', sDolTaxi:'{n} için taksiye binin: {d}, {t}.', sDolRide:'{n} dolmuşuna binin: {t}. Ücreti şoföre ödeyin.'}
 };
 Object.keys(UI_DOL).forEach(l => { Object.assign(UI[l], UI_DOL[l]); });
+const UI_MAPS = {
+en:{mapsT:'Maps to download', mapTr:'Visitor transport map', mapCc:'City centre map', mapDl:'Download for printing'},
+tr:{mapsT:'İndirilebilir haritalar', mapTr:'Ziyaretçi ulaşım haritası', mapCc:'Şehir merkezi haritası', mapDl:'İndir, baskıya uygun'},
+de:{mapsT:'Karten zum Herunterladen', mapTr:'Verkehrskarte für Besucher', mapCc:'Stadtplan Zentrum', mapDl:'Herunterladen, druckfähig'},
+fr:{mapsT:'Cartes à télécharger', mapTr:'Carte des transports', mapCc:'Plan du centre-ville', mapDl:'Télécharger, imprimable'},
+es:{mapsT:'Mapas para descargar', mapTr:'Mapa de transporte', mapCc:'Mapa del centro', mapDl:'Descargar para imprimir'},
+bg:{mapsT:'Карти за изтегляне', mapTr:'Транспортна карта', mapCc:'Карта на центъра', mapDl:'Изтегляне, за печат'},
+ru:{mapsT:'Карты для скачивания', mapTr:'Транспортная карта', mapCc:'Карта центра города', mapDl:'Скачать для печати'},
+el:{mapsT:'Χάρτες για λήψη', mapTr:'Χάρτης μεταφορών', mapCc:'Χάρτης κέντρου πόλης', mapDl:'Λήψη για εκτύπωση'},
+ar:{mapsT:'خرائط للتنزيل', mapTr:'خريطة المواصلات', mapCc:'خريطة وسط المدينة', mapDl:'تنزيل للطباعة'}
+};
+Object.keys(UI_MAPS).forEach(l => { if (UI[l]) Object.assign(UI[l], UI_MAPS[l]); });
 LANGS.forEach(l => { Object.keys(UI.en).forEach(k => { if (!(k in UI[l])) UI[l][k] = UI.en[k]; }); });      /* not yet translated: English */
 
 /* ============================ end of data ============================ */
@@ -2238,6 +2279,7 @@ function renderApp(){ const t = UI[lang], box = $('#appbox'), ol = a => '<ol cla
 addEventListener('beforeinstallprompt', e => { e.preventDefault(); INSTALL = e; renderApp(); });
 addEventListener('appinstalled', () => { INSTALL = null; $('#appbox').hidden = true; });
 function renderHome(){ const t = UI[lang];
+  $('#maps').hidden = MODE !== 'where' || F.sort || F.walk || F.noferry || F.one;
   $('#appbox').hidden = isApp() || MODE !== 'where' || F.sort || F.walk || F.noferry || F.one; if (!$('#appbox').hidden) renderApp();
   if (MODE === 'how'){ const q = F.q.trim(); $('#count').hidden = !q;
     if (!q){ $('#needs').innerHTML = '<section style="--c:var(--accent)"><h2><i></i>' + esc(t.popular) + '</h2>' + tiles(POPULAR, true) + '</section>'; return; }
