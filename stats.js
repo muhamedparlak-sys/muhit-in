@@ -2,7 +2,7 @@
    CODE is the site code chosen when the GoatCounter account was opened: the part before ".goatcounter.com".
    While CODE is empty nothing is loaded and nothing is counted. */
 (function(){
-  var CODE = '';
+  var CODE = 'muhitin';
   if (!CODE) return;
   if (location.hostname !== 'muhit.in' && location.hostname !== 'www.muhit.in') return;      /* previews and copies are not counted */
   var q = window.guideQ || [], ready = false;
