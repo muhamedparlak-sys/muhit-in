@@ -910,6 +910,10 @@ button.btn{width:100%;cursor:pointer}
 .tips .hours{margin:0 0 10px}
 .tips .tipnote{margin:10px 0 0}
 .tips .tipnote a{color:inherit}
+.photo{margin:0 0 14px}
+.photo img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;border-radius:16px;background:var(--chip)}
+.photo figcaption{margin-top:5px;font-size:13.5px;line-height:1.35;color:var(--muted)}
+.photo a{text-decoration:none}
 .sheet .how.gap{margin-top:20px}
 .sheet .none{margin:4px 0 12px}
 .btn.wrong{display:none;width:auto;min-height:46px;margin:22px 0 0;padding:0 16px;font-size:16.5px;font-weight:650;color:var(--muted)}
@@ -1015,7 +1019,7 @@ button.btn{width:100%;cursor:pointer}
    stop          : optional {lat, lng, name:[...]} bus stop to walk to first
    ===================================================================== */
 const DRAFT  = false;
-const BUILD  = '2026-10-11 b';      /* changed with every new version: an open guide that comes back online reloads itself when this differs */
+const BUILD  = '2026-10-11 c';      /* changed with every new version: an open guide that comes back online reloads itself when this differs */
 const LANGS  = ['en','tr','de','fr','es','bg','ru','el','ar'];
 const XLANGS = ['bg','ru','el','ar'];      /* the languages whose place texts live in XL_ROWS */
 const OFFICE = {lat:40.1498833, lng:26.4024356};
@@ -2026,21 +2030,66 @@ el:{mapsT:'Χάρτες για λήψη', mapTr:'Χάρτης μεταφορών
 ar:{mapsT:'خرائط للتنزيل', mapTr:'خريطة المواصلات', mapCc:'خريطة وسط المدينة', mapDl:'تنزيل للطباعة'}
 };
 Object.keys(UI_MAPS).forEach(l => { if (UI[l]) Object.assign(UI[l], UI_MAPS[l]); });
+/* ---- photographs ----
+   One photograph per place, kept as foto/<place id>.webp. All are freely licensed pictures from Wikimedia Commons;
+   the licences ask for the photographer and the licence to be named, which the line under each picture does (foto/KAYNAKLAR.txt lists them all).
+   by: photographer, lic: licence, src: the picture's page on Wikimedia Commons. A place without an entry simply has no picture. */
+const PHOTOS = {
+  'trojan-horse':{by:'YesimMutlu', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:CanakkaleTrojanHorse.jpg'},
+  'aynali-bazaar':{by:'Dardanel17', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:Aynali-carsi.jpg'},
+  'naval-museum':{by:'Dosseman', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:%C3%87anakkale_Naval_Museum_in_2017_Unidentified_3582.jpg'},
+  'city-museum':{by:'Kızıldeniz', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:%C3%87anakkale_Kent_M%C3%BCzesi.jpg'},
+  'troy-museum':{by:'Troya Müzesi', lic:'CC BY-SA 2.0', src:'https://commons.wikimedia.org/wiki/File:Museum_of_Troy_(53022400001).jpg'},
+  'c-kilitbahir':{by:'Alicembasli', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:Kilitbahir_Kalesi_09.jpg'},
+  'bozcaada':{by:'Geheh3375', lic:'CC0', src:'https://commons.wikimedia.org/wiki/File:Bozcaada_Harbor_View_with_Boats.jpg'},
+  'c-saat':{by:'Sharon Hahn Darlin', lic:'CC BY 2.0', src:'https://commons.wikimedia.org/wiki/File:%C3%87anakkale,_Turkey_-_Clock_Tower_and_Plaza_March_2022.jpg'},
+  'm-abide':{by:'Kuzey ege Bayraktar', lic:'CC0', src:'https://commons.wikimedia.org/wiki/File:%C3%87anakkale_%C5%9Eehitler_Abidesi_01.10.2024_Panoramio.jpg'},
+  'm-57':{by:'Dudva', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:57th_Infantry_Regiment_Memorial.jpg'},
+  'm-conkbayiri':{by:'Dennis G. Jarvis', lic:'CC BY-SA 2.0', src:'https://commons.wikimedia.org/wiki/File:Turkey-2985_(2217222824)_(2).jpg'},
+  'm-kabatepe':{by:'Aziz Akbiyik', lic:'CC BY-SA 3.0', src:'https://commons.wikimedia.org/wiki/File:Kabatepe_-_panoramio.jpg'},
+  'm-anzac':{by:'Adam Jones', lic:'CC BY-SA 2.0', src:'https://commons.wikimedia.org/wiki/File:View_of_Anzac_Cove_-_Gallipoli_Peninsula_-_Dardanelles_-_Turkey_-_01_(5734713946).jpg'},
+  'm-ariburnu':{by:'Sezenkerem', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:Ari_Burnu_Cemetery_2.jpg'},
+  'm-lonepine':{by:'Dudva', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:Lone_Pine_Cemetery.jpg'},
+  'm-seyit':{by:'Alicembasli', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:Seyit_Onba%C5%9F%C4%B1_Monument_02.jpg'},
+  'm-mecidiye':{by:'Dosseman', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:Rumeli_Mecidiye_Tabyas%C4%B1_(Bastion)_in_2014_8005.jpg'},
+  'm-namazgah':{by:'Dosseman', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:Namazgah_Tabyas%C4%B1_(Bastion)_in_2009_6543.jpg'},
+  'm-helles':{by:'Raicem', lic:'CC BY 4.0', src:'https://commons.wikimedia.org/wiki/File:Helles_Memorial_in_Gallipoli.jpg'},
+  'm-mehmetcik':{by:'Jorge Láscar', lic:'CC BY 2.0', src:'https://commons.wikimedia.org/wiki/File:Mehmet%C3%A7i%C4%9Fe_Sayg%C4%B1_An%C4%B1t%C4%B1_(8708676953).jpg'},
+  'a-assos':{by:'Dosseman', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:Assos_Athena_temple_029.jpg'},
+  'a-zeus':{by:'Akinic', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:Adatepe_Zeus_Altar%C4%B1_2024-04-08_09.43.13_1791057758.jpeg'},
+  'a-troas':{by:'Horacio36', lic:'CC BY-SA 3.0', src:'https://commons.wikimedia.org/wiki/File:Troas_Therme_2.JPG'},
+  'c-mevlevi':{by:'Arif miletli', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:Gelibolu_mevlevihanesi.jpg'},
+  'c-bridge':{by:'Zafer', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:1915_%C3%87anakkale_Bridge_20220327_(4).jpg'},
+  'c-bozcaada':{by:'Kadı Kadı', lic:'CC BY 2.0', src:'https://commons.wikimedia.org/wiki/File:Bozcaada_Castle_2_(31072023).jpg'},
+  'c-babakale':{by:'Özgür Arda BAYRAM', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:Babakale_Kalesi_20250830_114214.jpg'},
+  'n-ayazmapark':{by:'Alfinkedisi', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:Ayazma_(3).jpg'},
+  'n-aydincik':{by:'Aziz Akbiyik', lic:'CC BY-SA 3.0', src:'https://commons.wikimedia.org/wiki/File:G%C3%B6k%C3%A7eada_Ayd%C4%B1nc%C4%B1k_Plaj%C4%B1_-_panoramio_(1).jpg'},
+  'n-yildiz':{by:'Biologicalkitty88', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:%C3%87anakkale_G%C3%B6k%C3%A7eada_Y%C4%B1ld%C4%B1z_koyu_2019_A%C4%9Fustos.jpg'},
+  'v-adatepe':{by:'Claus P. Heibel', lic:'CC BY 2.0', src:'https://commons.wikimedia.org/wiki/File:Adatepe_K%C3%B6y%C3%BC_(48907883512).jpg'},
+  'v-kucukkuyu':{by:'Marynakaratas', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:K%C3%BC%C3%A7%C3%BCkkuyu_liman.jpg'},
+  'v-bolayir':{by:'Aziz Akbiyik', lic:'CC BY-SA 3.0', src:'https://commons.wikimedia.org/wiki/File:Bolay%C4%B1r_plaj_-_panoramio.jpg'},
+  'v-kalekoy':{by:'Biologicalkitty88', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:%C3%87anakkale_G%C3%B6k%C3%A7eada_Kalek%C3%B6y_2019_A%C4%9Fustos_3.jpg'},
+  'v-zeytinli':{by:'Aziz Akbiyik', lic:'CC BY-SA 3.0', src:'https://commons.wikimedia.org/wiki/File:G%C3%B6k%C3%A7eada_Zeytinlik%C3%B6y_-_panoramio.jpg'},
+  'v-tepekoy':{by:'Adam Jones', lic:'CC BY-SA 2.0', src:'https://commons.wikimedia.org/wiki/File:Village_Scene_-_Tepekoy_-_Gokceada_Island_-_Turkey_-_03_(5741116770).jpg'},
+  'troy-site':{by:'Barrowbob', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:Hisarl%C4%B1k_(Troy).jpg'},
+  'c-cimenlik':{by:'Maarten Sepp', lic:'CC BY-SA 3.0', src:'https://commons.wikimedia.org/wiki/File:%C3%87anakkale,_Turkey._Cimenlik_Castle,_now_military_museum_-_panoramio.jpg'},
+  'gokceada':{by:'Ggia', lic:'CC BY-SA 3.0', src:'https://commons.wikimedia.org/wiki/File:20100524_Kardamos_beach_Imbros_G%C3%B6k%C3%A7eada_Turkey.jpg'}
+};
 /* ---- visiting hours ----
    The places listed here (and those marked 'in' or 'hrs' in SUIT) show "check the closing time before you go"
    and a button that opens the place on Google, where today's opening hours are shown. No hours are kept in this page. */
 const HOURS_ASK = ['synagogue','c-kilitbahir','c-nusret','c-seddulbahir','c-gelibolu','c-mevlevi','c-bozcaada','c-babakale',
   'a-assos','a-smintheion','a-troas','a-parion','m-kabatepe','m-salimmutlu','m-bigali'];
 const UI_ADD = {
-en:{hrsBtn:'See opening hours on Google', wrong:'This information is wrong', wrongOk:'Thank you. Your report has been counted.'},
-tr:{hrsBtn:'Saatleri Google’da gör', wrong:'Bu bilgi hatalı', wrongOk:'Teşekkürler. Bildiriminiz kaydedildi.'},
-de:{hrsBtn:'Öffnungszeiten bei Google ansehen', wrong:'Diese Angabe ist falsch', wrongOk:'Danke. Ihre Meldung wurde gezählt.'},
-fr:{hrsBtn:'Voir les horaires sur Google', wrong:'Cette information est erronée', wrongOk:'Merci. Votre signalement a été enregistré.'},
-es:{hrsBtn:'Ver el horario en Google', wrong:'Esta información es incorrecta', wrongOk:'Gracias. Su aviso ha sido registrado.'},
-bg:{hrsBtn:'Вижте работното време в Google', wrong:'Тази информация е грешна', wrongOk:'Благодарим. Сигналът ви е отчетен.'},
-ru:{hrsBtn:'Часы работы в Google', wrong:'Эта информация неверна', wrongOk:'Спасибо. Ваше сообщение учтено.'},
-el:{hrsBtn:'Δείτε το ωράριο στο Google', wrong:'Αυτή η πληροφορία είναι λάθος', wrongOk:'Ευχαριστούμε. Η αναφορά σας καταγράφηκε.'},
-ar:{hrsBtn:'عرض ساعات العمل على Google', wrong:'هذه المعلومة غير صحيحة', wrongOk:'شكرًا لكم. تم تسجيل بلاغكم.'}
+en:{photoBy:'Photo: {a}', hrsBtn:'See opening hours on Google', wrong:'This information is wrong', wrongOk:'Thank you. Your report has been counted.'},
+tr:{photoBy:'Fotoğraf: {a}', hrsBtn:'Saatleri Google’da gör', wrong:'Bu bilgi hatalı', wrongOk:'Teşekkürler. Bildiriminiz kaydedildi.'},
+de:{photoBy:'Foto: {a}', hrsBtn:'Öffnungszeiten bei Google ansehen', wrong:'Diese Angabe ist falsch', wrongOk:'Danke. Ihre Meldung wurde gezählt.'},
+fr:{photoBy:'Photo : {a}', hrsBtn:'Voir les horaires sur Google', wrong:'Cette information est erronée', wrongOk:'Merci. Votre signalement a été enregistré.'},
+es:{photoBy:'Foto: {a}', hrsBtn:'Ver el horario en Google', wrong:'Esta información es incorrecta', wrongOk:'Gracias. Su aviso ha sido registrado.'},
+bg:{photoBy:'Снимка: {a}', hrsBtn:'Вижте работното време в Google', wrong:'Тази информация е грешна', wrongOk:'Благодарим. Сигналът ви е отчетен.'},
+ru:{photoBy:'Фото: {a}', hrsBtn:'Часы работы в Google', wrong:'Эта информация неверна', wrongOk:'Спасибо. Ваше сообщение учтено.'},
+el:{photoBy:'Φωτογραφία: {a}', hrsBtn:'Δείτε το ωράριο στο Google', wrong:'Αυτή η πληροφορία είναι λάθος', wrongOk:'Ευχαριστούμε. Η αναφορά σας καταγράφηκε.'},
+ar:{photoBy:'الصورة: {a}', hrsBtn:'عرض ساعات العمل على Google', wrong:'هذه المعلومة غير صحيحة', wrongOk:'شكرًا لكم. تم تسجيل بلاغكم.'}
 };
 Object.keys(UI_ADD).forEach(l => { if (UI[l]) Object.assign(UI[l], UI_ADD[l]); });
 LANGS.forEach(l => { Object.keys(UI.en).forEach(k => { if (!(k in UI[l])) UI[l][k] = UI.en[k]; }); });      /* not yet translated: English */
@@ -2363,10 +2412,13 @@ const nameLinks = (q, mode) => { const e = encodeURIComponent(q); return [
 const asksHours = p => !p.hours && ((SUIT[p.id] && (SUIT[p.id].in || SUIT[p.id].hrs)) || HOURS_ASK.includes(p.id));
 const hoursLink = p => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.q || p.name[1].replace(/\u00ad/g, '').replace(/\s*\(.*\)$/, '') + ', Çanakkale');
 const WRONG = {};      /* places reported as wrong while the page is open: one report each */
+/* the photograph of a place with its photographer and licence; without a connection the picture is left out */
+const photoOf = (p, n) => { const f = PHOTOS[p.id]; if (!f) return '';
+  return '<figure class="photo"><img src="foto/' + p.id + '.webp" alt="' + esc(n) + '" width="1200" height="800" decoding="async" onerror="this.parentNode.remove()"><figcaption><a target="_blank" rel="noopener" href="' + esc(f.src) + '">' + esc(UI[lang].photoBy.replace('{a}', f.by)) + ' · ' + esc(f.lic) + ' · Wikimedia Commons</a></figcaption></figure>'; };
 function renderSheet(p){
   const t = UI[lang], c = p.cat, n = tx(p.name), v = viaOf(p);
   const desc = p.desc ? tx(p.desc) : p.noDist ? fillT(t.cDesc, {n}) : p.x ? (v ? fillT(CAR === true ? t.xDescCar : t.xDesc, {d:short(v)}) : t.xDescC) : fillT(t.dDesc, {n});
-  let h = '<div class="cat" style="--c:var(--' + c + ')"><i></i>' + esc(t.cats[c]) + '</div><h2>' + esc(n) + '</h2><p>' + esc(desc) + '</p>';
+  let h = '<div class="cat" style="--c:var(--' + c + ')"><i></i>' + esc(t.cats[c]) + '</div><h2>' + esc(n) + '</h2><p>' + esc(desc) + '</p>' + photoOf(p, n);
   const fs = facts(p); if (fs.length) h += '<ul class="facts">' + fs.map(f => '<li>' + esc(f) + '</li>').join('') + '</ul>';
   if (p.all) h += '<div class="hours all"><p>' + esc(tx(p.all.note)) + '</p><a class="btn primary" target="_blank" rel="noopener" href="' + esc(nearLinks(p.all.q)[isIOS ? 1 : 0][1]) + '">' + esc(tx(p.all.btn)) + '</a></div>';
   h += carBox();
