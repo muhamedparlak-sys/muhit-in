@@ -26,6 +26,9 @@
 <meta name="twitter:title" content="Çanakkale Şehir Rehberi · City Guide">
 <meta name="twitter:description" content="Gezilecek yerler, ulaşım ve yol tarifleri · Sights, transport and directions. 9 dil / 9 languages.">
 <meta name="twitter:image" content="https://muhit.in/paylas.jpg">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://muhit.in/#site","url":"https://muhit.in/","name":"Çanakkale Şehir Rehberi","alternateName":"Çanakkale City Guide","inLanguage":["tr","en","de","fr","es","bg","ru","el","ar"],"publisher":{"@id":"https://muhit.in/#office"}},{"@type":"TouristInformationCenter","@id":"https://muhit.in/#office","name":"Çanakkale Turizm Danışma Bürosu","alternateName":"Çanakkale Tourism Information Office","url":"https://muhit.in/","logo":"https://muhit.in/icon-512.png","image":"https://muhit.in/paylas.jpg","address":{"@type":"PostalAddress","streetAddress":"İskele Meydanı","addressLocality":"Çanakkale","addressCountry":"TR"},"geo":{"@type":"GeoCoordinates","latitude":40.1498833,"longitude":26.4024356}}]}</script>
+<script>window.GUIDE_APP = true; window.guideQ = [];</script>
+<script src="stats.js" async></script>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes">
@@ -909,6 +912,9 @@ button.btn{width:100%;cursor:pointer}
 .tips .tipnote a{color:inherit}
 .sheet .how.gap{margin-top:20px}
 .sheet .none{margin:4px 0 12px}
+.btn.wrong{display:none;width:auto;min-height:46px;margin:22px 0 0;padding:0 16px;font-size:16.5px;font-weight:650;color:var(--muted)}
+.stats .btn.wrong{display:inline-flex}
+.btn.wrong[disabled]{opacity:.55;cursor:default}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:2000;padding:10px 16px;border-radius:20px;background:var(--text);color:var(--bg);font-size:17px;font-weight:600}
 </style>
 </head>
@@ -1009,7 +1015,7 @@ button.btn{width:100%;cursor:pointer}
    stop          : optional {lat, lng, name:[...]} bus stop to walk to first
    ===================================================================== */
 const DRAFT  = false;
-const BUILD  = '2026-10-11 a';      /* changed with every new version: an open guide that comes back online reloads itself when this differs */
+const BUILD  = '2026-10-11 b';      /* changed with every new version: an open guide that comes back online reloads itself when this differs */
 const LANGS  = ['en','tr','de','fr','es','bg','ru','el','ar'];
 const XLANGS = ['bg','ru','el','ar'];      /* the languages whose place texts live in XL_ROWS */
 const OFFICE = {lat:40.1498833, lng:26.4024356};
@@ -1878,7 +1884,7 @@ en:{near:'Near me', nearAll:'See all of them in your maps app', home:'First scre
   nearAsk:'Allow location access to see the one nearest to you. Your location is used only on this page and is not stored.', nearBtn:'Use my location', nearWait:'Finding your location…', nearLoad:'Looking for places near you…',
   nearDenied:'Location access was not given. Allow it in your browser settings and try again, or search in your maps app.', nearNone:'No place was found close to you. Your maps app can search around you.',
   nearYou:'You are here', nearMore:'Others nearby', nearOffice:'Nearest to our office', nearSrc:'Places come from OpenStreetMap and may be incomplete. Distances and times are estimates.', nearAgain:'Update my location'},
-tr:{near:'Yakınımda', nearAll:'Tümünü harita uygulamanızda görün', home:'Ana sayfa', goesT:'Bu duraktan nereye gidilir', goesN:'Hatlar belediyenin listesine göredir. Binmeden önce otobüsün tabelasına bakın ya da şoföre sorun.', offNote:'Bu rehber bir kez açıldıktan sonra internetsiz de açılır. Harita, hava durumu ve yol tarifi için bağlantı gerekir.', offNow:'Çevrimdışısınız: kayıtlı rehber gösteriliyor. Harita, hava durumu ve yol tarifi için internet gerekir.', nearMaps:'Bunun için en doğru sonucu harita uygulamanız verir: aşağıdaki düğme çevrenizdeki en yakın olanları gösterir.', nearName:{pharmacy:'Eczane', taxi:'Taksi durağı', busstop:'Otobüs durağı', mosque:'Cami'}, nearTitle:{pharmacy:'En yakın eczane', taxi:'En yakın taksi durağı', busstop:'En yakın otobüs durağı', mosque:'En yakın cami'},
+tr:{near:'Yakınımda', nearAll:'Tümünü harita uygulamanızda görün', home:'Ana sayfa', goesT:'Bu duraktan nereye gidilir', goesN:'Hatlar belediyenin listesine göredir. Binmeden önce otobüsün tabelasına bakın ya da şoföre sorun.', offNote:'Bu sayfayı bir kez açtıktan sonra internet olmadan da kullanabilirsiniz. Harita, hava durumu ve yol tarifi için internet bağlantısı gerekir.', offNow:'İnternet bağlantınız yok: rehberin kayıtlı hâli gösteriliyor. Harita, hava durumu ve yol tarifi için internet bağlantısı gerekir.', nearMaps:'Bunun için en doğru sonucu harita uygulamanız verir: aşağıdaki düğme çevrenizdeki en yakın olanları gösterir.', nearName:{pharmacy:'Eczane', taxi:'Taksi durağı', busstop:'Otobüs durağı', mosque:'Cami'}, nearTitle:{pharmacy:'En yakın eczane', taxi:'En yakın taksi durağı', busstop:'En yakın otobüs durağı', mosque:'En yakın cami'},
   nearAsk:'Size en yakın olanı görmek için konum erişimine izin verin. Konumunuz yalnızca bu sayfada kullanılır, kaydedilmez.', nearBtn:'Konumumu kullan', nearWait:'Konumunuz alınıyor…', nearLoad:'Yakınınızdaki yerler aranıyor…',
   nearDenied:'Konum izni verilmedi. Tarayıcı ayarlarından izin verip yeniden deneyin ya da harita uygulamanızda arayın.', nearNone:'Yakınınızda kayıtlı bir yer bulunamadı. Harita uygulamanız çevrenizde arayabilir.',
   nearYou:'Buradasınız', nearMore:'Yakındaki diğerleri', nearOffice:'Büroya en yakın', nearSrc:'Yerler OpenStreetMap verisidir; eksik olabilir. Mesafe ve süreler tahminidir.', nearAgain:'Konumumu güncelle'},
@@ -1995,8 +2001,8 @@ en:{appT:'Add the guide to your phone', appP:'Put the guide on your home screen 
   appBtn:'Install as an app', appIosT:'iPhone and iPad (Safari)', appAndT:'Android (Chrome)', appN:'Maps, the weather and directions still need the internet.', onNow:'You are back online: the guide is being updated.',
   appIos:['Tap the Share button at the bottom of Safari (a square with an arrow pointing up).','Scroll down and choose “Add to Home Screen”.','Tap “Add”. The guide appears on your home screen.'],
   appAnd:['Tap the menu at the top right of Chrome (three dots).','Choose “Add to Home screen” or “Install app”.','Tap “Install” or “Add”. The guide appears on your home screen.']},
-tr:{appT:'Rehberi telefonunuza ekleyin', appP:'Rehberi ana ekranınıza ekleyin, bir uygulama gibi açın. Bir kez açıldıktan sonra internetsiz de çalışır; bağlantı gelince kendini günceller.',
-  appBtn:'Uygulama olarak yükle', appIosT:'iPhone ve iPad (Safari)', appAndT:'Android (Chrome)', appN:'Harita, hava durumu ve yol tarifi için yine internet gerekir.', onNow:'Yeniden çevrimiçisiniz: rehber güncelleniyor.',
+tr:{appT:'Rehberi telefonunuza ekleyin', appP:'Rehberi ana ekranınıza ekleyip bir uygulama gibi açabilirsiniz. Bir kez açtıktan sonra internet olmadan da kullanabilirsiniz; internete bağlandığınızda rehber kendiliğinden güncellenir.',
+  appBtn:'Uygulama olarak yükle', appIosT:'iPhone ve iPad (Safari)', appAndT:'Android (Chrome)', appN:'Harita, hava durumu ve yol tarifi için internet bağlantısı gerekir.', onNow:'İnternet bağlantınız geri geldi: rehber güncelleniyor.',
   appIos:['Safari’nin altındaki Paylaş düğmesine dokunun (yukarı oklu kare).','Aşağı kaydırıp “Ana Ekrana Ekle”yi seçin.','“Ekle”ye dokunun. Rehber ana ekranınızda görünür.'],
   appAnd:['Chrome’un sağ üstündeki menüye dokunun (üç nokta).','“Ana ekrana ekle” ya da “Uygulamayı yükle”yi seçin.','“Yükle” ya da “Ekle”ye dokunun. Rehber ana ekranınızda görünür.']}
 };
@@ -2020,6 +2026,23 @@ el:{mapsT:'Χάρτες για λήψη', mapTr:'Χάρτης μεταφορών
 ar:{mapsT:'خرائط للتنزيل', mapTr:'خريطة المواصلات', mapCc:'خريطة وسط المدينة', mapDl:'تنزيل للطباعة'}
 };
 Object.keys(UI_MAPS).forEach(l => { if (UI[l]) Object.assign(UI[l], UI_MAPS[l]); });
+/* ---- visiting hours ----
+   The places listed here (and those marked 'in' or 'hrs' in SUIT) show "check the closing time before you go"
+   and a button that opens the place on Google, where today's opening hours are shown. No hours are kept in this page. */
+const HOURS_ASK = ['synagogue','c-kilitbahir','c-nusret','c-seddulbahir','c-gelibolu','c-mevlevi','c-bozcaada','c-babakale',
+  'a-assos','a-smintheion','a-troas','a-parion','m-kabatepe','m-salimmutlu','m-bigali'];
+const UI_ADD = {
+en:{hrsBtn:'See opening hours on Google', wrong:'This information is wrong', wrongOk:'Thank you. Your report has been counted.'},
+tr:{hrsBtn:'Saatleri Google’da gör', wrong:'Bu bilgi hatalı', wrongOk:'Teşekkürler. Bildiriminiz kaydedildi.'},
+de:{hrsBtn:'Öffnungszeiten bei Google ansehen', wrong:'Diese Angabe ist falsch', wrongOk:'Danke. Ihre Meldung wurde gezählt.'},
+fr:{hrsBtn:'Voir les horaires sur Google', wrong:'Cette information est erronée', wrongOk:'Merci. Votre signalement a été enregistré.'},
+es:{hrsBtn:'Ver el horario en Google', wrong:'Esta información es incorrecta', wrongOk:'Gracias. Su aviso ha sido registrado.'},
+bg:{hrsBtn:'Вижте работното време в Google', wrong:'Тази информация е грешна', wrongOk:'Благодарим. Сигналът ви е отчетен.'},
+ru:{hrsBtn:'Часы работы в Google', wrong:'Эта информация неверна', wrongOk:'Спасибо. Ваше сообщение учтено.'},
+el:{hrsBtn:'Δείτε το ωράριο στο Google', wrong:'Αυτή η πληροφορία είναι λάθος', wrongOk:'Ευχαριστούμε. Η αναφορά σας καταγράφηκε.'},
+ar:{hrsBtn:'عرض ساعات العمل على Google', wrong:'هذه المعلومة غير صحيحة', wrongOk:'شكرًا لكم. تم تسجيل بلاغكم.'}
+};
+Object.keys(UI_ADD).forEach(l => { if (UI[l]) Object.assign(UI[l], UI_ADD[l]); });
 LANGS.forEach(l => { Object.keys(UI.en).forEach(k => { if (!(k in UI[l])) UI[l][k] = UI.en[k]; }); });      /* not yet translated: English */
 
 /* ============================ end of data ============================ */
@@ -2336,6 +2359,10 @@ const isOpen = p => { if (!p.hours) return true; const n = trNow(); return p.hou
 const nameLinks = (q, mode) => { const e = encodeURIComponent(q); return [
   ['gName', 'https://www.google.com/maps/dir/?api=1&destination=' + e + '&travelmode=' + G_MODE[mode]],
   ['aName', 'https://maps.apple.com/?daddr=' + e + '&dirflg=' + A_MODE[mode]], findLinks(q)[2]]; };
+/* visiting hours are not kept here: the place is opened on Google, which shows whether it is open today */
+const asksHours = p => !p.hours && ((SUIT[p.id] && (SUIT[p.id].in || SUIT[p.id].hrs)) || HOURS_ASK.includes(p.id));
+const hoursLink = p => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.q || p.name[1].replace(/\u00ad/g, '').replace(/\s*\(.*\)$/, '') + ', Çanakkale');
+const WRONG = {};      /* places reported as wrong while the page is open: one report each */
 function renderSheet(p){
   const t = UI[lang], c = p.cat, n = tx(p.name), v = viaOf(p);
   const desc = p.desc ? tx(p.desc) : p.noDist ? fillT(t.cDesc, {n}) : p.x ? (v ? fillT(CAR === true ? t.xDescCar : t.xDesc, {d:short(v)}) : t.xDescC) : fillT(t.dDesc, {n});
@@ -2355,7 +2382,7 @@ function renderSheet(p){
       cta(mine(o.links), o.cta || (o.mode === 'bus' && p.stop ? t.openStop : t.start)); }
   else { if (v && CAR === false) h += seeCard(p.via); h += cta(mine(links), routed ? t.start : t.findIn); }
   if (p.hours && !closed) h += '<div class="hours"><p>' + esc(fillT(t.dutyHours, {a:p.hours.from, b:p.hours.to})) + '</p>' + list + '</div>';
-  if (!p.hours && SUIT[p.id] && (SUIT[p.id].in || SUIT[p.id].hrs)) h += '<div class="hours"><p>' + esc(t.pCheck) + '</p></div>';
+  if (asksHours(p)) h += '<div class="hours"><p>' + esc(t.pCheck) + '</p><a class="btn" target="_blank" rel="noopener" data-stat="saat/' + p.id + '" href="' + esc(hoursLink(p)) + '">' + esc(t.hrsBtn) + '</a></div>';
   $('#sheetTop').innerHTML = h; h = '';
   if (ops.length) h += '<div class="how">' + esc(t.how) + '</div><div class="opts" style="--c:var(--' + c + ')">' + ops.map((o, i) =>
       '<details class="opt"' + (i === 0 && !closed ? ' open' : '') + '><summary><span class="ico">' + ICONS[o.mode] + '</span><span class="txt"><b>' + esc(o.title) + '</b>' + (i === 0 && ops.length > 1 && !closed ? '<span class="rec">' + esc(t.rec) + '</span>' : '') + '</span><span class="val"><b>' + esc(o.time) + '</b></span><span class="go">' + ICONS.chevron + '</span>' + (o.note ? '<span class="note">' + esc(o.note) + '</span>' : '') + '</summary><div class="body">' +
@@ -2366,6 +2393,7 @@ function renderSheet(p){
   h += (p.see || []).map(seeCard).join('');
   if (hasFerry(p) || p.group === 'ferry' || ops.some(o => o.mode === 'ferry'))
     h += '<div class="gdu"><div class="how">' + esc(t.gduT) + '</div><p>' + esc(t.gduP) + '</p><div class="apps"><a class="btn" target="_blank" rel="noopener" href="' + FERRY_SITE.times + '">' + esc(t.gduTimes) + '</a><a class="btn" target="_blank" rel="noopener" href="' + FERRY_SITE.fares + '">' + esc(t.gduFares) + '</a></div></div>';
+  h += '<button type="button" class="btn wrong" data-wrong="' + p.id + '"' + (WRONG[p.id] ? ' disabled' : '') + '>' + ICONS.alert + '<span>' + esc(t.wrong) + '</span></button>';
   $('#sheet').innerHTML = h;
 }
 
@@ -2544,6 +2572,12 @@ function drawNear(k, best){ const K = NEAR.kinds[k], pts = [[ME.lat, ME.lng], [b
     .bindTooltip(best.name, {permanent:true, direction:up ? 'top' : 'bottom', offset:[0, up ? -17 : 17], className:'lbl'});
   placeMap._bounds = pts; placeMap.fitBounds(pts.concat((best.others || []).map(x => [x.lat, x.lng])), {paddingTopLeft:[50,70], paddingBottomRight:[50,50], maxZoom:17}); }      /* the next nearest ones are in view too */
 
+/* ---------- visitor counting ----------
+   stats.js, a separate small file, holds the GoatCounter site code and does the sending; while its code is empty, or offline, nothing is counted.
+   No cookies and no personal data. A screen is counted as /<language>/<screen>, e.g. /tr/p/troy-site, so the panel shows the place and the language. */
+function stat(path, title, event){ try { if (window.guideStats) window.guideStats(path, title, !!event); else if (window.guideQ && window.guideQ.length < 60) window.guideQ.push([path, title, !!event]); } catch(e){} }
+let COUNTED = '';
+function countView(){ const k = '/' + lang + here().slice(1); if (k === COUNTED) return; COUNTED = k; stat(k, document.title); }
 const here = () => (location.hash || '#/').replace(/^#$/, '#/');
 let trail = [here()], homeY = 0;      /* trail: the screens opened inside the guide, so Back never leaves it */
 function route(){
@@ -2572,10 +2606,13 @@ document.addEventListener('click', e => {
   if (back){ if (trail.length > 1){ e.preventDefault(); history.back(); } return; }
   if (e.target.closest('#install') && INSTALL){ INSTALL.prompt(); INSTALL = null; return; }      /* "install as an app" */
   if (e.target.closest('[data-loc]')){ ASKED = true; locate(); return; }      /* "use my location" */
+  const wr = e.target.closest('[data-wrong]');      /* "this information is wrong": counted once per place, no text is asked for */
+  if (wr){ const id = wr.dataset.wrong, P = byId(id); if (!WRONG[id]){ WRONG[id] = true; stat('hatali/' + id, 'Bilgi hatalı: ' + (P ? P.name[1].replace(/\u00ad/g, '') : id) + ' (' + lang + ')', true); } wr.disabled = true; toast(UI[lang].wrongOk); return; }
+  const st = e.target.closest('[data-stat]'); if (st) stat(st.dataset.stat, '', true);
   const car = e.target.closest('.carbtn');      /* the answer to "do you have a car?" */
   if (car){ CAR = car.dataset.car === '1'; try { localStorage.setItem('guide-car', CAR ? '1' : '0'); } catch(e2){} route(); return; }
   if (e.target.closest('#home a.icon, #home a.card')) homeY = scrollY; });
-addEventListener('hashchange', () => { const h = here(); if (trail.length > 1 && trail[trail.length - 2] === h) trail.pop(); else trail.push(h); route(); });
+addEventListener('hashchange', () => { const h = here(); if (trail.length > 1 && trail[trail.length - 2] === h) trail.pop(); else trail.push(h); route(); countView(); });
 
 /* the 'Back' bar sits right under the banner */
 function setHH(){ document.documentElement.style.setProperty('--hh', $('header.top').offsetHeight + 'px'); }
@@ -2590,7 +2627,7 @@ function setLang(c){
   $('#homelink').setAttribute('aria-label', t.home || UI.en.home); $('#homelink').title = t.home || UI.en.home; setHH();
   $('#offnote').textContent = t.offNote || UI.en.offNote;
   [placeMap].forEach(m => { if (m && m._locBtn){ m._locBtn.setAttribute('aria-label', t.locate); m._locBtn.title = t.locate; } });
-  PLACES.forEach(p => { delete p._hay; }); renderChips(); renderHome(); route();
+  PLACES.forEach(p => { delete p._hay; }); renderChips(); renderHome(); route(); countView();
 }
 LANGS.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = UI[c].full; o.lang = c; $('#lang').appendChild(o); });
 $('#lang').addEventListener('change', e => { setLang(e.target.value); try { localStorage.setItem('guide-lang', lang); } catch(e2){} });
