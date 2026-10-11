@@ -1,5 +1,5 @@
 muhit.in yer fotoğrafları: kaynak ve lisans listesi
-Fotoğrafların tümü Wikimedia Commons'tan alınmıştır; 3:2 oranına kırpılmış ve 1200x800 piksele küçültülmüştür.
+Aksi belirtilmedikçe fotoğraflar Wikimedia Commons'tan alınmıştır; 3:2 oranına kırpılmış ve en çok 1200x800 piksele küçültülmüştür.
 
 trojan-horse.webp  (Truva Atı)
   Fotoğraf: YesimMutlu, 2021
@@ -195,3 +195,136 @@ gokceada.webp  (Gökçeada)
   Fotoğraf: Ggia, 2010
   Lisans: CC BY-SA 3.0  https://creativecommons.org/licenses/by-sa/3.0
   Kaynak: https://commons.wikimedia.org/wiki/File:20100524_Kardamos_beach_Imbros_Gökçeada_Turkey.jpg
+
+office.webp  (office)
+  Fotoğraf: Çanakkale Turizm Danışma Bürosu, 2026 (büronun kendi fotoğrafı)
+
+airport.webp  (Havalimanı)
+  Fotoğraf: Ex13, 2016
+  Lisans: CC BY-SA 4.0  https://creativecommons.org/licenses/by-sa/4.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:Çanakkale_Airport.jpg
+
+kabatepe.webp  (Gökçeada feribotu (Kabatepe İskelesi))
+  Fotoğraf: Adam Jones, 2011
+  Lisans: CC BY-SA 2.0  https://creativecommons.org/licenses/by-sa/2.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:Ferry_to_Gokceada_Island_in_Port_-_Kabatepe_-_Dardanelles_-_Turkey_(5737351981).jpg
+
+eceabat.webp  (Eceabat)
+  Fotoğraf: Tutku Çetinel, 2015
+  Lisans: CC BY 3.0  https://creativecommons.org/licenses/by/3.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:Eceabat,_17900_Eceabat-Çanakkale,_Turkey_-_panoramio.jpg
+
+lapseki.webp  (Lapseki)
+  Fotoğraf: ibrahim Kıroğlu, 2017
+  Lisans: CC BY-SA 4.0  https://creativecommons.org/licenses/by-sa/4.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:Lapseki_havadan.jpg
+
+gelibolu.webp  (Gelibolu)
+  Fotoğraf: Biryoda, 2020
+  Lisans: CC BY-SA 4.0  https://creativecommons.org/licenses/by-sa/4.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:Gelibolu_Yarımadası.jpg
+
+ayvacik.webp  (Ayvacık)
+  Fotoğraf: Cobija, 2016
+  Lisans: CC BY-SA 4.0  https://creativecommons.org/licenses/by-sa/4.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:Ayvacık_Saat_Kulesi.jpg
+
+bayramic.webp  (Bayramiç)
+  Fotoğraf: Kadı Kadı, 2023
+  Lisans: CC BY 2.0  https://creativecommons.org/licenses/by/2.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:Bayramiç_Taş_Köprü_Camii_(28072023)_-_53077224920.jpg
+
+biga.webp  (Biga)
+  Fotoğraf: Kızıl, 2025
+  Lisans: CC BY-SA 4.0  https://creativecommons.org/licenses/by-sa/4.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:Biga_Kaymakamlığı–IMG_5368~2.jpg
+
+istanbul.webp  (İstanbul)
+  Fotoğraf: SegLig, 2025
+  Lisans: CC BY 4.0  https://creativecommons.org/licenses/by/4.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:Istanbul_skyline_01.jpg
+
+izmir.webp  (İzmir)
+  Fotoğraf: Ferit BAYCUMAN, 2020
+  Lisans: CC BY-SA 4.0  https://creativecommons.org/licenses/by-sa/4.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:İzmir_Saat_Kulesi,_Konak_(COVİD-19_Salgın_Günleri).jpg
+
+bursa.webp  (Bursa)
+  Fotoğraf: Carl Ha, 2025
+  Lisans: CC BY-SA 4.0  https://creativecommons.org/licenses/by-sa/4.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:Bursa,_Ulu_Cami,_interior_with_şadırvan.jpg
+
+ankara.webp  (Ankara)
+  Fotoğraf: Mehman, 2025
+  Lisans: CC BY-SA 4.0  https://creativecommons.org/licenses/by-sa/4.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:Anıtkabir_in_November_2025.jpg
+
+balikesir.webp  (Balıkesir)
+  Fotoğraf: Hustle77, 2020
+  Lisans: CC BY-SA 4.0  https://creativecommons.org/licenses/by-sa/4.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:BalıkesirSaatKulesi.jpg
+
+edirne.webp  (Edirne)
+  Fotoğraf: BuhaM, 2025
+  Lisans: CC BY-SA 4.0  https://creativecommons.org/licenses/by-sa/4.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:Selimiye_Mosque_in_Edirne_01.jpg
+
+m-french.webp  (Fransız Mezarlığı ve Anıtı)
+  Fotoğraf: MatthewVanitas, 2005
+  Lisans: CC BY-SA 3.0  https://creativecommons.org/licenses/by-sa/3.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:Gallipolifrenchossuary.jpg
+
+m-sahindere.webp  (Şahindere Şehitliği)
+  Fotoğraf: Hüseyin Öcal, 2009
+  Lisans: CC BY 3.0  https://creativecommons.org/licenses/by/3.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:ŞAHİNDERE_ŞEHİTLİĞİ-_ÖCAL_-_panoramio.jpg
+
+m-soganlidere.webp  (Soğanlıdere Şehitliği)
+  Fotoğraf: bynyalcin, 2006
+  Lisans: CC BY 3.0  https://creativecommons.org/licenses/by/3.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:Soğanlıdere_martrys_çanakkale_turkey_-_panoramio.jpg
+
+m-zigindere.webp  (Zığındere Sargıyeri Şehitliği)
+  Fotoğraf: Hüseyin Öcal, 2009
+  Lisans: CC BY 3.0  https://creativecommons.org/licenses/by/3.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:SARGIYERİ_ŞEHİTLİĞİ-ÖCAL_-_panoramio.jpg
+
+m-akbas.webp  (Akbaş Şehitliği)
+  Fotoğraf: Ck3452, 2013
+  Lisans: CC BY-SA 3.0  https://creativecommons.org/licenses/by-sa/3.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:Akbas_sehitligi-_2013-10-30_15-45.jpg
+
+a-smintheion.webp  (Apollon Smintheion)
+  Fotoğraf: Emirhan Sağdır, 2026
+  Lisans: CC BY-SA 4.0  https://creativecommons.org/licenses/by-sa/4.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:Apollon_Smintheus_Tapınağı_2026-09-14_14.50.41_1789477744.jpeg
+
+c-nusret.webp  (Nusret Mayın Gemisi)
+  Fotoğraf: Raicem, 2023
+  Lisans: CC BY 4.0  https://creativecommons.org/licenses/by/4.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:Nusret_Minelayer.jpg
+
+n-ayazma.webp  (Ayazma Plajı)
+  Fotoğraf: HALUK COMERTEL, 2012
+  Lisans: CC BY 3.0  https://creativecommons.org/licenses/by/3.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:Bozcaada_-_panoramio_(5).jpg
+
+n-polente.webp  (Polente Feneri)
+  Fotoğraf: Raicem, 2024
+  Lisans: CC0  http://creativecommons.org/publicdomain/zero/1.0/deed.en
+  Kaynak: https://commons.wikimedia.org/wiki/File:Polente_lighthouse_in_Bozcaada,_under_a_wind_turbine.jpg
+
+n-saros.webp  (Saros Körfezi)
+  Fotoğraf: by rock, 2010
+  Lisans: CC BY 3.0  https://creativecommons.org/licenses/by/3.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:Emel_SAYIN_koyu_Saroz_körfezi_gelibolu_ÇANAKKALE_-_panoramio.jpg
+
+c9-stop.webp  (Şehir içi otobüs durağı (İskele))
+  Fotoğraf: Dosseman, 2017
+  Lisans: CC BY-SA 4.0  https://creativecommons.org/licenses/by-sa/4.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:Çanakkale_town_Seafront_aka_Kordon_in_2017_3481.jpg
+
+m-bigali.webp  (Bigalı Atatürk Evi)
+  Fotoğraf: Tarih, 2024
+  Lisans: CC BY-SA 4.0  https://creativecommons.org/licenses/by-sa/4.0
+  Kaynak: https://commons.wikimedia.org/wiki/File:Bigalı_Köyünde_Atatürk'ün_karargah_olarak_kullandığı_evin_avlusu.jpg
