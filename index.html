@@ -915,7 +915,7 @@ button.btn{width:100%;cursor:pointer}
 .agency{margin:0 0 10px;padding:14px;border:2px solid var(--line);border-radius:18px;background:var(--panel)}
 .agency b{display:block;font-size:20px;line-height:1.25}
 .agency small{display:block;margin-top:2px;font-size:16.5px;color:var(--muted)}
-.agency .apps{margin-top:10px}
+.agency .apps{margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
 .photo{margin:0 0 14px}
 .photo img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;border-radius:16px;background:var(--chip)}
 .photo figcaption{margin-top:5px;font-size:13.5px;line-height:1.35;color:var(--muted)}
@@ -1025,7 +1025,7 @@ button.btn{width:100%;cursor:pointer}
    stop          : optional {lat, lng, name:[...]} bus stop to walk to first
    ===================================================================== */
 const DRAFT  = false;
-const BUILD  = '2026-10-12 a';      /* changed with every new version: an open guide that comes back online reloads itself when this differs */
+const BUILD  = '2026-10-12 b';      /* changed with every new version: an open guide that comes back online reloads itself when this differs */
 const LANGS  = ['en','tr','de','fr','es','bg','ru','el','ar'];
 const XLANGS = ['bg','ru','el','ar'];      /* the languages whose place texts live in XL_ROWS */
 const OFFICE = {lat:40.1498833, lng:26.4024356};
@@ -2129,6 +2129,29 @@ const XL_ADD = {      /* Bulgarian, Russian, Greek and Arabic for the texts abov
   'مكتب الاستعلامات السياحية التابع لمديرية الثقافة والسياحة في جناق قلعة، في ساحة العبّارات (İskele Meydanı). تبدأ مسارات هذا الدليل من هنا.']
 };
 Object.keys(XL_ADD).forEach(k => { ['bg','ru','el','ar'].forEach((l, i) => { XL[l][k] = XL_ADD[k][i]; }); });
+/* ---- the tourist guides' chamber ----
+   Licensed tourist guides for a guided tour or a private tour: the official chamber of the region (source: caro.org.tr). */
+const GUIDES_ROOM = {name:'Çanakkale Bölgesel Turist Rehberleri Odası (ÇARO)', address:'İsmetpaşa Mah. İnönü Cad. No: 149, K:3 D:4, Merkez, Çanakkale',
+  phones:['0286 210 01 07', '0286 212 90 57'], email:'info@caro.org.tr', web:'https://caro.org.tr/'};
+PLACES.push({id:'guides', icon:'flag', cat:'transport', kind:'search', noDist:true, car:false, q:'Çanakkale Bölgesel Turist Rehberleri Odası',
+  kw:'rehber rehberler odası çaro caro guide guides tourist guide tur tour führer guía гид',
+  name:['Tourist guides (Guides’ Chamber)','Turist rehberi (Rehberler Odası)','Fremdenführer (Gästeführerkammer)','Guides touristiques (Chambre des guides)','Guías turísticos (Cámara de guías)'],
+  label:['Tourist guides','Turist rehberi','Fremdenführer','Guides','Guías'],
+  desc:['For a guided tour or a private licensed tourist guide, contact the Çanakkale Regional Chamber of Tourist Guides.',
+    'Rehberli tur ya da özel turist rehberi için Çanakkale Bölgesel Turist Rehberleri Odası’na başvurabilirsiniz.',
+    'Für eine geführte Tour oder einen privaten, staatlich geprüften Fremdenführer wenden Sie sich an die Regionale Kammer der Fremdenführer Çanakkale.',
+    'Pour une visite guidée ou un guide touristique agréé privé, contactez la Chambre régionale des guides touristiques de Çanakkale.',
+    'Para una visita guiada o un guía turístico autorizado privado, contacte con la Cámara Regional de Guías Turísticos de Çanakkale.']});
+HOME[HOME.length - 1].title = 'infoT'; HOME[HOME.length - 1].cards.push('guides');
+Object.assign(XL_ADD, {
+'Tourist guides (Guides’ Chamber)':['Екскурзоводи (Камара на екскурзоводите)','Гиды (Палата гидов)','Ξεναγοί (Επιμελητήριο ξεναγών)','المرشدون السياحيون (غرفة المرشدين)'],
+'Tourist guides':['Екскурзоводи','Гиды','Ξεναγοί','المرشدون السياحيون'],
+'For a guided tour or a private licensed tourist guide, contact the Çanakkale Regional Chamber of Tourist Guides.':[
+  'За обиколка с екскурзовод или частен лицензиран екскурзовод се обърнете към Регионалната камара на екскурзоводите в Чанаккале.',
+  'Чтобы заказать экскурсию или частного лицензированного гида, обратитесь в Региональную палату туристических гидов Чанаккале.',
+  'Για ξενάγηση ή ιδιωτικό αδειούχο ξεναγό, απευθυνθείτε στο Περιφερειακό Επιμελητήριο Ξεναγών του Τσανάκκαλε.',
+  'لجولة برفقة مرشد أو لمرشد سياحي مرخَّص خاص، تواصلوا مع الغرفة الإقليمية للمرشدين السياحيين في جناق قلعة.']});
+Object.keys(XL_ADD).forEach(k => { ['bg','ru','el','ar'].forEach((l, i) => { XL[l][k] = XL_ADD[k][i]; }); });
 /* ---- guided tours first ----
    The screens of these groups, and of every place in them, first advise the visitor to talk to a tour agency and join a guided tour (text: tourRec),
    with a button that leads to the "Tour agencies" screen. */
@@ -2144,15 +2167,15 @@ const AGENCIES = [];
 const HOURS_ASK = ['synagogue','c-kilitbahir','c-nusret','c-seddulbahir','c-gelibolu','c-mevlevi','c-bozcaada','c-babakale',
   'a-assos','a-smintheion','a-troas','a-parion','m-kabatepe','m-salimmutlu','m-bigali'];
 const UI_ADD = {
-en:{tourRec:'To visit the Gallipoli memorials we recommend, first of all, talking to a tour agency and joining a guided tour. The memorials and cemeteries are spread over a wide area of the peninsula.', agCall:'Call', agWeb:'Website', agMap:'Map', agSort:'The list is in alphabetical order.', photoBy:'Photo: {a}', hrsBtn:'See opening hours on Google', wrong:'Report an error', wrongOk:'Thank you. Your report has been counted.'},
-tr:{tourRec:'Şehitlikleri gezmek için öncelikle bir tur acentesiyle görüşmenizi ve rehberli bir tura katılmanızı öneririz. Anıtlar ve şehitlikler yarımadada geniş bir alana yayılmıştır.', agCall:'Ara', agWeb:'Web sitesi', agMap:'Harita', agSort:'Liste alfabetik sıradadır.', photoBy:'Fotoğraf: {a}', hrsBtn:'Saatleri Google’da gör', wrong:'Hata bildir', wrongOk:'Teşekkürler. Bildiriminiz kaydedildi.'},
-de:{tourRec:'Für den Besuch der Gedenkstätten von Gallipoli empfehlen wir zuerst, sich an einen Touranbieter zu wenden und an einer geführten Tour teilzunehmen. Die Denkmäler und Friedhöfe liegen weit über die Halbinsel verstreut.', agCall:'Anrufen', agWeb:'Website', agMap:'Karte', agSort:'Die Liste ist alphabetisch geordnet.', photoBy:'Foto: {a}', hrsBtn:'Öffnungszeiten bei Google ansehen', wrong:'Fehler melden', wrongOk:'Danke. Ihre Meldung wurde gezählt.'},
-fr:{tourRec:'Pour visiter les mémoriaux de Gallipoli, nous vous recommandons avant tout de vous adresser à une agence et de participer à une visite guidée. Les monuments et les cimetières sont dispersés sur une grande partie de la péninsule.', agCall:'Appeler', agWeb:'Site web', agMap:'Carte', agSort:'La liste est classée par ordre alphabétique.', photoBy:'Photo : {a}', hrsBtn:'Voir les horaires sur Google', wrong:'Signaler une erreur', wrongOk:'Merci. Votre signalement a été enregistré.'},
-es:{tourRec:'Para visitar los memoriales de Galípoli le recomendamos, ante todo, consultar a una agencia y unirse a una visita guiada. Los monumentos y cementerios están repartidos por una amplia zona de la península.', agCall:'Llamar', agWeb:'Sitio web', agMap:'Mapa', agSort:'La lista está en orden alfabético.', photoBy:'Foto: {a}', hrsBtn:'Ver el horario en Google', wrong:'Informar de un error', wrongOk:'Gracias. Su aviso ha sido registrado.'},
-bg:{tourRec:'За посещение на мемориалите в Галиполи препоръчваме преди всичко да се обърнете към туристическа агенция и да се включите в обиколка с екскурзовод. Паметниците и гробищата са разпръснати на голяма площ на полуострова.', agCall:'Обадете се', agWeb:'Уебсайт', agMap:'Карта', agSort:'Списъкът е по азбучен ред.', photoBy:'Снимка: {a}', hrsBtn:'Вижте работното време в Google', wrong:'Съобщете за грешка', wrongOk:'Благодарим. Сигналът ви е отчетен.'},
-ru:{tourRec:'Для посещения мемориалов Галлиполи рекомендуем прежде всего обратиться в турагентство и присоединиться к экскурсии с гидом. Памятники и кладбища разбросаны по большой территории полуострова.', agCall:'Позвонить', agWeb:'Сайт', agMap:'Карта', agSort:'Список составлен в алфавитном порядке.', photoBy:'Фото: {a}', hrsBtn:'Часы работы в Google', wrong:'Сообщить об ошибке', wrongOk:'Спасибо. Ваше сообщение учтено.'},
-el:{tourRec:'Για την επίσκεψη στα μνημεία της Καλλίπολης συνιστούμε πρώτα απ’ όλα να απευθυνθείτε σε ταξιδιωτικό γραφείο και να συμμετάσχετε σε ξενάγηση. Τα μνημεία και τα κοιμητήρια είναι διάσπαρτα σε μεγάλη έκταση της χερσονήσου.', agCall:'Κλήση', agWeb:'Ιστότοπος', agMap:'Χάρτης', agSort:'Η λίστα είναι με αλφαβητική σειρά.', photoBy:'Φωτογραφία: {a}', hrsBtn:'Δείτε το ωράριο στο Google', wrong:'Αναφορά σφάλματος', wrongOk:'Ευχαριστούμε. Η αναφορά σας καταγράφηκε.'},
-ar:{tourRec:'لزيارة نُصُب غاليبولي التذكارية نوصي أولًا بالتواصل مع وكالة جولات والانضمام إلى جولة برفقة مرشد. تنتشر النُّصُب والمقابر على مساحة واسعة من شبه الجزيرة.', agCall:'اتصال', agWeb:'الموقع الإلكتروني', agMap:'الخريطة', agSort:'القائمة مرتبة أبجديًا.', photoBy:'الصورة: {a}', hrsBtn:'عرض ساعات العمل على Google', wrong:'الإبلاغ عن خطأ', wrongOk:'شكرًا لكم. تم تسجيل بلاغكم.'}
+en:{infoT:'Information and guides', agMail:'E-mail', tourRec:'To visit the Gallipoli memorials we recommend, first of all, talking to a tour agency and joining a guided tour. The memorials and cemeteries are spread over a wide area of the peninsula.', agCall:'Call', agWeb:'Website', agMap:'Map', agSort:'The list is in alphabetical order.', photoBy:'Photo: {a}', hrsBtn:'See opening hours on Google', wrong:'Report an error', wrongOk:'Thank you. Your report has been counted.'},
+tr:{infoT:'Danışma ve rehberlik', agMail:'E-posta', tourRec:'Şehitlikleri gezmek için öncelikle bir tur acentesiyle görüşmenizi ve rehberli bir tura katılmanızı öneririz. Anıtlar ve şehitlikler yarımadada geniş bir alana yayılmıştır.', agCall:'Ara', agWeb:'Web sitesi', agMap:'Harita', agSort:'Liste alfabetik sıradadır.', photoBy:'Fotoğraf: {a}', hrsBtn:'Saatleri Google’da gör', wrong:'Hata bildir', wrongOk:'Teşekkürler. Bildiriminiz kaydedildi.'},
+de:{infoT:'Auskunft und Reiseleitung', agMail:'E-Mail', tourRec:'Für den Besuch der Gedenkstätten von Gallipoli empfehlen wir zuerst, sich an einen Touranbieter zu wenden und an einer geführten Tour teilzunehmen. Die Denkmäler und Friedhöfe liegen weit über die Halbinsel verstreut.', agCall:'Anrufen', agWeb:'Website', agMap:'Karte', agSort:'Die Liste ist alphabetisch geordnet.', photoBy:'Foto: {a}', hrsBtn:'Öffnungszeiten bei Google ansehen', wrong:'Fehler melden', wrongOk:'Danke. Ihre Meldung wurde gezählt.'},
+fr:{infoT:'Informations et guides', agMail:'E-mail', tourRec:'Pour visiter les mémoriaux de Gallipoli, nous vous recommandons avant tout de vous adresser à une agence et de participer à une visite guidée. Les monuments et les cimetières sont dispersés sur une grande partie de la péninsule.', agCall:'Appeler', agWeb:'Site web', agMap:'Carte', agSort:'La liste est classée par ordre alphabétique.', photoBy:'Photo : {a}', hrsBtn:'Voir les horaires sur Google', wrong:'Signaler une erreur', wrongOk:'Merci. Votre signalement a été enregistré.'},
+es:{infoT:'Información y guías', agMail:'Correo', tourRec:'Para visitar los memoriales de Galípoli le recomendamos, ante todo, consultar a una agencia y unirse a una visita guiada. Los monumentos y cementerios están repartidos por una amplia zona de la península.', agCall:'Llamar', agWeb:'Sitio web', agMap:'Mapa', agSort:'La lista está en orden alfabético.', photoBy:'Foto: {a}', hrsBtn:'Ver el horario en Google', wrong:'Informar de un error', wrongOk:'Gracias. Su aviso ha sido registrado.'},
+bg:{infoT:'Информация и екскурзоводи', agMail:'Имейл', tourRec:'За посещение на мемориалите в Галиполи препоръчваме преди всичко да се обърнете към туристическа агенция и да се включите в обиколка с екскурзовод. Паметниците и гробищата са разпръснати на голяма площ на полуострова.', agCall:'Обадете се', agWeb:'Уебсайт', agMap:'Карта', agSort:'Списъкът е по азбучен ред.', photoBy:'Снимка: {a}', hrsBtn:'Вижте работното време в Google', wrong:'Съобщете за грешка', wrongOk:'Благодарим. Сигналът ви е отчетен.'},
+ru:{infoT:'Информация и гиды', agMail:'Эл. почта', tourRec:'Для посещения мемориалов Галлиполи рекомендуем прежде всего обратиться в турагентство и присоединиться к экскурсии с гидом. Памятники и кладбища разбросаны по большой территории полуострова.', agCall:'Позвонить', agWeb:'Сайт', agMap:'Карта', agSort:'Список составлен в алфавитном порядке.', photoBy:'Фото: {a}', hrsBtn:'Часы работы в Google', wrong:'Сообщить об ошибке', wrongOk:'Спасибо. Ваше сообщение учтено.'},
+el:{infoT:'Πληροφορίες και ξεναγοί', agMail:'Email', tourRec:'Για την επίσκεψη στα μνημεία της Καλλίπολης συνιστούμε πρώτα απ’ όλα να απευθυνθείτε σε ταξιδιωτικό γραφείο και να συμμετάσχετε σε ξενάγηση. Τα μνημεία και τα κοιμητήρια είναι διάσπαρτα σε μεγάλη έκταση της χερσονήσου.', agCall:'Κλήση', agWeb:'Ιστότοπος', agMap:'Χάρτης', agSort:'Η λίστα είναι με αλφαβητική σειρά.', photoBy:'Φωτογραφία: {a}', hrsBtn:'Δείτε το ωράριο στο Google', wrong:'Αναφορά σφάλματος', wrongOk:'Ευχαριστούμε. Η αναφορά σας καταγράφηκε.'},
+ar:{infoT:'الاستعلامات والمرشدون', agMail:'البريد الإلكتروني', tourRec:'لزيارة نُصُب غاليبولي التذكارية نوصي أولًا بالتواصل مع وكالة جولات والانضمام إلى جولة برفقة مرشد. تنتشر النُّصُب والمقابر على مساحة واسعة من شبه الجزيرة.', agCall:'اتصال', agWeb:'الموقع الإلكتروني', agMap:'الخريطة', agSort:'القائمة مرتبة أبجديًا.', photoBy:'الصورة: {a}', hrsBtn:'عرض ساعات العمل على Google', wrong:'الإبلاغ عن خطأ', wrongOk:'شكرًا لكم. تم تسجيل بلاغكم.'}
 };
 Object.keys(UI_ADD).forEach(l => { if (UI[l]) Object.assign(UI[l], UI_ADD[l]); });
 LANGS.forEach(l => { Object.keys(UI.en).forEach(k => { if (!(k in UI[l])) UI[l][k] = UI.en[k]; }); });      /* not yet translated: English */
@@ -2482,7 +2505,12 @@ const photoOf = (p, n) => { const f = PHOTOS[p.id]; if (!f) return ''; const by 
 ICONS.info = I('<circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><path d="M12 7.6v.1" stroke-width="2.6"/>');
 /* 'guided tours first': the advice and the way to the tour agencies */
 const tourFirst = p => TOUR_FIRST.some(g => groupsOf(p).includes(g));
-const tourBox = () => '<div class="tour"><p>' + esc(UI[lang].tourRec) + '</p><a class="btn primary" href="#/p/agencies">' + esc(tx(byId('agencies').name)) + '</a></div>';
+const tourBox = () => '<div class="tour"><p>' + esc(UI[lang].tourRec) + '</p><a class="btn primary" href="#/p/agencies">' + esc(tx(byId('agencies').name)) + '</a><a class="btn" style="margin-top:8px" href="#/p/guides">' + esc(tx(byId('guides').name)) + '</a></div>';
+/* the contact card of the tourist guides' chamber */
+function guidesBox(lead){ const t = UI[lang], G = GUIDES_ROOM, tel = s => String(s).replace(/[^+\d]/g, '');
+  return (lead ? '<p>' + esc(tx(byId('guides').desc)) + '</p>' : '') + '<div class="agency"><b>' + esc(G.name) + '</b><small>' + esc(G.address) + '</small><div class="apps">' +
+    G.phones.map(p => '<a class="btn" href="tel:' + esc(tel(p)) + '">' + esc(p) + '</a>').join('') + '<a class="btn" href="mailto:' + esc(G.email) + '">' + esc(t.agMail) + '</a>' +
+    '<a class="btn" target="_blank" rel="noopener" href="' + esc(G.web) + '">' + esc(t.agWeb) + '</a><a class="btn" target="_blank" rel="noopener" href="' + esc(findLinks(G.name + ', ' + G.address)[isIOS ? 1 : 0][1]) + '">' + esc(t.agMap) + '</a></div></div>'; }
 /* the agencies the office shares, in alphabetical order; a phone number becomes a button that calls it */
 function agencyList(){ const t = UI[lang], tel = s => String(s).replace(/[^+\d]/g, '');
   return AGENCIES.slice().sort((a, b) => a.name.localeCompare(b.name, 'tr')).map(a => '<div class="agency"><b>' + esc(a.name) + '</b>' + (a.address ? '<small>' + esc(a.address) + '</small>' : '') + (a.phone ? '<small>' + esc(a.phone) + '</small>' : '') + '<div class="apps">' +
@@ -2491,7 +2519,7 @@ function agencyList(){ const t = UI[lang], tel = s => String(s).replace(/[^+\d]/
 function renderSheet(p){
   const t = UI[lang], c = p.cat, n = tx(p.name), v = viaOf(p);
   const desc = p.desc ? tx(p.desc) : p.noDist ? fillT(t.cDesc, {n}) : p.x ? (v ? fillT(CAR === true ? t.xDescCar : t.xDesc, {d:short(v)}) : t.xDescC) : fillT(t.dDesc, {n});
-  let h = '<div class="cat" style="--c:var(--' + c + ')"><i></i>' + esc(t.cats[c]) + '</div><h2>' + esc(n) + '</h2><p>' + esc(desc) + '</p>' + photoOf(p, n) + (tourFirst(p) ? tourBox() : '') + (p.id === 'agencies' && AGENCIES.length ? agencyList() : '');
+  let h = '<div class="cat" style="--c:var(--' + c + ')"><i></i>' + esc(t.cats[c]) + '</div><h2>' + esc(n) + '</h2><p>' + esc(desc) + '</p>' + photoOf(p, n) + (tourFirst(p) ? tourBox() : '') + (p.id === 'agencies' && AGENCIES.length ? agencyList() : '') + (p.id === 'guides' ? guidesBox(false) : p.id === 'agencies' ? guidesBox(true) : '');
   const fs = facts(p); if (fs.length) h += '<ul class="facts">' + fs.map(f => '<li>' + esc(f) + '</li>').join('') + '</ul>';
   if (p.all) h += '<div class="hours all"><p>' + esc(tx(p.all.note)) + '</p><a class="btn primary" target="_blank" rel="noopener" href="' + esc(nearLinks(p.all.q)[isIOS ? 1 : 0][1]) + '">' + esc(tx(p.all.btn)) + '</a></div>';
   h += carBox();
