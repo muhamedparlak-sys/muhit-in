@@ -781,6 +781,10 @@ h1{margin:16px 0 12px;font-size:clamp(29px,7.2vw,40px);line-height:1.15;letter-s
 @media (min-width:700px){.icons{grid-template-columns:repeat(6,minmax(0,1fr))}}
 .icon{display:flex;flex-direction:column;align-items:center;text-align:center;gap:7px;min-width:0;min-height:122px;padding:12px 3px 10px;border:2px solid var(--line);border-radius:18px;background:var(--panel);text-decoration:none}
 .icon:hover{border-color:var(--c)}
+.icon{position:relative}
+.newtag{position:absolute;top:7px;right:7px;padding:2px 8px;border-radius:999px;background:#d7182a;color:#fff;font-size:12px;font-weight:800;line-height:1.45;letter-spacing:.2px}
+[dir=rtl] .newtag{right:auto;left:7px}
+.newtag.in{position:static;display:inline-block;margin-inline-start:7px;vertical-align:2px}
 .icon .big{width:66px;height:66px;border-radius:50%;display:grid;place-items:center;background:var(--c);color:var(--bg)}
 .icon b{max-width:100%;font-size:17px;line-height:1.18;overflow-wrap:break-word;-webkit-hyphens:auto;hyphens:auto}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
@@ -1025,7 +1029,7 @@ button.btn{width:100%;cursor:pointer}
    stop          : optional {lat, lng, name:[...]} bus stop to walk to first
    ===================================================================== */
 const DRAFT  = false;
-const BUILD  = '2026-10-12 b';      /* changed with every new version: an open guide that comes back online reloads itself when this differs */
+const BUILD  = '2026-11-16 b';      /* changed with every new version: an open guide that comes back online reloads itself when this differs */
 const LANGS  = ['en','tr','de','fr','es','bg','ru','el','ar'];
 const XLANGS = ['bg','ru','el','ar'];      /* the languages whose place texts live in XL_ROWS */
 const OFFICE = {lat:40.1498833, lng:26.4024356};
@@ -1170,7 +1174,7 @@ const ROUTES = [
 const HOME = [
   {cat:'near',      tiles:['n:pharmacy','n:taxi','n:busstop']},
   {cat:'sights',    title:'routes', cards:['r:centre']},
-  {cat:'sights',    tiles:['trojan-horse','aynali-bazaar','c-saat','naval-museum','c-cimenlik','city-museum','ceramic-museum','synagogue','n:mosque']},
+  {cat:'sights',    tiles:['trojan-horse','aynali-bazaar','c-saat','naval-museum','piri-reis','c-cimenlik','city-museum','ceramic-museum','synagogue','n:mosque']},
   {cat:'far',       tiles:['troy-site','troy-museum','g:memorials','g:ancient','g:castles','g:nature','g:villages','g:islands','g:districts']},
   {cat:'services',  tiles:['atm','wc-ferry','pharmacy','hospital','exchange','ptt']},
   {cat:'transport', tiles:['otogar','g:bus','g:ferry','airport','agencies','g:cities']}      /* the bus companies are linked from the Otogar */
@@ -1309,9 +1313,9 @@ const PLACES = [
  {id:'ptt', icon:'post', cat:'services', kind:'pin', lat:40.149244, lng:26.406478,
   name:['Post office (HGS toll card)','PTT (HGS kartı)','Post (HGS-Mautkarte)','Poste (carte de péage HGS)','Correos (tarjeta de peaje HGS)'],
   desc:['Main post office on İnönü Caddesi. HGS motorway toll cards are sold here.','İnönü Caddesi’ndeki PTT. HGS kartı buradan alınabilir.','Hauptpost an der İnönü Caddesi. Hier gibt es HGS-Mautkarten.','Poste principale, İnönü Caddesi. On y vend les cartes de péage HGS.','Oficina principal de correos, en İnönü Caddesi. Aquí se venden las tarjetas de peaje HGS.']},
- {id:'exchange', icon:'exchange', cat:'services', kind:'search', q:'Sarraf Çanakkale Merkez',
-  name:['Currency exchange','Döviz bürosu (sarraf)','Geld­wechsel','Bureau de change','Cambio de divisas'],
-  desc:['Jewellery shops (sarraf) in the centre also change money.','Merkezdeki sarraflar döviz de bozar.','Juweliere (Sarraf) im Zentrum wechseln auch Geld.','Les bijoutiers (sarraf) du centre changent aussi de l’argent.','Las joyerías (sarraf) del centro también cambian divisas.']},
+ {id:'exchange', icon:'exchange', cat:'services', kind:'search', q:'Temizel Döviz Çanakkale',
+  name:['Currency exchange','Döviz bürosu','Geld­wechsel','Bureau de change','Cambio de divisas'],
+  desc:['Temizel Döviz is a licensed exchange office in the centre, at Çarşı Caddesi No. 159. Banks also change money.','Temizel Döviz, merkezde Çarşı Caddesi No: 159’da bulunan yetkili bir döviz bürosudur. Bankalarda da döviz bozdurabilirsiniz.','Temizel Döviz ist eine zugelassene Wechselstube im Zentrum, Çarşı Caddesi Nr. 159. Auch Banken wechseln Geld.','Temizel Döviz est un bureau de change agréé du centre, au n° 159 de la Çarşı Caddesi. Les banques changent aussi de l’argent.','Temizel Döviz es una casa de cambio autorizada del centro, en la Çarşı Caddesi n.º 159. Los bancos también cambian divisas.']},
  /* ---- districts of Çanakkale: how to get there from the city centre ---- */
  /* texts given as [English, Turkish] are shown in English in the other languages until they are translated */
  {id:'c-kilitbahir', icon:'castle', group:'castles', cat:'far', kind:'pin', ferry:true, car:false, vehicles:1, kw:'kale kilitbahir castle festung château castillo', lat:40.148, lng:26.3786,
@@ -1374,6 +1378,9 @@ const PLACES = [
  {id:'pamukkale', icon:'ticket', group:'buscos', cat:'transport', kind:'search', via:'otogar', q:'Çanakkale Pamukkale Turizm', name:'Pamukkale Turizm', desc:BUSCO},
  /* ---- more sights in the centre. They have no pin yet: each opens a search in the maps app.
     via:'walk' marks a place in the centre within walking distance. ---- */
+ {id:'piri-reis', icon:'anchor', cat:'sights', kind:'search', newUntil:'2027-05-11', q:'Piri Reis Müzesi Çanakkale',
+  name:['Piri Reis Museum','Piri Reis Müzesi','Piri-Reis-Museum','Musée Piri Reis','Museo Piri Reis'],
+  desc:['A new museum of the Çanakkale Chamber of Commerce and Industry (ÇTSO), opened in November 2026 in the chamber’s former building in the centre. It tells the story of the Dardanelles, of sea trade through the ages and of the sailor and cartographer Piri Reis, his 1513 world map and his Kitab-ı Bahriye, with digital displays and a virtual-reality ship. Ask at our desk for opening hours.','Çanakkale Ticaret ve Sanayi Odası’nın (ÇTSO) merkezdeki eski binasında Kasım 2026’da açılan yeni müze. Çanakkale Boğazı’nı, çağlar boyunca deniz ticaretini ve denizci-haritacı Piri Reis’i, 1513 dünya haritasını ve Kitab-ı Bahriye’sini dijital anlatımlar ve sanal gerçeklik gemisiyle tanıtır. Ziyaret saatlerini danışma masamıza sorun.','Ein neues Museum der Industrie- und Handelskammer Çanakkale (ÇTSO), eröffnet im November 2026 im früheren Kammergebäude im Zentrum. Es erzählt von den Dardanellen, vom Seehandel durch die Jahrhunderte und vom Seefahrer und Kartografen Piri Reis, seiner Weltkarte von 1513 und seinem Kitab-ı Bahriye, mit digitalen Stationen und einem Virtual-Reality-Schiff. Öffnungszeiten erfahren Sie an unserem Schalter.','Un nouveau musée de la Chambre de commerce et d’industrie de Çanakkale (ÇTSO), ouvert en novembre 2026 dans l’ancien bâtiment de la chambre, dans le centre. Il raconte les Dardanelles, le commerce maritime à travers les siècles et le marin et cartographe Piri Reis, sa carte du monde de 1513 et son Kitab-ı Bahriye, avec des dispositifs numériques et un navire en réalité virtuelle. Demandez les horaires à notre comptoir.','Un nuevo museo de la Cámara de Comercio e Industria de Çanakkale (ÇTSO), abierto en noviembre de 2026 en el antiguo edificio de la cámara, en el centro. Cuenta la historia de los Dardanelos, del comercio marítimo a lo largo de los siglos y del marino y cartógrafo Piri Reis, su mapa del mundo de 1513 y su Kitab-ı Bahriye, con pantallas digitales y un barco de realidad virtual. Pregunte el horario en nuestro mostrador.']},
  {id:'mosque', icon:'mosque', cat:'sights', kind:'search', see:['n:mosque'], q:'Cami Çanakkale Merkez',
   name:['Mosque','Cami','Moschee','Mosquée','Mezquita'],
   desc:['There are several mosques in the centre. The buttons below find the nearest ones on the map.','Merkezde birçok cami vardır. Aşağıdaki düğmeler en yakın camileri haritada bulur.','Im Zentrum gibt es mehrere Moscheen. Die Schaltflächen unten finden die nächstgelegenen auf der Karte.','Le centre compte plusieurs mosquées. Les boutons ci-dessous trouvent les plus proches sur la carte.','En el centro hay varias mezquitas. Los botones de abajo encuentran las más cercanas en el mapa.']},
@@ -1461,6 +1468,7 @@ const KEYWORDS = {
  'aynali-bazaar':'çarşı bazaar alışveriş shopping hediyelik souvenir pazar market',
  'naval-museum':'müze museum deniz askeri çimenlik nusret kale',
  'city-museum':'müze museum kent şehir arşiv',
+ 'piri-reis':'müze museum piri reis harita map deniz denizcilik çtso ctso kitab-ı bahriye',
  'ceramic-museum':'müze museum seramik çömlek çini',
  'synagogue':'sinagog havra synagogue yahudi jewish mekor hayim ibadet',
  'mosque':'cami camii mosque ibadet namaz mescit',
@@ -1478,7 +1486,7 @@ const KEYWORDS = {
  'toilet':'tuvalet wc lavabo toilet restroom umumi ücretsiz',
  'hospital':'hastane acil doktor ambulans hospital emergency doctor',
  'ptt':'ptt posta postane hgs pul kargo post',
- 'exchange':'döviz exchange sarraf kur euro dolar para bozdurma change',
+ 'exchange':'döviz exchange sarraf kur euro dolar para bozdurma change temizel çarşı',
  'agencies':'tur tour acente acenta agency rehber guide gezi troya truva troy gelibolu gallipoli şehitlik anzac',
  'truva':'otobüs bilet bus ticket', 'kamilkoc':'otobüs bilet bus ticket', 'metro':'otobüs bilet bus ticket', 'pamukkale':'otobüs bilet bus ticket',
  'eceabat':'şehitlik gelibolu yarımadası kilitbahir gallipoli', 'gelibolu':'gallipoli', 'bozcaada':'ada island tenedos', 'gokceada':'ada island imroz imbros',
@@ -1513,8 +1521,8 @@ const SYNONYMS = [
 const STOPWORDS = ['çanakkale','ve','ile','the','of','and','de','la','el','der','die','das','и','και','في'];      /* ignored when other words were typed */
 Object.keys(KEYWORDS).forEach(id => { const p = PLACES.find(x => x.id === id); if (p) p.kw = (p.kw ? p.kw + ' ' : '') + KEYWORDS[id]; });
 const UI = {
-en:{name:'EN', brand:'Çanakkale Tourism Information', kicker:'CITY GUIDE', title:'Çanakkale guide map', h1:'What would you like to ask?',
-  qWhere:'Where can I go right now?', qHow:'How do I get there?', phHow:'Where do you want to go?', popular:'Most asked', carQ:'Do you have a car?', carYes:'I have a car', carNo:'I have no car',
+en:{name:'EN', brand:'Çanakkale Tourism Information', kicker:'CITY GUIDE', title:'Çanakkale guide map', h1:'Welcome to Çanakkale',
+  qWhere:'Explore', qHow:'Directions', phHow:'Where do you want to go?', popular:'Most asked', carQ:'Do you have a car?', carYes:'I have a car', carNo:'I have no car',
   xDescCar:'In the {d} area. You can drive straight there; your maps app shows the road and the driving time.',
   dutyNow:'Pharmacies are closed right now (evening or weekend). Only the duty pharmacy (nöbetçi eczane) is open; its address is also posted on every pharmacy door.', dutyBtn:'Find the duty pharmacy', dutyList:'Duty pharmacy list',
   dutyHours:'Pharmacies are open on weekdays {a}–{b}. Outside these hours, at weekends and on public holidays only the duty pharmacy (nöbetçi eczane) is open.',
@@ -1537,8 +1545,8 @@ en:{name:'EN', brand:'Çanakkale Tourism Information', kicker:'CITY GUIDE', titl
   how:'How to get there', locate:'Show my location', locErr:'Your location is not available.', theme:'Switch between light and dark',
   draft:'Draft: places and details are still being checked by the office.',
   foot:'Çanakkale Tourism Information Office. Distances and times are estimates; ask at the desk for today’s details.'},
-tr:{name:'TR', brand:'Çanakkale Turizm Danışma', kicker:'ŞEHİR REHBERİ', title:'Çanakkale rehber haritası', h1:'Ne sormak istersiniz?',
-  qWhere:'Şu an nereye gidebilirim?', qHow:'Bir yere nasıl giderim?', phHow:'Nereye gitmek istiyorsunuz?', popular:'En çok sorulanlar', carQ:'Arabanız var mı?', carYes:'Arabam var', carNo:'Arabam yok',
+tr:{name:'TR', brand:'Çanakkale Turizm Danışma', kicker:'ŞEHİR REHBERİ', title:'Çanakkale rehber haritası', h1:'Çanakkale’ye hoş geldiniz',
+  qWhere:'Keşfet', qHow:'Yol tarifi', phHow:'Nereye gitmek istiyorsunuz?', popular:'En çok sorulanlar', carQ:'Arabanız var mı?', carYes:'Arabam var', carNo:'Arabam yok',
   xDescCar:'{d} çevresindedir. Aracınızla doğrudan gidebilirsiniz; yolu ve süreyi harita uygulamanız gösterir.',
   dutyNow:'Şu an eczanelerin mesai saatleri dışında (akşam ya da hafta sonu). Yalnızca nöbetçi eczane açıktır; adresi her eczanenin kapısında da yazar.', dutyBtn:'Nöbetçi eczaneyi bul', dutyList:'Nöbetçi eczane listesi',
   dutyHours:'Eczaneler hafta içi {a}–{b} arasında açıktır. Bu saatlerin dışında, hafta sonu ve resmî tatillerde yalnızca nöbetçi eczane hizmet verir.',
@@ -1561,8 +1569,8 @@ tr:{name:'TR', brand:'Çanakkale Turizm Danışma', kicker:'ŞEHİR REHBERİ', t
   how:'Nasıl gidilir', locate:'Konumumu göster', locErr:'Konumunuz alınamadı.', theme:'Açık ve koyu görünüm arasında geç',
   draft:'Taslak: yerler ve ayrıntılar büro tarafından henüz kontrol ediliyor.',
   foot:'Çanakkale Turizm Danışma Bürosu. Mesafe ve süreler tahminidir; güncel bilgi için danışma masasına sorun.'},
-de:{name:'DE', brand:'Touristeninformation Çanakkale', kicker:'STADTFÜHRER', title:'Stadtplan Çanakkale', h1:'Was möchten Sie wissen?',
-  qWhere:'Wohin kann ich jetzt gehen?', qHow:'Wie komme ich dorthin?', phHow:'Wohin möchten Sie?', popular:'Am häufigsten gefragt', carQ:'Haben Sie ein Auto?', carYes:'Ich habe ein Auto', carNo:'Ich habe kein Auto',
+de:{name:'DE', brand:'Touristeninformation Çanakkale', kicker:'STADTFÜHRER', title:'Stadtplan Çanakkale', h1:'Willkommen in Çanakkale',
+  qWhere:'Entdecken', qHow:'Route', phHow:'Wohin möchten Sie?', popular:'Am häufigsten gefragt', carQ:'Haben Sie ein Auto?', carYes:'Ich habe ein Auto', carNo:'Ich habe kein Auto',
   xDescCar:'Im Raum {d}. Sie können direkt mit dem Auto hinfahren; Ihre Karten-App zeigt Strecke und Fahrzeit.',
   dutyNow:'Die Apotheken sind jetzt geschlossen (abends oder am Wochenende). Geöffnet ist nur die Notdienstapotheke (nöbetçi eczane); ihre Adresse hängt auch an jeder Apothekentür.', dutyBtn:'Notdienstapotheke finden', dutyList:'Liste der Notdienstapotheken',
   dutyHours:'Apotheken sind werktags von {a} bis {b} Uhr geöffnet. Außerhalb dieser Zeiten, am Wochenende und an Feiertagen hat nur die Notdienstapotheke (nöbetçi eczane) geöffnet.',
@@ -1585,8 +1593,8 @@ de:{name:'DE', brand:'Touristeninformation Çanakkale', kicker:'STADTFÜHRER', t
   how:'So kommen Sie hin', locate:'Meinen Standort anzeigen', locErr:'Ihr Standort ist nicht verfügbar.', theme:'Zwischen heller und dunkler Ansicht wechseln',
   draft:'Entwurf: Orte und Angaben werden noch vom Büro geprüft.',
   foot:'Touristeninformation Çanakkale. Entfernungen und Zeiten sind Schätzwerte; aktuelle Angaben erhalten Sie am Schalter.'},
-fr:{name:'FR', brand:'Office de tourisme de Çanakkale', kicker:'GUIDE DE LA VILLE', title:'Plan de Çanakkale', h1:'Que souhaitez-vous savoir ?',
-  qWhere:'Où puis-je aller maintenant ?', qHow:'Comment y aller ?', phHow:'Où voulez-vous aller ?', popular:'Les plus demandés', carQ:'Avez-vous une voiture ?', carYes:'J’ai une voiture', carNo:'Je n’ai pas de voiture',
+fr:{name:'FR', brand:'Office de tourisme de Çanakkale', kicker:'GUIDE DE LA VILLE', title:'Plan de Çanakkale', h1:'Bienvenue à Çanakkale',
+  qWhere:'Explorer', qHow:'Itinéraire', phHow:'Où voulez-vous aller ?', popular:'Les plus demandés', carQ:'Avez-vous une voiture ?', carYes:'J’ai une voiture', carNo:'Je n’ai pas de voiture',
   xDescCar:'Dans le secteur de {d}. Vous pouvez y aller directement en voiture ; votre application de cartes indique la route et la durée.',
   dutyNow:'Les pharmacies sont fermées en ce moment (soir ou week-end). Seule la pharmacie de garde (nöbetçi eczane) est ouverte ; son adresse est aussi affichée sur la porte de chaque pharmacie.', dutyBtn:'Trouver la pharmacie de garde', dutyList:'Liste des pharmacies de garde',
   dutyHours:'Les pharmacies sont ouvertes en semaine de {a} à {b}. En dehors de ces horaires, le week-end et les jours fériés, seule la pharmacie de garde (nöbetçi eczane) est ouverte.',
@@ -1609,8 +1617,8 @@ fr:{name:'FR', brand:'Office de tourisme de Çanakkale', kicker:'GUIDE DE LA VIL
   how:'Comment s’y rendre', locate:'Afficher ma position', locErr:'Votre position est indisponible.', theme:'Basculer entre thème clair et sombre',
   draft:'Brouillon : les lieux et les détails sont encore en cours de vérification.',
   foot:'Office de tourisme de Çanakkale. Les distances et les durées sont des estimations ; demandez les informations du jour au comptoir.'},
-es:{name:'ES', brand:'Oficina de Turismo de Çanakkale', kicker:'GUÍA DE LA CIUDAD', title:'Mapa de Çanakkale', h1:'¿Qué desea saber?',
-  qWhere:'¿Adónde puedo ir ahora?', qHow:'¿Cómo llego allí?', phHow:'¿Adónde quiere ir?', popular:'Lo más preguntado', carQ:'¿Tiene coche?', carYes:'Tengo coche', carNo:'No tengo coche',
+es:{name:'ES', brand:'Oficina de Turismo de Çanakkale', kicker:'GUÍA DE LA CIUDAD', title:'Mapa de Çanakkale', h1:'Bienvenido a Çanakkale',
+  qWhere:'Explorar', qHow:'Cómo llegar', phHow:'¿Adónde quiere ir?', popular:'Lo más preguntado', carQ:'¿Tiene coche?', carYes:'Tengo coche', carNo:'No tengo coche',
   xDescCar:'En la zona de {d}. Puede ir directamente en coche; su aplicación de mapas muestra la ruta y el tiempo.',
   dutyNow:'Las farmacias están cerradas ahora (noche o fin de semana). Solo abre la farmacia de guardia (nöbetçi eczane); su dirección figura también en la puerta de cada farmacia.', dutyBtn:'Buscar la farmacia de guardia', dutyList:'Lista de farmacias de guardia',
   dutyHours:'Las farmacias abren los días laborables de {a} a {b}. Fuera de ese horario, los fines de semana y los festivos solo abre la farmacia de guardia (nöbetçi eczane).',
@@ -1637,8 +1645,8 @@ es:{name:'ES', brand:'Oficina de Turismo de Çanakkale', kicker:'GUÍA DE LA CIU
 /* ---- four more languages: Bulgarian, Russian, Greek, Arabic ----
    Interface texts are below. Texts of the places are in XL further down, looked up by their English text. */
 const MORE_UI = {
-bg:{name:'BG', brand:'Туристически център Чанаккале', kicker:'ГРАДСКИ ПЪТЕВОДИТЕЛ', title:'Пътеводител за Чанаккале', h1:'Какво искате да попитате?',
-  qWhere:'Къде мога да отида сега?', qHow:'Как да стигна дотам?', phHow:'Къде искате да отидете?', popular:'Най-често питани', carQ:'Имате ли автомобил?', carYes:'Имам авто­мобил', carNo:'Нямам авто­мобил',
+bg:{name:'BG', brand:'Туристически център Чанаккале', kicker:'ГРАДСКИ ПЪТЕВОДИТЕЛ', title:'Пътеводител за Чанаккале', h1:'Добре дошли в Чанаккале',
+  qWhere:'Разгледай', qHow:'Упътвания', phHow:'Къде искате да отидете?', popular:'Най-често питани', carQ:'Имате ли автомобил?', carYes:'Имам авто­мобил', carNo:'Нямам авто­мобил',
   xDescCar:'В района на {d}. Можете да стигнете направо с автомобила си; приложението ви за карти показва пътя и времето.',
   dutyNow:'В момента аптеките са затворени (вечер или уикенд). Работи само дежурната аптека (nöbetçi eczane); адресът ѝ е изписан и на вратата на всяка аптека.', dutyBtn:'Намери дежурната аптека', dutyList:'Списък на дежурните аптеки',
   dutyHours:'Аптеките работят в делнични дни от {a} до {b}. Извън тези часове, през уикенда и на официални празници работи само дежурната аптека (nöbetçi eczane).',
@@ -1661,8 +1669,8 @@ bg:{name:'BG', brand:'Туристически център Чанаккале',
   nFound:'{n} резултата, най-подходящите първо', mBusC:'Ç9 + междуградски автобус', sCb2:'От автогарата вземете междуградски автобус до {n}. Билети се продават в офисите на автобусните фирми и онлайн; вижте „Автобусни фирми“.', sCarNo:'Приложението ви за карти показва разстоянието и времето за пътуване до {n}.', cDesc:'Как да стигнете от Чанаккале до {n}.',
   xDesc:'В района на {d}. Първо вижте как да стигнете до {d}; за последната част обикновено е нужно такси, екскурзия или собствен автомобил.', xDescC:'В центъра на Чанаккале или наблизо.', toVia:'Как да стигнете до {d}', inArea:'район {d}', centre:'център на града'},
 
-ru:{name:'RU', brand:'Туристический центр Чанаккале', kicker:'ПУТЕВОДИТЕЛЬ', title:'Путеводитель по Чанаккале', h1:'Что вы хотите узнать?',
-  qWhere:'Куда можно пойти сейчас?', qHow:'Как туда добраться?', phHow:'Куда вы хотите поехать?', popular:'Чаще всего спрашивают', carQ:'У вас есть автомобиль?', carYes:'Есть авто­мобиль', carNo:'Нет авто­мобиля',
+ru:{name:'RU', brand:'Туристический центр Чанаккале', kicker:'ПУТЕВОДИТЕЛЬ', title:'Путеводитель по Чанаккале', h1:'Добро пожаловать в Чанаккале',
+  qWhere:'Интересное', qHow:'Маршрут', phHow:'Куда вы хотите поехать?', popular:'Чаще всего спрашивают', carQ:'У вас есть автомобиль?', carYes:'Есть авто­мобиль', carNo:'Нет авто­мобиля',
   xDescCar:'В районе {d}. Туда можно доехать прямо на автомобиле; приложение карт покажет дорогу и время в пути.',
   dutyNow:'Сейчас аптеки закрыты (вечер или выходные). Работает только дежурная аптека (nöbetçi eczane); её адрес указан также на двери каждой аптеки.', dutyBtn:'Найти дежурную аптеку', dutyList:'Список дежурных аптек',
   dutyHours:'Аптеки работают по будням с {a} до {b}. В остальное время, в выходные и праздничные дни работает только дежурная аптека (nöbetçi eczane).',
@@ -1685,8 +1693,8 @@ ru:{name:'RU', brand:'Туристический центр Чанаккале',
   nFound:'Результатов: {n}, сначала самые подходящие', mBusC:'Ç9 + междугородный автобус', sCb2:'На автовокзале сядьте на междугородный автобус до {n}. Билеты продаются в офисах автобусных компаний и онлайн; см. «Автобусные компании».', sCarNo:'Расстояние и время в пути до {n} покажет ваше приложение карт.', cDesc:'Как добраться из Чанаккале до {n}.',
   xDesc:'В районе {d}. Сначала посмотрите, как добраться до {d}; на последнем участке обычно нужны такси, экскурсия или свой автомобиль.', xDescC:'В центре Чанаккале или рядом.', toVia:'Как добраться: {d}', inArea:'район {d}', centre:'центр города'},
 
-el:{name:'EL', brand:'Τουριστικές Πληροφορίες Τσανάκκαλε', kicker:'ΟΔΗΓΟΣ ΠΟΛΗΣ', title:'Οδηγός Τσανάκκαλε', h1:'Τι θέλετε να ρωτήσετε;',
-  qWhere:'Πού μπορώ να πάω τώρα;', qHow:'Πώς θα πάω εκεί;', phHow:'Πού θέλετε να πάτε;', popular:'Οι πιο συχνές ερωτήσεις', carQ:'Έχετε αυτοκίνητο;', carYes:'Έχω αυτο­κίνητο', carNo:'Δεν έχω αυτο­κίνητο',
+el:{name:'EL', brand:'Τουριστικές Πληροφορίες Τσανάκκαλε', kicker:'ΟΔΗΓΟΣ ΠΟΛΗΣ', title:'Οδηγός Τσανάκκαλε', h1:'Καλώς ήρθατε στο Τσανάκκαλε',
+  qWhere:'Εξερεύνηση', qHow:'Οδηγίες', phHow:'Πού θέλετε να πάτε;', popular:'Οι πιο συχνές ερωτήσεις', carQ:'Έχετε αυτοκίνητο;', carYes:'Έχω αυτο­κίνητο', carNo:'Δεν έχω αυτο­κίνητο',
   xDescCar:'Στην περιοχή: {d}. Μπορείτε να πάτε απευθείας με το αυτοκίνητό σας· η εφαρμογή χαρτών σας δείχνει τη διαδρομή και τον χρόνο.',
   dutyNow:'Τα φαρμακεία είναι κλειστά αυτή την ώρα (βράδυ ή Σαββατοκύριακο). Ανοιχτό είναι μόνο το εφημερεύον φαρμακείο (nöbetçi eczane)· η διεύθυνσή του αναγράφεται και στην πόρτα κάθε φαρμακείου.', dutyBtn:'Βρείτε το εφημερεύον φαρμακείο', dutyList:'Λίστα εφημερευόντων φαρμακείων',
   dutyHours:'Τα φαρμακεία είναι ανοιχτά τις καθημερινές {a}–{b}. Εκτός αυτών των ωρών, τα Σαββατοκύριακα και τις αργίες λειτουργεί μόνο το εφημερεύον φαρμακείο (nöbetçi eczane).',
@@ -1709,8 +1717,8 @@ el:{name:'EL', brand:'Τουριστικές Πληροφορίες Τσανάκ
   nFound:'{n} αποτελέσματα, πρώτα τα πιο σχετικά', mBusC:'Ç9 + υπεραστικό λεωφορείο', sCb2:'Στον σταθμό πάρτε υπεραστικό λεωφορείο για {n}. Εισιτήρια πωλούνται στα γραφεία των εταιρειών λεωφορείων και διαδικτυακά· δείτε «Εταιρείες λεωφορείων».', sCarNo:'Η εφαρμογή χαρτών σας δείχνει την απόσταση και τον χρόνο οδήγησης έως: {n}.', cDesc:'Πώς θα πάτε από το Τσανάκκαλε προς: {n}.',
   xDesc:'Στην περιοχή: {d}. Δείτε πρώτα πώς φτάνετε εκεί· για το τελευταίο τμήμα χρειάζεται συνήθως ταξί, οργανωμένη εκδρομή ή δικό σας αυτοκίνητο.', xDescC:'Στο κέντρο του Τσανάκκαλε ή κοντά.', toVia:'Πώς θα πάτε: {d}', inArea:'περιοχή {d}', centre:'κέντρο πόλης'},
 
-ar:{name:'AR', brand:'مكتب الاستعلامات السياحية في جناق قلعة', kicker:'دليل المدينة', title:'دليل جناق قلعة', h1:'ماذا تريد أن تسأل؟',
-  qWhere:'إلى أين يمكنني الذهاب الآن؟', qHow:'كيف أصل إلى هناك؟', phHow:'إلى أين تريد الذهاب؟', popular:'الأكثر سؤالًا', carQ:'هل لديك سيارة؟', carYes:'لدي سيارة', carNo:'ليس لدي سيارة',
+ar:{name:'AR', brand:'مكتب الاستعلامات السياحية في جناق قلعة', kicker:'دليل المدينة', title:'دليل جناق قلعة', h1:'أهلًا بكم في جناق قلعة',
+  qWhere:'استكشف', qHow:'الاتجاهات', phHow:'إلى أين تريد الذهاب؟', popular:'الأكثر سؤالًا', carQ:'هل لديك سيارة؟', carYes:'لدي سيارة', carNo:'ليس لدي سيارة',
   xDescCar:'في منطقة {d}. يمكنك الذهاب مباشرةً بسيارتك؛ يعرض تطبيق الخرائط لديك الطريق ومدة القيادة.',
   dutyNow:'الصيدليات مغلقة الآن (مساءً أو في عطلة نهاية الأسبوع). تعمل الصيدلية المناوبة فقط (nöbetçi eczane)، وعنوانها مكتوب أيضًا على باب كل صيدلية.', dutyBtn:'ابحث عن الصيدلية المناوبة', dutyList:'قائمة الصيدليات المناوبة',
   dutyHours:'تعمل الصيدليات في أيام الأسبوع من {a} إلى {b}. خارج هذه الأوقات وفي عطلة نهاية الأسبوع والعطل الرسمية تعمل الصيدلية المناوبة فقط (nöbetçi eczane).',
@@ -1770,6 +1778,8 @@ const XL_ROWS = {
 'Naval Museum':['Военно­морски музей','Военно-морской музей','Ναυτικό Μουσείο','المتحف البحري'],
 'Naval museum beside Çimenlik Castle, with a replica of the minelayer Nusret.':['Военноморски музей до крепостта Чименлик, с реплика на минния заградител „Нусрет“.','Военно-морской музей у крепости Чименлик с копией минного заградителя «Нусрет».','Ναυτικό μουσείο δίπλα στο κάστρο Τσιμενλίκ, με αντίγραφο της ναρκοθέτιδας «Νουσρέτ».','متحف بحري بجوار قلعة تشيمنليك، وفيه نسخة من زارعة الألغام «نصرت».'],
 'City Museum':['Градски музей','Городской музей','Μουσείο της Πόλης','متحف المدينة'],
+'Piri Reis Museum':['Музей „Пири Реис“','Музей Пири-реиса','Μουσείο Πίρι Ρέις','متحف بيري ريس'],
+'A new museum of the Çanakkale Chamber of Commerce and Industry (ÇTSO), opened in November 2026 in the chamber’s former building in the centre. It tells the story of the Dardanelles, of sea trade through the ages and of the sailor and cartographer Piri Reis, his 1513 world map and his Kitab-ı Bahriye, with digital displays and a virtual-reality ship. Ask at our desk for opening hours.':['Нов музей на Търговско-промишлената камара на Чанаккале (ÇTSO), открит през ноември 2026 г. в бившата сграда на камарата в центъра. Разказва за Дарданелите, за морската търговия през вековете и за мореплавателя и картограф Пири Реис, неговата световна карта от 1513 г. и Kitab-ı Bahriye, с дигитални експозиции и кораб с виртуална реалност. За работното време попитайте на нашето гише.','Новый музей Торгово-промышленной палаты Чанаккале (ÇTSO), открытый в ноябре 2026 года в бывшем здании палаты в центре. Он рассказывает о Дарданеллах, о морской торговле на протяжении веков и о мореплавателе и картографе Пири-реисе, его карте мира 1513 года и книге Kitab-ı Bahriye, с цифровыми экспозициями и кораблём виртуальной реальности. Часы работы уточняйте на нашей стойке.','Νέο μουσείο του Εμπορικού και Βιομηχανικού Επιμελητηρίου του Τσανάκκαλε (ÇTSO), που άνοιξε τον Νοέμβριο του 2026 στο παλιό κτίριο του επιμελητηρίου στο κέντρο. Αφηγείται την ιστορία των Δαρδανελλίων, του θαλάσσιου εμπορίου στους αιώνες και του θαλασσοπόρου και χαρτογράφου Πίρι Ρέις, τον παγκόσμιο χάρτη του 1513 και το Kitab-ı Bahriye, με ψηφιακές εκθέσεις και ένα πλοίο εικονικής πραγματικότητας. Για το ωράριο ρωτήστε στο γκισέ μας.','متحف جديد لغرفة التجارة والصناعة في جناق قلعة (ÇTSO)، افتُتح في نوفمبر 2026 في المبنى السابق للغرفة في المركز. يروي قصة مضيق الدردنيل والتجارة البحرية عبر العصور والبحّار ورسّام الخرائط بيري ريس، وخريطته للعالم لعام 1513 وكتابه Kitab-ı Bahriye، بعروض رقمية وسفينة للواقع الافتراضي. اسأل في مكتبنا عن مواعيد الزيارة.'],
 'The City Museum and Archive tells the story of Çanakkale and its people.':['Градският музей и архив разказва историята на Чанаккале и неговите жители.','Городской музей и архив рассказывает историю Чанаккале и его жителей.','Το Μουσείο και Αρχείο της Πόλης αφηγείται την ιστορία του Τσανάκκαλε και των κατοίκων του.','يروي متحف المدينة وأرشيفها تاريخ جناق قلعة وأهلها.'],
 'Ceramic Museum':['Музей на кера­миката','Музей керамики','Μουσείο Κεραμικής','متحف الخزف'],
 'Museum of traditional Çanakkale ceramics.':['Музей на традиционната керамика от Чанаккале.','Музей традиционной керамики Чанаккале.','Μουσείο της παραδοσιακής κεραμικής του Τσανάκκαλε.','متحف الخزف التقليدي في جناق قلعة.'],
@@ -1830,7 +1840,7 @@ const XL_ROWS = {
 'Post office (HGS toll card)':['Поща (HGS карта за пътни такси)','Почта (карта HGS для платных дорог)','Ταχυδρο­μείο (κάρτα διοδίων HGS)','مكتب البريد (بطاقة HGS للطرق)'],
 'Main post office on İnönü Caddesi. HGS motorway toll cards are sold here.':['Централна поща на ул. İnönü. Тук се продават HGS карти за магистралните такси.','Главпочтамт на улице İnönü. Здесь продаются карты HGS для оплаты платных дорог.','Κεντρικό ταχυδρομείο στην οδό İnönü. Εδώ πωλούνται κάρτες διοδίων HGS.','مكتب البريد الرئيسي في شارع İnönü. تُباع هنا بطاقات HGS لرسوم الطرق السريعة.'],
 'Currency exchange':['Обмяна на валута','Обмен валюты','Συνάλ­λαγμα (ανταλλακτήριο)','صرف العملات'],
-'Jewellery shops (sarraf) in the centre also change money.':['Бижутерийните магазини (sarraf) в центъра също обменят валута.','Ювелирные магазины (sarraf) в центре также меняют валюту.','Τα κοσμηματοπωλεία (sarraf) στο κέντρο αλλάζουν επίσης συνάλλαγμα.','محلات الصاغة (sarraf) في المركز تصرف العملات أيضًا.'],
+'Temizel Döviz is a licensed exchange office in the centre, at Çarşı Caddesi No. 159. Banks also change money.':['Temizel Döviz е лицензирано бюро за обмяна на валута в центъра, на Çarşı Caddesi № 159. Банките също обменят валута.','Temizel Döviz — лицензированный обменный пункт в центре, Çarşı Caddesi, 159. Валюту также меняют в банках.','Το Temizel Döviz είναι αδειοδοτημένο ανταλλακτήριο συναλλάγματος στο κέντρο, στην Çarşı Caddesi αρ. 159. Συνάλλαγμα αλλάζουν επίσης οι τράπεζες.','Temizel Döviz مكتب صرافة مرخّص في المركز، في Çarşı Caddesi رقم 159. تصرف البنوك العملات أيضًا.'],
 'The route uses two car ferries: Çanakkale–Eceabat (725 TL per car) and Kabatepe–Gökçeada (1,400 TL per car).':['Маршрутът включва два автомобилни ферибота: Чанаккале–Еджеабат (725 TL на автомобил) и Кабатепе–Гьокчеада (1400 TL на автомобил).','Маршрут включает два автомобильных парома: Чанаккале–Эджеабат (725 TL за автомобиль) и Кабатепе–Гёкчеада (1400 TL за автомобиль).','Η διαδρομή περιλαμβάνει δύο οχηματαγωγά: Τσανάκκαλε–Έτζεαμπατ (725 TL ανά αυτοκίνητο) και Kabatepe–Ίμβρος (1.400 TL ανά αυτοκίνητο).','يتضمن المسار عبّارتين للسيارات: جناق قلعة–إيجه آباد (725 ليرة للسيارة) وكاباتبه–غوكتشه أدا (1400 ليرة للسيارة).'],
 '40 TL + dolmuş + 250 TL':['40 TL + долмуш + 250 TL','40 TL + долмуш + 250 TL','40 TL + ντολμούς + 250 TL','40 TL + دولموش + 250 TL'],
 'Ferry + dolmuş + ferry':['Ферибот + долмуш + ферибот','Паром + долмуш + паром','Φέρι + ντολμούς + φέρι','عبّارة + دولموش + عبّارة'],
@@ -2024,6 +2034,8 @@ tr:{mWalkDol:'Yürüyüş + dolmuş', mTaxiDol:'Taksi + dolmuş', payDriver:'üc
   sDolWalk:'{n} için yürüyün: {d}, {t}.', sDolTaxi:'{n} için taksiye binin: {d}, {t}.', sDolRide:'{n} dolmuşuna binin: {t}. Ücreti şoföre ödeyin.'}
 };
 Object.keys(UI_DOL).forEach(l => { Object.assign(UI[l], UI_DOL[l]); });
+const UI_NEW = {en:{newTag:'New'}, tr:{newTag:'Yeni'}, de:{newTag:'Neu'}, fr:{newTag:'Nouveau'}, es:{newTag:'Nuevo'}, bg:{newTag:'Ново'}, ru:{newTag:'Новинка'}, el:{newTag:'Νέο'}, ar:{newTag:'جديد'}};
+Object.keys(UI_NEW).forEach(l => { if (UI[l]) Object.assign(UI[l], UI_NEW[l]); });
 const UI_MAPS = {
 en:{mapsT:'Maps to download', mapTr:'Visitor transport map', mapCc:'City centre map', mapDl:'Download for printing'},
 tr:{mapsT:'İndirilebilir haritalar', mapTr:'Ziyaretçi ulaşım haritası', mapCc:'Şehir merkezi haritası', mapDl:'İndir, baskıya uygun'},
@@ -2441,14 +2453,17 @@ $('#q').addEventListener('input', e => { F.q = e.target.value; renderHome(); });
 $('#clear').addEventListener('click', () => { if (MODE === 'how'){ F.q = ''; $('#q').value = ''; } else F.sort = F.walk = F.noferry = F.one = false; renderChips(); renderHome(); });
 
 const short = x => tx(x.label || x.name).replace(/\s*\(.*\)$/, '');
-const card = p => '<li><a class="card" style="--c:var(--' + p.cat + ')" href="#/p/' + p.id + '"><span class="big">' + sized(p.icon, 32) + '</span><span class="txt"><b>' + esc(tx(p.name)) + '</b><small>' + esc(summary(p)) + '</small></span><span class="go">' + ICONS.chevron + '</span></a></li>';
+const card = p => '<li><a class="card" style="--c:var(--' + p.cat + ')" href="#/p/' + p.id + '"><span class="big">' + sized(p.icon, 32) + '</span><span class="txt"><b>' + esc(tx(p.name)) + newTag(p, true) + '</b><small>' + esc(summary(p)) + '</small></span><span class="go">' + ICONS.chevron + '</span></a></li>';
 /* a picture on the first screen: a place, or a group ('g:<key>') */
 const pick = k => { if (k.startsWith('r:')){ const R = routeById(k.slice(2)); return R && routeLegs(R).legs.length ? {x:{icon:R.icon, name:R.name}, r:R, c:R.cat, href:'#/r/' + R.id} : null; }
   if (k.startsWith('n:')){ const id = k.slice(2), K = NEAR.kinds[id], t = UI[lang];
     return K ? {x:{icon:K.icon, name:t.nearTitle[id], label:t.nearName[id]}, n:true, c:'near', href:'#/n/' + id} : null; }
   const g = k.startsWith('g:') && GROUPS[k.slice(2)], x = g || byId(k); return x ? {x, g, c:g ? g.cat : x.cat, href:'#/' + (g ? 'g/' + k.slice(2) : 'p/' + x.id)} : null; };
-const tiles = (list, own) => '<div class="icons">' + list.map(pick).filter(Boolean).map(k => '<a class="icon"' + (own ? ' style="--c:var(--' + k.c + ')"' : '') + ' href="' + k.href + '"><span class="big">' + sized(k.x.icon, 38) + '</span><b>' + esc(short(k.x)) + '</b></a>').join('') + '</div>';
-const cards = list => '<ul class="list">' + list.map(pick).filter(Boolean).map(k => '<li><a class="card" style="--c:var(--' + k.c + ')" href="' + k.href + '"><span class="big">' + sized(k.x.icon, 32) + '</span><span class="txt"><b>' + esc(tx(k.x.name)) + '</b>' + (k.r ? '<small>' + esc(routeSum(k.r)) + '</small>' : '') + '</span><span class="go">' + ICONS.chevron + '</span></a></li>').join('') + '</ul>';
+const tiles = (list, own) => '<div class="icons">' + list.map(pick).filter(Boolean).map(k => '<a class="icon"' + (own ? ' style="--c:var(--' + k.c + ')"' : '') + ' href="' + k.href + '">' + newTag(k.x) + '<span class="big">' + sized(k.x.icon, 38) + '</span><b>' + esc(short(k.x)) + '</b></a>').join('') + '</div>';
+const cards = list => '<ul class="list">' + list.map(pick).filter(Boolean).map(k => '<li><a class="card" style="--c:var(--' + k.c + ')" href="' + k.href + '"><span class="big">' + sized(k.x.icon, 32) + '</span><span class="txt"><b>' + esc(tx(k.x.name)) + newTag(k.x, true) + '</b>' + (k.r ? '<small>' + esc(routeSum(k.r)) + '</small>' : '') + '</span><span class="go">' + ICONS.chevron + '</span></a></li>').join('') + '</ul>';
+/* a 'new' label on places that opened recently: shown until the date in newUntil (Turkish time), then it disappears by itself */
+const isNew = x => !!(x && x.newUntil && Date.now() < Date.parse(x.newUntil + 'T00:00:00+03:00'));
+const newTag = (x, inl) => isNew(x) ? '<span class="newtag' + (inl ? ' in' : '') + '">' + esc(UI[lang].newTag || UI.en.newTag) + '</span>' : '';
 const listOf = found => found.length ? '<ul class="list">' + found.map(card).join('') + '</ul>' : '<p class="none">' + esc(UI[lang].none) + '</p>';
 /* first screen. "How do I get to ...?": a search, with the most asked places while nothing is typed.
    "Where can I go?": pictures by need, three to a row; with a planning filter it becomes one list, nearest first. */
