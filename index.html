@@ -818,6 +818,7 @@ h1{margin:16px 0 12px;font-size:clamp(29px,7.2vw,40px);line-height:1.15;letter-s
 .sheet h2{margin:0 0 6px;font-size:31px;line-height:1.15;letter-spacing:-.4px}
 .sheet p{margin:0 0 12px;max-width:60ch}
 .facts{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px;padding:0;list-style:none}
+.wxhere{margin:-6px 0 16px;padding:9px 14px;border-radius:14px;background:var(--chip);font-size:16.5px;line-height:1.35}
 .facts li{padding:6px 12px;border-radius:16px;background:var(--chip);font-size:17.5px;font-weight:600}
 .how{margin:0 0 6px;font-size:15px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted)}
 .steps{margin:0 0 18px;padding:0;list-style:none;counter-reset:s;display:grid;gap:10px}
@@ -1029,7 +1030,7 @@ button.btn{width:100%;cursor:pointer}
    stop          : optional {lat, lng, name:[...]} bus stop to walk to first
    ===================================================================== */
 const DRAFT  = false;
-const BUILD  = '2026-11-16 b';      /* changed with every new version: an open guide that comes back online reloads itself when this differs */
+const BUILD  = '2026-11-16 d';      /* changed with every new version: an open guide that comes back online reloads itself when this differs */
 const LANGS  = ['en','tr','de','fr','es','bg','ru','el','ar'];
 const XLANGS = ['bg','ru','el','ar'];      /* the languages whose place texts live in XL_ROWS */
 const OFFICE = {lat:40.1498833, lng:26.4024356};
@@ -1059,7 +1060,7 @@ const RATES  = {            /* used for every time and fare estimate */
 };
 const GROUPS = {              /* a picture that opens several places. cat: its colour and heading; ids: optional fixed list and order (otherwise every place with group:'<key>', nearest first) */
   bus:   {icon:'busstop', cat:'transport', ids:['c9-ptt','c9-stop','otogar','troy-minibus'], name:['Bus stops','Otobüs durakları','Bushaltestellen','Arrêts de bus','Paradas de autobús'], label:['Buses','Otobüs','Busse','Bus','Autobuses']},
-  ferry: {icon:'ferry',   cat:'transport', ids:['eceabat-ferry','kabatepe','geyikli'], name:['Ferries','Feribotlar','Fähren','Ferries','Ferris'], label:['Ferry','Feribot','Fähre','Ferry','Ferri']},
+  ferry: {icon:'ferry',   cat:'transport', ids:['eceabat-ferry','kilitbahir-ferry','kabatepe','geyikli'], name:['Ferries','Feribotlar','Fähren','Ferries','Ferris'], label:['Ferry','Feribot','Fähre','Ferry','Ferri']},
   districts: {icon:'town', cat:'transport', name:['Districts of Çanakkale','Çanakkale’nin ilçeleri','Landkreise von Çanakkale','Districts de Çanakkale','Distritos de Çanakkale'], label:['Districts','İlçeler','Land­kreise','Districts','Distritos']},
   islands:   {icon:'island', cat:'transport', ids:['bozcaada','gokceada'], name:['Islands','Adalar','Inseln','Îles','Islas']},
   cities:    {icon:'city', cat:'transport', name:['Other cities','Diğer şehirler','Andere Städte','Autres villes','Otras ciudades'], label:['Cities','Şehirler','Städte','Villes','Ciudades']},
@@ -1153,7 +1154,7 @@ const NEAR = {
 const WEATHER = {lat:40.15, lng:26.41, url:'https://api.open-meteo.com/v1/forecast', keepMin:30, rainMm:0.2, rainProb:60, hot:31, cold:8, wind:40, gust:60, dayFrom:'09:00', dayTo:'17:00'};
 const SUIT = {
   'r:centre':{out:1, hrs:1, min:230},
-  'trojan-horse':{out:1, sun:1, eve:1, min:20}, 'c-saat':{out:1, eve:1, min:15}, 'c-cimenlik':{out:1, hrs:1, min:45},
+  'trojan-horse':{out:1, sun:1, eve:1, min:20}, 'c-saat':{out:1, eve:1, min:15},
   'naval-museum':{in:1, min:60}, 'city-museum':{in:1, min:40}, 'ceramic-museum':{in:1, min:30}, 'aynali-bazaar':{in:1, min:30},
   'troy-museum':{in:1, far:1, min:180},
   'troy-site':{out:1, hrs:1, far:1, min:240}, 'g:castles':{out:1, far:1, min:240}, 'g:nature':{out:1, sea:1, far:1, min:240},
@@ -1174,24 +1175,24 @@ const ROUTES = [
 const HOME = [
   {cat:'near',      tiles:['n:pharmacy','n:taxi','n:busstop']},
   {cat:'sights',    title:'routes', cards:['r:centre']},
-  {cat:'sights',    tiles:['trojan-horse','aynali-bazaar','c-saat','naval-museum','piri-reis','c-cimenlik','city-museum','ceramic-museum','synagogue','n:mosque']},
+  {cat:'sights',    tiles:['trojan-horse','aynali-bazaar','c-saat','naval-museum','c-nusret','piri-reis','city-museum','ceramic-museum','synagogue','n:mosque']},
   {cat:'far',       tiles:['troy-site','troy-museum','g:memorials','g:ancient','g:castles','g:nature','g:villages','g:islands','g:districts']},
   {cat:'services',  tiles:['atm','wc-ferry','pharmacy','hospital','exchange','ptt']},
-  {cat:'transport', tiles:['otogar','g:bus','g:ferry','airport','agencies','g:cities']}      /* the bus companies are linked from the Otogar */
+  {cat:'transport', tiles:['otogar','g:bus','g:ferry','airport','agencies','car-rental','g:cities']}      /* the bus companies are linked from the Otogar */
 ];
 /* the pictures shown under "How do I get to ...?" before anything is typed: keep 3, 6 or 9 */
 const POPULAR = ['otogar','c9-ptt','airport','eceabat-ferry','troy-site','troy-museum','troy-minibus','g:memorials','g:islands','agencies'];
 const BUSCO = ['Intercity coach company. The buttons below find its ticket offices on the map; coaches leave from the Otogar.','Şehirlerarası otobüs firması. Aşağıdaki düğmeler yazıhanelerini haritada bulur; otobüsler otogardan kalkar.','Fernbusunternehmen. Die Schaltflächen unten finden seine Büros auf der Karte; die Busse fahren am Otogar ab.','Compagnie d’autocars. Les boutons ci-dessous trouvent ses agences sur la carte ; les autocars partent de l’Otogar.','Empresa de autobuses interurbanos. Los botones de abajo encuentran sus oficinas en el mapa; los autobuses salen del Otogar.'];
 const PLACES = [
  {id:'trojan-horse', icon:'horse', cat:'sights', kind:'pin', see:['r:centre'], lat:40.1520614, lng:26.4054584,
-  name:['Trojan Horse','Truva Atı','Trojani­sches Pferd','Cheval de Troie','Caballo de Troya'],
+  name:['Trojan Horse statue','Truva Atı Heykeli','Statue des Trojani­schen Pferdes','Statue du cheval de Troie','Estatua del caballo de Troya'],
   desc:['The wooden horse made for the 2004 film Troy, on the waterfront promenade.','2004 yapımı Troy filmi için yapılan ahşap at; kordonda durur.','Das Holzpferd aus dem Film „Troja“ (2004), an der Uferpromenade.','Le cheval de bois du film Troie (2004), sur la promenade du front de mer.','El caballo de madera de la película Troya (2004), en el paseo marítimo.']},
  {id:'aynali-bazaar', icon:'bag', cat:'sights', kind:'pin', see:['r:centre'], lat:40.1462548, lng:26.4038044,
   name:['Aynalı Bazaar','Aynalı Çarşı','Aynalı-Basar','Bazar Aynalı','Bazar Aynalı'],
   desc:['Historic covered bazaar in the old town, good for souvenirs and local products.','Eski şehirdeki tarihî kapalı çarşı; hediyelik eşya ve yöresel ürünler bulunur.','Historischer überdachter Basar in der Altstadt, gut für Souvenirs und lokale Produkte.','Bazar couvert historique de la vieille ville, idéal pour les souvenirs et les produits locaux.','Bazar cubierto histórico del casco antiguo, ideal para recuerdos y productos locales.']},
- {id:'naval-museum', icon:'anchor', cat:'sights', kind:'pin', see:['r:centre'], lat:40.1475135, lng:26.3992667,
-  name:['Naval Museum','Deniz Müzesi','Marine­museum','Musée naval','Museo Naval'],
-  desc:['Naval museum beside Çimenlik Castle, with a replica of the minelayer Nusret.','Çimenlik Kalesi’nin yanındaki deniz müzesi; Nusret Mayın Gemisi’nin benzeri de buradadır.','Marinemuseum neben der Festung Çimenlik, mit einem Nachbau des Minenlegers Nusret.','Musée naval à côté de la forteresse de Çimenlik, avec une réplique du mouilleur de mines Nusret.','Museo naval junto a la fortaleza de Çimenlik, con una réplica del minador Nusret.']},
+ {id:'naval-museum', icon:'anchor', group:'castles', cat:'sights', kind:'pin', see:['r:centre'], lat:40.1475135, lng:26.3992667,
+  name:['Naval Museum and Çimenlik Castle','Deniz Müzesi ve Çimenlik Kalesi','Marine­museum und Festung Çimenlik','Musée naval et forteresse de Çimenlik','Museo Naval y Fortaleza de Çimenlik'],
+  desc:['The Naval Museum and Çimenlik Castle are one site, visited together: the Ottoman castle, the museum and a replica of the minelayer Nusret.','Deniz Müzesi ile Çimenlik Kalesi aynı alandadır ve birlikte gezilir: Osmanlı kalesi, müze ve Nusret Mayın Gemisi’nin benzeri.','Marinemuseum und Festung Çimenlik bilden ein Gelände und werden zusammen besichtigt: die osmanische Festung, das Museum und ein Nachbau des Minenlegers Nusret.','Le Musée naval et la forteresse de Çimenlik forment un seul site, qui se visite d’un seul tenant : la forteresse ottomane, le musée et une réplique du mouilleur de mines Nusret.','El Museo Naval y la Fortaleza de Çimenlik son un mismo recinto y se visitan juntos: la fortaleza otomana, el museo y una réplica del minador Nusret.']},
  {id:'city-museum', icon:'landmark', cat:'sights', kind:'pin', see:['r:centre'], lat:40.1485236, lng:26.400803,
   name:['City Museum','Kent Müzesi','Stadt­museum','Musée de la ville','Museo de la Ciudad'],
   desc:['The City Museum and Archive tells the story of Çanakkale and its people.','Kent Müzesi ve Arşivi, Çanakkale’nin ve Çanakkalelilerin hikâyesini anlatır.','Das Stadtmuseum mit Archiv erzählt die Geschichte Çanakkales und seiner Menschen.','Le musée de la ville et ses archives racontent l’histoire de Çanakkale et de ses habitants.','El Museo de la Ciudad y su archivo cuentan la historia de Çanakkale y de su gente.']},
@@ -1257,6 +1258,15 @@ const PLACES = [
   name:['Minibus stop for Troy','Troya minibüs durağı','Minibus-Haltestelle nach Troja','Arrêt des minibus pour Troie','Parada de minibuses a Troya'],
   label:['Troy minibus','Troya minibüsü','Troja-Minibus','Minibus Troie','Minibús Troya'],
   desc:['Minibuses to Troy and the Troy Museum leave from this stop. Ask at our desk for today’s times and the fare.','Troya’ya ve Troya Müzesi’ne giden minibüsler bu duraktan kalkar. Günün saatlerini ve ücreti danışma masamıza sorun.','Von dieser Haltestelle fahren die Minibusse nach Troja und zum Troja-Museum. Abfahrtszeiten und Fahrpreis erfahren Sie an unserem Schalter.','Les minibus pour Troie et le musée de Troie partent de cet arrêt. Demandez les horaires du jour et le tarif à notre comptoir.','De esta parada salen los minibuses a Troya y al Museo de Troya. Pregunte en nuestro mostrador por los horarios del día y la tarifa.']},
+ {id:'kilitbahir-ferry', icon:'ferry', group:'ferry', cat:'transport', kind:'pin', see:['c-kilitbahir'], lat:40.1504756, lng:26.4024052,
+  label:['Kilitbahir ferry','Kilitbahir feribotu','Fähre Kilitbahir','Ferry Kilitbahir','Ferri Kilitbahir'], more:[{mode:'ferry', min:'15', cost:'ask', steps:[
+   ['Walk to the ferry pier beside the office (about 1 min).','Buy a ticket at the pier; check today’s fare on gdu.com.tr.','The crossing to Kilitbahir takes about 15 minutes. Kilitbahir Castle is a short walk from the pier.'],
+   ['Büronun yanındaki feribot iskelesine yürüyün (yaklaşık 1 dk).','Biletinizi iskeledeki gişeden alın; günün ücreti için gdu.com.tr’ye bakın.','Kilitbahir’e geçiş yaklaşık 15 dakika sürer. Kilitbahir Kalesi iskeleye kısa bir yürüme mesafesindedir.'],
+   ['Gehen Sie zum Fähranleger neben dem Büro (etwa 1 Min.).','Kaufen Sie das Ticket am Anleger; den heutigen Preis finden Sie auf gdu.com.tr.','Die Überfahrt nach Kilitbahir dauert etwa 15 Minuten. Die Festung Kilitbahir liegt nur wenige Schritte vom Anleger.'],
+   ['Marchez jusqu’à l’embarcadère à côté de l’office (environ 1 min).','Achetez le billet à l’embarcadère ; tarif du jour sur gdu.com.tr.','La traversée vers Kilitbahir dure environ 15 minutes. La forteresse de Kilitbahir est à quelques pas du quai.'],
+   ['Camine hasta el muelle del ferri, junto a la oficina (alrededor de 1 min).','Compre el billete en el muelle; tarifa del día en gdu.com.tr.','La travesía a Kilitbahir dura unos 15 minutos. La fortaleza de Kilitbahir está a pocos pasos del muelle.']]}],
+  name:['Ferry to Kilitbahir','Kilitbahir feribotu','Fähre nach Kilitbahir','Ferry pour Kilitbahir','Ferri a Kilitbahir'],
+  desc:['Ferries across the Dardanelles to Kilitbahir, the village beside Kilitbahir Castle, leave from the pier next to our office. Check today’s times and fares on gdu.com.tr.','Boğaz’ın karşı yakasına, Kilitbahir Kalesi’nin bulunduğu Kilitbahir’e giden feribotlar büromuzun yanındaki iskeleden kalkar. Günün sefer saatleri ve ücretleri için gdu.com.tr’ye bakın.','Von dem Anleger neben unserem Büro fahren Fähren über die Dardanellen nach Kilitbahir, dem Ort an der Festung Kilitbahir. Aktuelle Abfahrtszeiten und Preise finden Sie auf gdu.com.tr.','Les ferries pour Kilitbahir, le village de la forteresse de Kilitbahir, de l’autre côté des Dardanelles, partent du quai à côté de notre office. Horaires et tarifs du jour sur gdu.com.tr.','Los ferris que cruzan los Dardanelos hacia Kilitbahir, el pueblo de la fortaleza de Kilitbahir, salen del muelle junto a nuestra oficina. Horarios y tarifas del día en gdu.com.tr.']},
  {id:'kabatepe', icon:'ferry', group:'ferry', cat:'transport', kind:'pin', ferry:true, vehicles:2, road:16000, driveMin:45, lat:40.2003366, lng:26.2708385,
   name:['Gökçeada ferry (Kabatepe pier)','Gökçeada feribotu (Kabatepe İskelesi)','Fähre nach Gökçeada (Anleger Kabatepe)','Ferry pour Gökçeada (quai de Kabatepe)','Ferri a Gökçeada (muelle de Kabatepe)'],
   label:['Gökçeada ferry','Gökçeada feribotu','Fähre Gökçeada','Ferry Gökçeada','Ferri Gökçeada'],
@@ -1319,9 +1329,9 @@ const PLACES = [
  /* ---- districts of Çanakkale: how to get there from the city centre ---- */
  /* texts given as [English, Turkish] are shown in English in the other languages until they are translated */
  {id:'c-kilitbahir', icon:'castle', group:'castles', cat:'far', kind:'pin', ferry:true, car:false, vehicles:1, kw:'kale kilitbahir castle festung château castillo', lat:40.148, lng:26.3786,
-  more:[{mode:'ferry', go:'transit', min:'', cost:'ask', title:['Ferry + on foot','Feribot + yürüyüş'], steps:[
-   ['Walk to the pier of the Kilitbahir ferry. It is close to our office; ask at our desk where it is. This is not the Eceabat ferry.','Cross to Kilitbahir as a foot passenger. Check today’s sailings and the fare at the pier.','From the Kilitbahir pier walk to the castle: a few minutes.'],
-   ['Kilitbahir feribotunun iskelesine yürüyün. Büromuza yakındır; yerini danışma masamıza sorun. Bu, Eceabat feribotu değildir.','Kilitbahir’e yaya yolcu olarak geçin. Günün seferlerini ve ücreti iskelede teyit edin.','Kilitbahir iskelesinden kaleye yürüyün: birkaç dakika.']]}],
+  more:[{mode:'ferry', from:'kilitbahir-ferry', min:'15', cost:'ask', title:['Ferry + on foot','Feribot + yürüyüş'], steps:[
+   ['Walk to the ferry pier beside our office (about 1 min) and take the Kilitbahir ferry. Eceabat ferries leave from the same pier, so check the destination.','Cross to Kilitbahir as a foot passenger. Check today’s sailings and the fare at the pier.','From the Kilitbahir pier walk to the castle: a few minutes.'],
+   ['Büromuzun yanındaki feribot iskelesine yürüyün (yaklaşık 1 dk) ve Kilitbahir feribotuna binin. Eceabat feribotları da aynı iskeleden kalkar; gideceği yeri kontrol edin.','Kilitbahir’e yaya yolcu olarak geçin. Günün seferlerini ve ücreti iskelede teyit edin.','Kilitbahir iskelesinden kaleye yürüyün: birkaç dakika.']]}],
   name:['Kilitbahir Castle','Kilitbahir Kalesi'],
   desc:['The 15th-century castle on the European shore, opposite Çanakkale. A small ferry crosses from the centre to Kilitbahir; the castle is a short walk from its pier.','Çanakkale’nin karşısında, Avrupa yakasındaki 15. yüzyıl kalesi. Merkezden Kilitbahir’e küçük bir feribot geçer; kale, iskeleye kısa bir yürüyüş mesafesindedir.']},
  {id:'eceabat', icon:'town', group:'districts', cat:'transport', kind:'pin', name:'Eceabat', taxi:false, ferry:true, vehicles:1, road:5800, driveMin:30, lat:40.184286, lng:26.359394,
@@ -1378,16 +1388,20 @@ const PLACES = [
  {id:'pamukkale', icon:'ticket', group:'buscos', cat:'transport', kind:'search', via:'otogar', q:'Çanakkale Pamukkale Turizm', name:'Pamukkale Turizm', desc:BUSCO},
  /* ---- more sights in the centre. They have no pin yet: each opens a search in the maps app.
     via:'walk' marks a place in the centre within walking distance. ---- */
- {id:'piri-reis', icon:'anchor', cat:'sights', kind:'search', newUntil:'2027-05-11', q:'Piri Reis Müzesi Çanakkale',
+ {id:'c-nusret', icon:'ship', group:'castles', cat:'sights', kind:'pin', see:['naval-museum'], lat:40.1475135, lng:26.3992667,
+  name:['Minelayer Nusret (replica)','Nusret Mayın Gemisi','Minenleger Nusret (Nachbau)','Mouilleur de mines Nusret (réplique)','Minador Nusret (réplica)'],
+  desc:['A replica of the minelayer Nusret, whose mines helped turn back the Allied fleet on 18 March 1915. It is displayed at the Naval Museum, inside Çimenlik Castle.','Nusret Mayın Gemisi’nin benzeri; döktüğü mayınlar 18 Mart 1915 zaferinde önemli rol oynadı. Çimenlik Kalesi içindeki Deniz Müzesi alanında sergilenir.','Nachbau des Minenlegers Nusret, dessen Minen am 18. März 1915 zur Abwehr der alliierten Flotte beitrugen. Er steht beim Marinemuseum in der Festung Çimenlik.','Réplique du mouilleur de mines Nusret, dont les mines contribuèrent à repousser la flotte alliée le 18 mars 1915. Elle est exposée au Musée naval, dans la forteresse de Çimenlik.','Réplica del minador Nusret, cuyas minas ayudaron a rechazar a la flota aliada el 18 de marzo de 1915. Se expone en el Museo Naval, dentro de la Fortaleza de Çimenlik.']},
+ {id:'piri-reis', icon:'map', cat:'sights', kind:'search', newUntil:'2027-05-11', q:'Piri Reis Müzesi Çanakkale',
   name:['Piri Reis Museum','Piri Reis Müzesi','Piri-Reis-Museum','Musée Piri Reis','Museo Piri Reis'],
-  desc:['A new museum of the Çanakkale Chamber of Commerce and Industry (ÇTSO), opened in November 2026 in the chamber’s former building in the centre. It tells the story of the Dardanelles, of sea trade through the ages and of the sailor and cartographer Piri Reis, his 1513 world map and his Kitab-ı Bahriye, with digital displays and a virtual-reality ship. Ask at our desk for opening hours.','Çanakkale Ticaret ve Sanayi Odası’nın (ÇTSO) merkezdeki eski binasında Kasım 2026’da açılan yeni müze. Çanakkale Boğazı’nı, çağlar boyunca deniz ticaretini ve denizci-haritacı Piri Reis’i, 1513 dünya haritasını ve Kitab-ı Bahriye’sini dijital anlatımlar ve sanal gerçeklik gemisiyle tanıtır. Ziyaret saatlerini danışma masamıza sorun.','Ein neues Museum der Industrie- und Handelskammer Çanakkale (ÇTSO), eröffnet im November 2026 im früheren Kammergebäude im Zentrum. Es erzählt von den Dardanellen, vom Seehandel durch die Jahrhunderte und vom Seefahrer und Kartografen Piri Reis, seiner Weltkarte von 1513 und seinem Kitab-ı Bahriye, mit digitalen Stationen und einem Virtual-Reality-Schiff. Öffnungszeiten erfahren Sie an unserem Schalter.','Un nouveau musée de la Chambre de commerce et d’industrie de Çanakkale (ÇTSO), ouvert en novembre 2026 dans l’ancien bâtiment de la chambre, dans le centre. Il raconte les Dardanelles, le commerce maritime à travers les siècles et le marin et cartographe Piri Reis, sa carte du monde de 1513 et son Kitab-ı Bahriye, avec des dispositifs numériques et un navire en réalité virtuelle. Demandez les horaires à notre comptoir.','Un nuevo museo de la Cámara de Comercio e Industria de Çanakkale (ÇTSO), abierto en noviembre de 2026 en el antiguo edificio de la cámara, en el centro. Cuenta la historia de los Dardanelos, del comercio marítimo a lo largo de los siglos y del marino y cartógrafo Piri Reis, su mapa del mundo de 1513 y su Kitab-ı Bahriye, con pantallas digitales y un barco de realidad virtual. Pregunte el horario en nuestro mostrador.']},
+  desc:['A new museum of the Çanakkale Chamber of Commerce and Industry (ÇTSO), opened in November 2026 in the chamber’s former building in the centre. It tells the story of the Dardanelles, of sea trade through the ages and of the sailor and cartographer Piri Reis, his 1513 world map and his Kitab-ı Bahriye, with digital displays and a virtual-reality ship. Ask at our desk for opening hours. This is not the Piri Reis Museum in Gelibolu.','Çanakkale Ticaret ve Sanayi Odası’nın (ÇTSO) merkezdeki eski binasında Kasım 2026’da açılan yeni müze. Çanakkale Boğazı’nı, çağlar boyunca deniz ticaretini ve denizci-haritacı Piri Reis’i, 1513 dünya haritasını ve Kitab-ı Bahriye’sini dijital anlatımlar ve sanal gerçeklik gemisiyle tanıtır. Ziyaret saatlerini danışma masamıza sorun. Gelibolu’daki Piri Reis Müzesi’yle karıştırmayın.','Ein neues Museum der Industrie- und Handelskammer Çanakkale (ÇTSO), eröffnet im November 2026 im früheren Kammergebäude im Zentrum. Es erzählt von den Dardanellen, vom Seehandel durch die Jahrhunderte und vom Seefahrer und Kartografen Piri Reis, seiner Weltkarte von 1513 und seinem Kitab-ı Bahriye, mit digitalen Stationen und einem Virtual-Reality-Schiff. Öffnungszeiten erfahren Sie an unserem Schalter. Nicht zu verwechseln mit dem Piri-Reis-Museum in Gelibolu.','Un nouveau musée de la Chambre de commerce et d’industrie de Çanakkale (ÇTSO), ouvert en novembre 2026 dans l’ancien bâtiment de la chambre, dans le centre. Il raconte les Dardanelles, le commerce maritime à travers les siècles et le marin et cartographe Piri Reis, sa carte du monde de 1513 et son Kitab-ı Bahriye, avec des dispositifs numériques et un navire en réalité virtuelle. Demandez les horaires à notre comptoir. À ne pas confondre avec le musée Piri Reis de Gelibolu.','Un nuevo museo de la Cámara de Comercio e Industria de Çanakkale (ÇTSO), abierto en noviembre de 2026 en el antiguo edificio de la cámara, en el centro. Cuenta la historia de los Dardanelos, del comercio marítimo a lo largo de los siglos y del marino y cartógrafo Piri Reis, su mapa del mundo de 1513 y su Kitab-ı Bahriye, con pantallas digitales y un barco de realidad virtual. Pregunte el horario en nuestro mostrador. No es el Museo Piri Reis de Gelibolu.']},
  {id:'mosque', icon:'mosque', cat:'sights', kind:'search', see:['n:mosque'], q:'Cami Çanakkale Merkez',
   name:['Mosque','Cami','Moschee','Mosquée','Mezquita'],
   desc:['There are several mosques in the centre. The buttons below find the nearest ones on the map.','Merkezde birçok cami vardır. Aşağıdaki düğmeler en yakın camileri haritada bulur.','Im Zentrum gibt es mehrere Moscheen. Die Schaltflächen unten finden die nächstgelegenen auf der Karte.','Le centre compte plusieurs mosquées. Les boutons ci-dessous trouvent les plus proches sur la carte.','En el centro hay varias mezquitas. Los botones de abajo encuentran las más cercanas en el mapa.']},
  {id:'c-saat', icon:'clock', group:'castles', via:'walk', cat:'sights', kind:'search', x:true, q:'Çanakkale Saat Kulesi',
   name:['Clock Tower','Saat Kulesi','Uhrturm','Tour de l’Horloge','Torre del Reloj']},
- {id:'c-cimenlik', icon:'castle', group:'castles', via:'walk', cat:'sights', kind:'search', x:true, q:'Çimenlik Kalesi, Çanakkale', kw:'kale deniz müzesi',
-  name:['Çimenlik Castle','Çimenlik Kalesi','Festung Çimenlik','Forte­resse de Çimenlik','Fortaleza de Çimenlik']},
+ {id:'car-rental', icon:'car', cat:'transport', kind:'search', q:'Rent a car Çanakkale Merkez',
+  name:['Car rental','Araç kiralama','Autovermietung','Location de voitures','Alquiler de coches'],
+  desc:['Car rental offices in the centre (rent a car). The buttons below find them on the map. Firms ask for a valid driving licence (some also an International Driving Permit), an ID card or passport and usually a credit card; check the conditions with the firm.','Merkezdeki araç kiralama (rent a car) firmaları. Aşağıdaki düğmeler onları haritada bulur. Firmalar geçerli bir ehliyet (bazıları uluslararası sürücü belgesi de), kimlik ya da pasaport ve genellikle kredi kartı ister; koşulları firmaya sorun.','Autovermietungen im Zentrum (Rent a Car). Die Schaltflächen unten finden sie auf der Karte. Verlangt werden ein gültiger Führerschein (teils auch ein internationaler Führerschein), Ausweis oder Reisepass und meist eine Kreditkarte; fragen Sie die Firma nach den Bedingungen.','Agences de location de voitures dans le centre (rent a car). Les boutons ci-dessous les trouvent sur la carte. Elles demandent un permis de conduire valide (parfois aussi un permis international), une pièce d’identité ou un passeport et en général une carte de crédit ; renseignez-vous auprès de l’agence.','Empresas de alquiler de coches en el centro (rent a car). Los botones de abajo las encuentran en el mapa. Piden un permiso de conducir válido (algunas también el permiso internacional), documento de identidad o pasaporte y normalmente tarjeta de crédito; consulte las condiciones con la empresa.']},
  /* ---- tour agencies: one search for now; add each agency as its own place once the office has the list ---- */
  {id:'agencies', icon:'flag', cat:'transport', kind:'search', q:'Tur acentesi Çanakkale Merkez',
   name:['Tour agencies','Tur acenteleri','Tour­anbieter','Agences d’excursions','Agencias de excursiones'],
@@ -1432,7 +1446,6 @@ const EXTRA = [
  ['a-parion','ancient','biga','arch','Parion Antik Kenti','Parion','kemer'],
  ['a-dardanos','ancient','centre','arch','Dardanos Tümülüsü','Dardanos Tumulus',''],
  /* castles and landmarks */
- ['c-nusret','castles','walk','castle','Nusret Mayın Gemisi','Minelayer Nusret','gemi ship müze'],
  ['c-seddulbahir','castles','eceabat','castle','Seddülbahir Kalesi','Seddülbahir Castle','kale'],
  ['c-gelibolu','castles','gelibolu','castle','Gelibolu Kalesi ve Piri Reis Müzesi','Gelibolu Castle and Piri Reis Museum','kale müze museum'],
  ['c-mevlevi','castles','gelibolu','castle','Gelibolu Mevlevihanesi','Gelibolu Mevlevi Lodge','mevlevihane'],
@@ -1467,6 +1480,7 @@ const KEYWORDS = {
  'trojan-horse':'truva troya troy troia at atı horse pferd cheval caballo kordon film heykel',
  'aynali-bazaar':'çarşı bazaar alışveriş shopping hediyelik souvenir pazar market',
  'naval-museum':'müze museum deniz askeri çimenlik nusret kale',
+ 'c-nusret':'nusret mayın gemisi minelayer ship gemi müze çimenlik 18 mart',
  'city-museum':'müze museum kent şehir arşiv',
  'piri-reis':'müze museum piri reis harita map deniz denizcilik çtso ctso kitab-ı bahriye',
  'ceramic-museum':'müze museum seramik çömlek çini',
@@ -1477,7 +1491,8 @@ const KEYWORDS = {
  'c9-stop':'otobüs durak kentkart',
  'c9-ptt':'otobüs durak otogar ç9 c9 ptt kentkart',
  'otogar':'otobüs terminal garaj bus station bilet istanbul izmir ankara bursa',
- 'eceabat-ferry':'feribot vapur gemi iskele gestaş eceabat kilitbahir gelibolu şehitlik',
+ 'eceabat-ferry':'feribot vapur gemi iskele gestaş eceabat gelibolu şehitlik',
+ 'kilitbahir-ferry':'feribot vapur gemi iskele gestaş kilitbahir kale castle ferry',
  'kabatepe':'feribot vapur gemi gestaş gökçeada imroz ada',
  'geyikli':'feribot vapur gemi gestaş bozcaada ada yükyeri',
  'airport':'havalimanı havaalanı uçak uçuş airport flight flughafen',
@@ -1487,6 +1502,7 @@ const KEYWORDS = {
  'hospital':'hastane acil doktor ambulans hospital emergency doctor',
  'ptt':'ptt posta postane hgs pul kargo post',
  'exchange':'döviz exchange sarraf kur euro dolar para bozdurma change temizel çarşı',
+ 'car-rental':'araç kiralama kiralık araba oto rent a car rental hire mietwagen location voiture alquiler coche',
  'agencies':'tur tour acente acenta agency rehber guide gezi troya truva troy gelibolu gallipoli şehitlik anzac',
  'truva':'otobüs bilet bus ticket', 'kamilkoc':'otobüs bilet bus ticket', 'metro':'otobüs bilet bus ticket', 'pamukkale':'otobüs bilet bus ticket',
  'eceabat':'şehitlik gelibolu yarımadası kilitbahir gallipoli', 'gelibolu':'gallipoli', 'bozcaada':'ada island tenedos', 'gokceada':'ada island imroz imbros',
@@ -1766,20 +1782,27 @@ const XL_ROWS = {
 'Cities':['Градове','Города','Πόλεις','المدن'],
 'Bus companies':['Автобусни фирми','Автобусные компании','Εταιρείες λεωφορείων','شركات الحافلات'],
 'Bus firms':['Автобусни фирми','Перевоз­чики','Εταιρείες','شركات الحافلات'],
+'Car rental':['Коли под наем','Прокат автомобилей','Ενοικίαση αυτοκινήτων','تأجير السيارات'],
+'Car rental offices in the centre (rent a car). The buttons below find them on the map. Firms ask for a valid driving licence (some also an International Driving Permit), an ID card or passport and usually a credit card; check the conditions with the firm.':['Фирми за коли под наем в центъра (rent a car). Бутоните по-долу ги намират на картата. Фирмите искат валидна шофьорска книжка (някои и международна), лична карта или паспорт и обикновено кредитна карта; попитайте фирмата за условията.','Пункты проката автомобилей в центре (rent a car). Кнопки ниже найдут их на карте. Обычно требуются действующее водительское удостоверение (иногда и международное), удостоверение личности или паспорт и, как правило, кредитная карта; уточняйте условия в компании.','Γραφεία ενοικίασης αυτοκινήτων στο κέντρο (rent a car). Τα κουμπιά παρακάτω τα βρίσκουν στον χάρτη. Ζητούν έγκυρο δίπλωμα οδήγησης (ορισμένα και διεθνές δίπλωμα), ταυτότητα ή διαβατήριο και συνήθως πιστωτική κάρτα· ρωτήστε την εταιρεία για τους όρους.','مكاتب تأجير السيارات في المركز (rent a car). الأزرار أدناه تعرضها على الخريطة. تطلب الشركات رخصة قيادة سارية (وبعضها رخصة دولية أيضًا) وبطاقة هوية أو جواز سفر وعادةً بطاقة ائتمان؛ اسأل الشركة عن الشروط.'],
 'Tour agencies':['Турис­тически агенции','Тур­агентства','Ταξι­διωτικά γραφεία','وكالات الجولات'],
 'Mosque':['Джамия','Мечеть','Τζαμί','مسجد'],
 'There are several mosques in the centre. The buttons below find the nearest ones on the map.':['В центъра има няколко джамии. Бутоните по-долу намират най-близките на картата.','В центре есть несколько мечетей. Кнопки ниже найдут ближайшие на карте.','Στο κέντρο υπάρχουν αρκετά τζαμιά. Τα κουμπιά παρακάτω βρίσκουν τα πλησιέστερα στον χάρτη.','توجد عدة مساجد في المركز. الأزرار أدناه تعرض أقربها على الخريطة.'],
 'Clock Tower':['Часов­никовата кула (Saat Kulesi)','Часовая башня (Saat Kulesi)','Πύργος του Ρολογιού (Saat Kulesi)','برج الساعة (Saat Kulesi)'],
 'Çimenlik Castle':['Крепост Чименлик (Çimenlik Kalesi)','Крепость Чименлик (Çimenlik Kalesi)','Κάστρο Τσιμενλίκ (Çimenlik Kalesi)','قلعة تشيمنليك (Çimenlik Kalesi)'],
+'Trojan Horse statue':['Статуя на Троянския кон','Статуя Троянского коня','Άγαλμα του Δούρειου Ίππου','تمثال حصان طروادة'],
 'Trojan Horse':['Троян­ският кон','Троян­ский конь','Δούρειος Ίππος','حصان طروادة'],
 'The wooden horse made for the 2004 film Troy, on the waterfront promenade.':['Дървеният кон от филма „Троя“ (2004), на крайбрежната алея.','Деревянный конь из фильма «Троя» (2004) на набережной.','Το ξύλινο άλογο από την ταινία «Τροία» (2004), στον παραλιακό πεζόδρομο.','الحصان الخشبي الذي صُنع لفيلم «طروادة» (2004)، على الكورنيش البحري.'],
 'Aynalı Bazaar':['Пазар Айналъ (Aynalı Çarşı)','Базар Айналы (Aynalı Çarşı)','Παζάρι Αϊναλί (Aynalı Çarşı)','سوق أينالي (Aynalı Çarşı)'],
 'Historic covered bazaar in the old town, good for souvenirs and local products.':['Исторически покрит пазар в стария град, подходящ за сувенири и местни продукти.','Исторический крытый рынок в старом городе: сувениры и местные продукты.','Ιστορική σκεπαστή αγορά στην παλιά πόλη, ιδανική για αναμνηστικά και τοπικά προϊόντα.','سوق تاريخي مسقوف في البلدة القديمة، مناسب للهدايا التذكارية والمنتجات المحلية.'],
+'Naval Museum and Çimenlik Castle':['Военноморски музей и крепост Чименлик','Военно-морской музей и крепость Чименлик','Ναυτικό Μουσείο και κάστρο Τσιμενλίκ','المتحف البحري وقلعة تشيمنليك'],
+'The Naval Museum and Çimenlik Castle are one site, visited together: the Ottoman castle, the museum and a replica of the minelayer Nusret.':['Военноморският музей и крепостта Чименлик са едно място и се разглеждат заедно: османската крепост, музеят и реплика на минния заградител „Нусрет“.','Военно-морской музей и крепость Чименлик — одно место, их осматривают вместе: османская крепость, музей и копия минного заградителя «Нусрет».','Το Ναυτικό Μουσείο και το κάστρο Τσιμενλίκ είναι ένας χώρος και επισκέπτονται μαζί: το οθωμανικό κάστρο, το μουσείο και αντίγραφο της ναρκοθέτιδας «Νουσρέτ».','المتحف البحري وقلعة تشيمنليك موقع واحد يُزاران معًا: القلعة العثمانية والمتحف ونسخة من زارعة الألغام «نصرت».'],
+'Minelayer Nusret (replica)':['Минен заградител „Нусрет“ (реплика)','Минный заградитель «Нусрет» (копия)','Ναρκοθέτιδα «Νουσρέτ» (αντίγραφο)','زارعة الألغام «نصرت» (نسخة)'],
+'A replica of the minelayer Nusret, whose mines helped turn back the Allied fleet on 18 March 1915. It is displayed at the Naval Museum, inside Çimenlik Castle.':['Реплика на минния заградител „Нусрет“, чиито мини помагат да бъде отблъснат съюзническият флот на 18 март 1915 г. Изложена е във Военноморския музей в крепостта Чименлик.','Копия минного заградителя «Нусрет», чьи мины помогли отразить атаку союзного флота 18 марта 1915 года. Она выставлена в Военно-морском музее в крепости Чименлик.','Αντίγραφο της ναρκοθέτιδας «Νουσρέτ», οι νάρκες της οποίας βοήθησαν να αποκρουστεί ο συμμαχικός στόλος στις 18 Μαρτίου 1915. Εκτίθεται στο Ναυτικό Μουσείο, μέσα στο κάστρο Τσιμενλίκ.','نسخة من زارعة الألغام «نصرت» التي ساعدت ألغامها على صدّ أسطول الحلفاء في 18 مارس 1915. تُعرض في المتحف البحري داخل قلعة تشيمنليك.'],
 'Naval Museum':['Военно­морски музей','Военно-морской музей','Ναυτικό Μουσείο','المتحف البحري'],
 'Naval museum beside Çimenlik Castle, with a replica of the minelayer Nusret.':['Военноморски музей до крепостта Чименлик, с реплика на минния заградител „Нусрет“.','Военно-морской музей у крепости Чименлик с копией минного заградителя «Нусрет».','Ναυτικό μουσείο δίπλα στο κάστρο Τσιμενλίκ, με αντίγραφο της ναρκοθέτιδας «Νουσρέτ».','متحف بحري بجوار قلعة تشيمنليك، وفيه نسخة من زارعة الألغام «نصرت».'],
 'City Museum':['Градски музей','Городской музей','Μουσείο της Πόλης','متحف المدينة'],
 'Piri Reis Museum':['Музей „Пири Реис“','Музей Пири-реиса','Μουσείο Πίρι Ρέις','متحف بيري ريس'],
-'A new museum of the Çanakkale Chamber of Commerce and Industry (ÇTSO), opened in November 2026 in the chamber’s former building in the centre. It tells the story of the Dardanelles, of sea trade through the ages and of the sailor and cartographer Piri Reis, his 1513 world map and his Kitab-ı Bahriye, with digital displays and a virtual-reality ship. Ask at our desk for opening hours.':['Нов музей на Търговско-промишлената камара на Чанаккале (ÇTSO), открит през ноември 2026 г. в бившата сграда на камарата в центъра. Разказва за Дарданелите, за морската търговия през вековете и за мореплавателя и картограф Пири Реис, неговата световна карта от 1513 г. и Kitab-ı Bahriye, с дигитални експозиции и кораб с виртуална реалност. За работното време попитайте на нашето гише.','Новый музей Торгово-промышленной палаты Чанаккале (ÇTSO), открытый в ноябре 2026 года в бывшем здании палаты в центре. Он рассказывает о Дарданеллах, о морской торговле на протяжении веков и о мореплавателе и картографе Пири-реисе, его карте мира 1513 года и книге Kitab-ı Bahriye, с цифровыми экспозициями и кораблём виртуальной реальности. Часы работы уточняйте на нашей стойке.','Νέο μουσείο του Εμπορικού και Βιομηχανικού Επιμελητηρίου του Τσανάκκαλε (ÇTSO), που άνοιξε τον Νοέμβριο του 2026 στο παλιό κτίριο του επιμελητηρίου στο κέντρο. Αφηγείται την ιστορία των Δαρδανελλίων, του θαλάσσιου εμπορίου στους αιώνες και του θαλασσοπόρου και χαρτογράφου Πίρι Ρέις, τον παγκόσμιο χάρτη του 1513 και το Kitab-ı Bahriye, με ψηφιακές εκθέσεις και ένα πλοίο εικονικής πραγματικότητας. Για το ωράριο ρωτήστε στο γκισέ μας.','متحف جديد لغرفة التجارة والصناعة في جناق قلعة (ÇTSO)، افتُتح في نوفمبر 2026 في المبنى السابق للغرفة في المركز. يروي قصة مضيق الدردنيل والتجارة البحرية عبر العصور والبحّار ورسّام الخرائط بيري ريس، وخريطته للعالم لعام 1513 وكتابه Kitab-ı Bahriye، بعروض رقمية وسفينة للواقع الافتراضي. اسأل في مكتبنا عن مواعيد الزيارة.'],
+'A new museum of the Çanakkale Chamber of Commerce and Industry (ÇTSO), opened in November 2026 in the chamber’s former building in the centre. It tells the story of the Dardanelles, of sea trade through the ages and of the sailor and cartographer Piri Reis, his 1513 world map and his Kitab-ı Bahriye, with digital displays and a virtual-reality ship. Ask at our desk for opening hours. This is not the Piri Reis Museum in Gelibolu.':['Нов музей на Търговско-промишлената камара на Чанаккале (ÇTSO), открит през ноември 2026 г. в бившата сграда на камарата в центъра. Разказва за Дарданелите, за морската търговия през вековете и за мореплавателя и картограф Пири Реис, неговата световна карта от 1513 г. и Kitab-ı Bahriye, с дигитални експозиции и кораб с виртуална реалност. За работното време попитайте на нашето гише. Да не се бърка с музея „Пири Реис“ в Гелиболу.','Новый музей Торгово-промышленной палаты Чанаккале (ÇTSO), открытый в ноябре 2026 года в бывшем здании палаты в центре. Он рассказывает о Дарданеллах, о морской торговле на протяжении веков и о мореплавателе и картографе Пири-реисе, его карте мира 1513 года и книге Kitab-ı Bahriye, с цифровыми экспозициями и кораблём виртуальной реальности. Часы работы уточняйте на нашей стойке. Не путайте с музеем Пири-реиса в Гелиболу.','Νέο μουσείο του Εμπορικού και Βιομηχανικού Επιμελητηρίου του Τσανάκκαλε (ÇTSO), που άνοιξε τον Νοέμβριο του 2026 στο παλιό κτίριο του επιμελητηρίου στο κέντρο. Αφηγείται την ιστορία των Δαρδανελλίων, του θαλάσσιου εμπορίου στους αιώνες και του θαλασσοπόρου και χαρτογράφου Πίρι Ρέις, τον παγκόσμιο χάρτη του 1513 και το Kitab-ı Bahriye, με ψηφιακές εκθέσεις και ένα πλοίο εικονικής πραγματικότητας. Για το ωράριο ρωτήστε στο γκισέ μας. Δεν πρόκειται για το Μουσείο Πίρι Ρέις της Καλλίπολης.','متحف جديد لغرفة التجارة والصناعة في جناق قلعة (ÇTSO)، افتُتح في نوفمبر 2026 في المبنى السابق للغرفة في المركز. يروي قصة مضيق الدردنيل والتجارة البحرية عبر العصور والبحّار ورسّام الخرائط بيري ريس، وخريطته للعالم لعام 1513 وكتابه Kitab-ı Bahriye، بعروض رقمية وسفينة للواقع الافتراضي. اسأل في مكتبنا عن مواعيد الزيارة. وهو غير متحف بيري ريس في غيليبولو.'],
 'The City Museum and Archive tells the story of Çanakkale and its people.':['Градският музей и архив разказва историята на Чанаккале и неговите жители.','Городской музей и архив рассказывает историю Чанаккале и его жителей.','Το Μουσείο και Αρχείο της Πόλης αφηγείται την ιστορία του Τσανάκκαλε και των κατοίκων του.','يروي متحف المدينة وأرشيفها تاريخ جناق قلعة وأهلها.'],
 'Ceramic Museum':['Музей на кера­миката','Музей керамики','Μουσείο Κεραμικής','متحف الخزف'],
 'Museum of traditional Çanakkale ceramics.':['Музей на традиционната керамика от Чанаккале.','Музей традиционной керамики Чанаккале.','Μουσείο της παραδοσιακής κεραμικής του Τσανάκκαλε.','متحف الخزف التقليدي في جناق قلعة.'],
@@ -1874,6 +1897,12 @@ const XL_ROWS = {
 'Walk to the minibus stop for Troy (see it under Buses).':['Вървете до спирката на минибусите за Троя (вижте я в „Автобуси“).','Дойдите до остановки маршруток в Трою (см. раздел «Автобусы»).','Περπατήστε έως τη στάση των μίνι μπας για την Τροία (δείτε τη στα «Λεωφορεία»).','امشِ إلى موقف الحافلات الصغيرة المتجهة إلى طروادة (تجده ضمن «الحافلات»).'],
 'Take the Troy minibus. Ask at our desk for today’s times and the fare.':['Вземете минибуса за Троя. Попитайте на нашето гише за днешното разписание и цената.','Сядьте на маршрутку в Трою. Расписание на сегодня и стоимость уточните на нашей стойке.','Πάρτε το μίνι μπας για την Τροία. Ρωτήστε στο γκισέ μας για τα σημερινά δρομολόγια και την τιμή.','استقل حافلة طروادة الصغيرة. اسأل في مكتبنا عن مواعيد اليوم والأجرة.'],
 'Get off at the Troy Museum.':['Слезте при Музея на Троя.','Выходите у Музея Трои.','Κατεβείτε στο Μουσείο Τροίας.','انزل عند متحف طروادة.'],
+'Kilitbahir ferry':['Ферибот за Килитбахир','Паром в Килитбахир','Φέρι για Κιλιτμπαχίρ','عبّارة كيليتباهير'],
+'Ferry to Kilitbahir':['Ферибот за Килитбахир','Паром в Килитбахир','Φέρι για Κιλιτμπαχίρ','عبّارة إلى كيليتباهير'],
+'Ferries across the Dardanelles to Kilitbahir, the village beside Kilitbahir Castle, leave from the pier next to our office. Check today’s times and fares on gdu.com.tr.':['Фериботите през Дарданелите до Килитбахир, селото до крепостта Килитбахир, тръгват от кея до нашия офис. Днешните разписания и цени вижте на gdu.com.tr.','Паромы через Дарданеллы в Килитбахир, посёлок у крепости Килитбахир, отходят от причала рядом с нашим офисом. Расписание и цены на сегодня — на gdu.com.tr.','Τα φέρι για το Κιλιτμπαχίρ, το χωριό δίπλα στο κάστρο του Κιλιτμπαχίρ, στην απέναντι όχθη των Δαρδανελλίων, αναχωρούν από την προβλήτα δίπλα στο γραφείο μας. Τα σημερινά δρομολόγια και τις τιμές θα βρείτε στο gdu.com.tr.','تنطلق العبّارات عبر الدردنيل إلى كيليتباهير، القرية المجاورة لقلعة كيليتباهير، من الرصيف المجاور لمكتبنا. راجع مواعيد اليوم والأسعار على gdu.com.tr.'],
+'Buy a ticket at the pier; check today’s fare on gdu.com.tr.':['Купете билет на кея; днешната цена вижте на gdu.com.tr.','Купите билет на причале; цену на сегодня смотрите на gdu.com.tr.','Αγοράστε εισιτήριο στην προβλήτα· τη σημερινή τιμή θα βρείτε στο gdu.com.tr.','اشترِ التذكرة من الرصيف؛ وراجع سعر اليوم على gdu.com.tr.'],
+'The crossing to Kilitbahir takes about 15 minutes. Kilitbahir Castle is a short walk from the pier.':['Преходът до Килитбахир трае около 15 минути. Крепостта Килитбахир е на кратка разходка от кея.','Переправа в Килитбахир длится около 15 минут. До крепости Килитбахир от причала недалеко пешком.','Η διάπλευση προς το Κιλιτμπαχίρ διαρκεί περίπου 15 λεπτά. Το κάστρο του Κιλιτμπαχίρ απέχει λίγα βήματα από την προβλήτα.','يستغرق العبور إلى كيليتباهير نحو 15 دقيقة. قلعة كيليتباهير على مسافة قصيرة سيرًا من الرصيف.'],
+'Walk to the ferry pier beside our office (about 1 min) and take the Kilitbahir ferry. Eceabat ferries leave from the same pier, so check the destination.':['Вървете до фериботния кей до нашия офис (около 1 мин) и се качете на ферибота за Килитбахир. От същия кей тръгват и фериботите за Еджеабат, затова проверете посоката.','Дойдите до паромного причала рядом с нашим офисом (около 1 мин) и садитесь на паром в Килитбахир. С того же причала ходят паромы в Эджеабат, поэтому проверьте направление.','Περπατήστε ως την προβλήτα του φέρι δίπλα στο γραφείο μας (περίπου 1 λεπτό) και πάρτε το φέρι για το Κιλιτμπαχίρ. Από την ίδια προβλήτα φεύγουν και τα φέρι για το Έτζεαμπατ, γι’ αυτό ελέγξτε τον προορισμό.','امشِ إلى رصيف العبّارات المجاور لمكتبنا (نحو دقيقة) واركب عبّارة كيليتباهير. تنطلق عبّارات إيجه آباد من الرصيف نفسه، لذا تحقّق من الوجهة.'],
 'Walk to the ferry pier beside the office (about 1 min).':['Вървете до фериботния кей до центъра (около 1 мин).','Дойдите до паромного причала рядом с центром (около 1 мин).','Περπατήστε έως την αποβάθρα του φέρι δίπλα στο γραφείο (περίπου 1 λεπτό).','امشِ إلى رصيف العبّارات المجاور للمكتب (نحو دقيقة واحدة).'],
 'Buy a pedestrian ticket at the pier: 40 TL.':['Купете билет за пешеходец на кея: 40 TL.','Купите на причале билет для пешехода: 40 TL.','Αγοράστε εισιτήριο πεζού στην αποβάθρα: 40 TL.','اشترِ تذكرة مشاة من الرصيف: 40 TL.'],
 'Buy a foot-passenger ticket at the pier: 40 TL.':['Купете билет за пешеходец на кея: 40 TL.','Купите на причале билет для пешехода: 40 TL.','Αγοράστε εισιτήριο πεζού στην αποβάθρα: 40 TL.','اشترِ تذكرة مشاة من الرصيف: 40 TL.'],
@@ -2034,6 +2063,7 @@ tr:{mWalkDol:'Yürüyüş + dolmuş', mTaxiDol:'Taksi + dolmuş', payDriver:'üc
   sDolWalk:'{n} için yürüyün: {d}, {t}.', sDolTaxi:'{n} için taksiye binin: {d}, {t}.', sDolRide:'{n} dolmuşuna binin: {t}. Ücreti şoföre ödeyin.'}
 };
 Object.keys(UI_DOL).forEach(l => { Object.assign(UI[l], UI_DOL[l]); });
+const UI_WXH = {en:{here:'Weather there now', wind:'wind {w} km/h'}, tr:{here:'Şu an orada hava', wind:'rüzgâr {w} km/sa'}, de:{here:'Wetter dort jetzt', wind:'Wind {w} km/h'}, fr:{here:'Météo sur place', wind:'vent {w} km/h'}, es:{here:'El tiempo allí ahora', wind:'viento {w} km/h'}, bg:{here:'Времето там сега', wind:'вятър {w} км/ч'}, ru:{here:'Погода там сейчас', wind:'ветер {w} км/ч'}, el:{here:'Ο καιρός εκεί τώρα', wind:'άνεμος {w} χλμ/ώ'}, ar:{here:'الطقس هناك الآن', wind:'الرياح {w} كم/س'}};
 const UI_NEW = {en:{newTag:'New'}, tr:{newTag:'Yeni'}, de:{newTag:'Neu'}, fr:{newTag:'Nouveau'}, es:{newTag:'Nuevo'}, bg:{newTag:'Ново'}, ru:{newTag:'Новинка'}, el:{newTag:'Νέο'}, ar:{newTag:'جديد'}};
 Object.keys(UI_NEW).forEach(l => { if (UI[l]) Object.assign(UI[l], UI_NEW[l]); });
 const UI_MAPS = {
@@ -2091,7 +2121,6 @@ const PHOTOS = {
   'v-zeytinli':{by:'Aziz Akbiyik', lic:'CC BY-SA 3.0', src:'https://commons.wikimedia.org/wiki/File:G%C3%B6k%C3%A7eada_Zeytinlik%C3%B6y_-_panoramio.jpg'},
   'v-tepekoy':{by:'Adam Jones', lic:'CC BY-SA 2.0', src:'https://commons.wikimedia.org/wiki/File:Village_Scene_-_Tepekoy_-_Gokceada_Island_-_Turkey_-_03_(5741116770).jpg'},
   'troy-site':{by:'Barrowbob', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:Hisarl%C4%B1k_(Troy).jpg'},
-  'c-cimenlik':{by:'Maarten Sepp', lic:'CC BY-SA 3.0', src:'https://commons.wikimedia.org/wiki/File:%C3%87anakkale,_Turkey._Cimenlik_Castle,_now_military_museum_-_panoramio.jpg'},
   'gokceada':{by:'Ggia', lic:'CC BY-SA 3.0', src:'https://commons.wikimedia.org/wiki/File:20100524_Kardamos_beach_Imbros_G%C3%B6k%C3%A7eada_Turkey.jpg'},
   'office':{by:'Çanakkale Turizm Danışma Bürosu'},
   'airport':{by:'Ex13', lic:'CC BY-SA 4.0', src:'https://commons.wikimedia.org/wiki/File:%C3%87anakkale_Airport.jpg'},
@@ -2310,6 +2339,8 @@ Object.assign(ICONS, {
   landmark:I('<path d="M3 21h18M5 21V10M19 21V10M9.7 21V10M14.3 21V10M3 10l9-6 9 6z"/>'),
   horse:I('<path d="M5 14.5V9h8.5l1.8-5h2.9l.5 2.4 2 1.3-.9 1.9-2.6-.6-1.2 2.6v3M5 9l-1.6 2.6M7.6 14.5V18M13.6 14.5V18"/><path d="M3.5 18h15"/><circle cx="6.5" cy="20" r="1.3"/><circle cx="15.5" cy="20" r="1.3"/>'),
   bag:I('<path d="M5 8h14l-1 13H6zM9 8V6a3 3 0 0 1 6 0v2"/>'),
+  ship:I('<path d="M2.5 15.5h19l-2.6 4.5H5.1z"/><path d="M5 15.5l1.4-4h10.2l1.6 4M9 11.5V8h5v3.5M11.5 8V4.5"/>'),
+  map:I('<path d="M3 6.5l6-2.5 6 2.5 6-2.5v13.5l-6 2.5-6-2.5-6 2.5z"/><path d="M9 4v13.5M15 6.5V20"/>'),
   anchor:I('<circle cx="12" cy="5" r="2"/><path d="M12 7v14M8 11h8M4.5 14a7.5 7.5 0 0 0 15 0"/>'),
   amphora:I('<path d="M9.3 3h5.4M10 3v2.6C7 7.4 5.8 10.2 5.8 12.8c0 3.6 2.5 6.3 4.2 7.2h4c1.7-.9 4.2-3.6 4.2-7.2 0-2.6-1.2-5.4-4.2-7.2V3M9.8 21h4.4"/><path d="M8 7.3c-2.2-.2-3 1.6-1.9 3.2M16 7.3c2.2-.2 3 1.6 1.9 3.2"/>'),
   star:I('<path d="M12 3l7.8 13.5H4.2zM12 21L4.2 7.5h15.6z"/>'),
@@ -2536,6 +2567,7 @@ function renderSheet(p){
   const desc = p.desc ? tx(p.desc) : p.noDist ? fillT(t.cDesc, {n}) : p.x ? (v ? fillT(CAR === true ? t.xDescCar : t.xDesc, {d:short(v)}) : t.xDescC) : fillT(t.dDesc, {n});
   let h = '<div class="cat" style="--c:var(--' + c + ')"><i></i>' + esc(t.cats[c]) + '</div><h2>' + esc(n) + '</h2><p>' + esc(desc) + '</p>' + photoOf(p, n) + (tourFirst(p) ? tourBox() : '') + (p.id === 'agencies' && AGENCIES.length ? agencyList() : '') + (p.id === 'guides' ? guidesBox(false) : p.id === 'agencies' ? guidesBox(true) : '');
   const fs = facts(p); if (fs.length) h += '<ul class="facts">' + fs.map(f => '<li>' + esc(f) + '</li>').join('') + '</ul>';
+  h += wxSlot(p);
   if (p.all) h += '<div class="hours all"><p>' + esc(tx(p.all.note)) + '</p><a class="btn primary" target="_blank" rel="noopener" href="' + esc(nearLinks(p.all.q)[isIOS ? 1 : 0][1]) + '">' + esc(tx(p.all.btn)) + '</a></div>';
   h += carBox();
   if (CAR === null){ $('#sheetTop').innerHTML = h; $('#sheet').innerHTML = ''; return; }      /* the directions follow the answer */
@@ -2602,6 +2634,19 @@ function sunTimes(){ const d = new Date(), n = Math.floor((d - Date.UTC(d.getUTC
   const dec = 0.006918 - 0.399912 * Math.cos(g) + 0.070257 * Math.sin(g) - 0.006758 * Math.cos(2 * g) + 0.000907 * Math.sin(2 * g) - 0.002697 * Math.cos(3 * g) + 0.00148 * Math.sin(3 * g);
   const ha = Math.acos(Math.cos(90.833 * r) / (Math.cos(WEATHER.lat * r) * Math.cos(dec)) - Math.tan(WEATHER.lat * r) * Math.tan(dec)) / r;
   return {rise:720 - 4 * (WEATHER.lng + ha) - eq + 180, set:720 - 4 * (WEATHER.lng - ha) - eq + 180}; }      /* + 180: Türkiye keeps UTC+3 all year */
+/* the weather at a place outside the city (Troy, Gallipoli, the islands, the districts): asked from Open-Meteo when its page opens, kept for 30 minutes */
+const WXP = {};
+function wxSlot(p){ if (p.kind !== 'pin' || typeof p.lat !== 'number' || p.noDist) return ''; const m = metres(OFFICE, p); if (m < 5000 || m > 150000) return '';
+  setTimeout(() => wxHere(p), 0); return '<p class="wxhere" id="wxHere" data-id="' + p.id + '" hidden></p>'; }
+function wxShow(p, w){ const el = $('#wxHere'); if (!el || el.dataset.id !== p.id || !w) return; const t = UI[lang], u = UI_WXH[lang] || UI_WXH.en;
+  el.innerHTML = '<b>' + esc(u.here) + ':</b> ' + esc('≈ ' + w.temp + ' °C · ' + ((t.wx || UI.en.wx)[w.kind] || '') + ' · ' + u.wind.replace('{w}', Math.round(w.wind))); el.hidden = false; }
+function wxHere(p){ const c = WXP[p.id]; if (c && Date.now() - c.t < WEATHER.keepMin * 6e4){ wxShow(p, c.w); return; }
+  const ac = new AbortController(), tm = setTimeout(() => ac.abort(), 8000);
+  fetch(WEATHER.url + '?latitude=' + p.lat + '&longitude=' + p.lng + '&current=temperature_2m,weather_code,wind_speed_10m&timezone=Europe%2FIstanbul', {signal:ac.signal})
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(j => { const c = j.current; if (!c || typeof c.temperature_2m !== 'number' || typeof c.weather_code !== 'number') return;
+      const w = {temp:Math.round(c.temperature_2m), kind:wxKind(c.weather_code), wind:+c.wind_speed_10m || 0}; WXP[p.id] = {t:Date.now(), w}; wxShow(p, w); })
+    .catch(() => {}).finally(() => clearTimeout(tm)); }
 /* the weather: WX = {temp, kind, mm, wind, gust, prob, sunrise, sunset}, or null while it is not known */
 let WX = null, WXSTATE = 'idle';
 const wxKind = c => c <= 1 ? 'clear' : c <= 3 ? 'cloudy' : c <= 48 ? 'fog' : c >= 95 ? 'storm' : (c >= 71 && c <= 77) || c === 85 || c === 86 ? 'snow' : 'rain';
@@ -2748,9 +2793,10 @@ let COUNTED = '';
 function countView(){ const k = '/' + lang + here().slice(1); if (k === COUNTED) return; COUNTED = k; stat(k, document.title); }
 const here = () => (location.hash || '#/').replace(/^#$/, '#/');
 let trail = [here()], homeY = 0;      /* trail: the screens opened inside the guide, so Back never leaves it */
+const ALIAS = {'c-cimenlik':'naval-museum'};      /* old addresses of places that were merged */
 function route(){
   const mp = location.hash.match(/^#\/p\/([\w-]+)/), mc = location.hash.match(/^#\/g\/(\w+)/), mn = location.hash.match(/^#\/n\/(\w+)/);
-  const p = mp && byId(mp[1]), c = !p && mc && GROUPS[mc[1]] && members(mc[1]).length ? mc[1] : null, nk = mn && NEAR.kinds[mn[1]] ? mn[1] : null;
+  const p = mp && byId(ALIAS[mp[1]] || mp[1]), c = !p && mc && GROUPS[mc[1]] && members(mc[1]).length ? mc[1] : null, nk = mn && NEAR.kinds[mn[1]] ? mn[1] : null;
   const mr = location.hash.match(/^#\/r\/([\w-]+)/), R = mr && routeById(mr[1]) && routeLegs(routeById(mr[1])).legs.length ? routeById(mr[1]) : null;
   if (R){ $('#home').hidden = true; $('#cat').hidden = true; $('#place').hidden = false; $('#placeMap').hidden = false; NEARSEEN = '';
     renderRoute(R); drawRoute(R); scrollTo(0, 0); document.title = tx(R.name) + ' · ' + UI[lang].brand; return; }
