@@ -909,6 +909,16 @@ button.btn{width:100%;cursor:pointer}
 .mapcard img{display:block;width:100%;height:auto;border-radius:12px;background:#fff}
 .mapcard b{font-size:18.5px;line-height:1.25;padding:0 4px}
 .mapcard small{font-size:15.5px;line-height:1.3;color:var(--muted);padding:0 4px}
+#mv{position:fixed;inset:0;z-index:2147483000;display:flex;flex-direction:column;background:#151210;color:#fff}
+.mvbar{display:flex;align-items:center;gap:12px;padding:calc(10px + env(safe-area-inset-top)) 16px 10px}
+.mvbar b{flex:1;font-size:18.5px;line-height:1.25}
+.mvx,.mvz{flex:none;width:52px;height:52px;border-radius:50%;border:0;background:rgba(255,255,255,.16);color:#fff;font:inherit;font-size:30px;line-height:1;cursor:pointer}
+.mvstage{position:relative;flex:1;overflow:hidden;touch-action:none;direction:ltr;cursor:grab}
+.mvstage img{position:absolute;left:0;top:0;max-width:none;transform-origin:0 0;background:#fff;user-select:none;-webkit-user-select:none;-webkit-user-drag:none}
+.mvhint{position:absolute;left:16px;right:16px;bottom:calc(92px + env(safe-area-inset-bottom));margin:0 auto;width:max-content;max-width:calc(100% - 32px);padding:7px 14px;border-radius:99px;background:rgba(0,0,0,.66);font-size:15px;text-align:center;pointer-events:none;transition:opacity .5s}
+.mvhint.off{opacity:0}
+.mvfoot{display:flex;align-items:center;gap:10px;padding:10px 16px calc(12px + env(safe-area-inset-bottom))}
+.mvfoot .btn{flex:1}
 .appbox details{margin:0 0 8px;padding:0 14px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
 .appbox summary{padding:14px 0;font-weight:700;font-size:18.5px;cursor:pointer}
 .appbox details .steps{margin:2px 0 14px}
@@ -1032,7 +1042,7 @@ button.btn{width:100%;cursor:pointer}
    stop          : optional {lat, lng, name:[...]} bus stop to walk to first
    ===================================================================== */
 const DRAFT  = false;
-const BUILD  = '2026-11-27 b';      /* changed with every new version: an open guide that comes back online reloads itself when this differs */
+const BUILD  = '2026-11-27 c';      /* changed with every new version: an open guide that comes back online reloads itself when this differs */
 const LANGS  = ['en','tr','de','fr','es','bg','ru','el','ar'];
 const XLANGS = ['bg','ru','el','ar'];      /* the languages whose place texts live in XL_ROWS */
 const OFFICE = {lat:40.1498833, lng:26.4024356};
@@ -2069,8 +2079,8 @@ const UI_WXH = {en:{here:'Weather there now', wind:'wind {w} km/h'}, tr:{here:'�
 const UI_NEW = {en:{newTag:'New'}, tr:{newTag:'Yeni'}, de:{newTag:'Neu'}, fr:{newTag:'Nouveau'}, es:{newTag:'Nuevo'}, bg:{newTag:'Ново'}, ru:{newTag:'Новинка'}, el:{newTag:'Νέο'}, ar:{newTag:'جديد'}};
 Object.keys(UI_NEW).forEach(l => { if (UI[l]) Object.assign(UI[l], UI_NEW[l]); });
 const UI_MAPS = {
-en:{mapsT:'Maps to download', mapTr:'Visitor transport map', mapCc:'City centre map', mapDl:'Download for printing'},
-tr:{mapsT:'İndirilebilir haritalar', mapTr:'Ziyaretçi ulaşım haritası', mapCc:'Şehir merkezi haritası', mapDl:'İndir, baskıya uygun'},
+en:{mapsT:'Maps to download', mapTr:'Visitor transport map', mapCc:'City centre map', mapDl:'Enlarge or download'},
+tr:{mapsT:'İndirilebilir haritalar', mapTr:'Ziyaretçi ulaşım haritası', mapCc:'Şehir merkezi haritası', mapDl:'Büyütün ya da indirin'},
 de:{mapsT:'Karten zum Herunterladen', mapTr:'Verkehrskarte für Besucher', mapCc:'Stadtplan Zentrum', mapDl:'Herunterladen, druckfähig'},
 fr:{mapsT:'Cartes à télécharger', mapTr:'Carte des transports', mapCc:'Plan du centre-ville', mapDl:'Télécharger, imprimable'},
 es:{mapsT:'Mapas para descargar', mapTr:'Mapa de transporte', mapCc:'Mapa del centro', mapDl:'Descargar para imprimir'},
@@ -2171,29 +2181,6 @@ const XL_ADD = {      /* Bulgarian, Russian, Greek and Arabic for the texts abov
   'Το γραφείο τουριστικών πληροφοριών της Επαρχιακής Διεύθυνσης Πολιτισμού και Τουρισμού του Τσανάκκαλε, στην πλατεία του φέρι (İskele Meydanı). Οι διαδρομές αυτού του οδηγού ξεκινούν από εδώ.',
   'مكتب الاستعلامات السياحية التابع لمديرية الثقافة والسياحة في جناق قلعة، في ساحة العبّارات (İskele Meydanı). تبدأ مسارات هذا الدليل من هنا.']
 };
-Object.keys(XL_ADD).forEach(k => { ['bg','ru','el','ar'].forEach((l, i) => { XL[l][k] = XL_ADD[k][i]; }); });
-/* ---- the tourist guides' chamber ----
-   Licensed tourist guides for a guided tour or a private tour: the official chamber of the region (source: caro.org.tr). */
-const GUIDES_ROOM = {name:'Çanakkale Bölgesel Turist Rehberleri Odası (ÇARO)', address:'İsmetpaşa Mah. İnönü Cad. No: 149, K:3 D:4, Merkez, Çanakkale',
-  phones:['0286 210 01 07', '0286 212 90 57'], email:'info@caro.org.tr', web:'https://caro.org.tr/'};
-PLACES.push({id:'guides', icon:'flag', cat:'transport', kind:'search', noDist:true, car:false, q:'Çanakkale Bölgesel Turist Rehberleri Odası',
-  kw:'rehber rehberler odası çaro caro guide guides tourist guide tur tour führer guía гид',
-  name:['Tourist guides (Guides’ Chamber)','Turist rehberi (Rehberler Odası)','Fremdenführer (Gästeführerkammer)','Guides touristiques (Chambre des guides)','Guías turísticos (Cámara de guías)'],
-  label:['Tourist guides','Turist rehberi','Fremdenführer','Guides','Guías'],
-  desc:['For a guided tour or a private licensed tourist guide, contact the Çanakkale Regional Chamber of Tourist Guides.',
-    'Rehberli tur ya da özel turist rehberi için Çanakkale Bölgesel Turist Rehberleri Odası’na başvurabilirsiniz.',
-    'Für eine geführte Tour oder einen privaten, staatlich geprüften Fremdenführer wenden Sie sich an die Regionale Kammer der Fremdenführer Çanakkale.',
-    'Pour une visite guidée ou un guide touristique agréé privé, contactez la Chambre régionale des guides touristiques de Çanakkale.',
-    'Para una visita guiada o un guía turístico autorizado privado, contacte con la Cámara Regional de Guías Turísticos de Çanakkale.']});
-HOME[HOME.length - 1].title = 'infoT'; HOME[HOME.length - 1].cards.push('guides');
-Object.assign(XL_ADD, {
-'Tourist guides (Guides’ Chamber)':['Екскурзоводи (Камара на екскурзоводите)','Гиды (Палата гидов)','Ξεναγοί (Επιμελητήριο ξεναγών)','المرشدون السياحيون (غرفة المرشدين)'],
-'Tourist guides':['Екскурзоводи','Гиды','Ξεναγοί','المرشدون السياحيون'],
-'For a guided tour or a private licensed tourist guide, contact the Çanakkale Regional Chamber of Tourist Guides.':[
-  'За обиколка с екскурзовод или частен лицензиран екскурзовод се обърнете към Регионалната камара на екскурзоводите в Чанаккале.',
-  'Чтобы заказать экскурсию или частного лицензированного гида, обратитесь в Региональную палату туристических гидов Чанаккале.',
-  'Για ξενάγηση ή ιδιωτικό αδειούχο ξεναγό, απευθυνθείτε στο Περιφερειακό Επιμελητήριο Ξεναγών του Τσανάκκαλε.',
-  'لجولة برفقة مرشد أو لمرشد سياحي مرخَّص خاص، تواصلوا مع الغرفة الإقليمية للمرشدين السياحيين في جناق قلعة.']});
 Object.keys(XL_ADD).forEach(k => { ['bg','ru','el','ar'].forEach((l, i) => { XL[l][k] = XL_ADD[k][i]; }); });
 /* ---- guided tours first ----
    The screens of these groups, and of every place in them, first advise the visitor to talk to a tour agency and join a guided tour (text: tourRec),
@@ -2578,12 +2565,7 @@ const photoOf = (p, n) => { const f = PHOTOS[p.id]; if (!f) return ''; const by 
 ICONS.info = I('<circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><path d="M12 7.6v.1" stroke-width="2.6"/>');
 /* 'guided tours first': the advice and the way to the tour agencies */
 const tourFirst = p => TOUR_FIRST.some(g => groupsOf(p).includes(g));
-const tourBox = () => '<div class="tour"><p>' + esc(UI[lang].tourRec) + '</p><a class="btn primary" href="#/p/agencies">' + esc(tx(byId('agencies').name)) + '</a><a class="btn" style="margin-top:8px" href="#/p/guides">' + esc(tx(byId('guides').name)) + '</a></div>';
-/* the contact card of the tourist guides' chamber */
-function guidesBox(lead){ const t = UI[lang], G = GUIDES_ROOM, tel = s => String(s).replace(/[^+\d]/g, '');
-  return (lead ? '<p>' + esc(tx(byId('guides').desc)) + '</p>' : '') + '<div class="agency"><b>' + esc(G.name) + '</b><small>' + esc(G.address) + '</small><div class="apps">' +
-    G.phones.map(p => '<a class="btn" href="tel:' + esc(tel(p)) + '">' + esc(p) + '</a>').join('') + '<a class="btn" href="mailto:' + esc(G.email) + '">' + esc(t.agMail) + '</a>' +
-    '<a class="btn" target="_blank" rel="noopener" href="' + esc(G.web) + '">' + esc(t.agWeb) + '</a><a class="btn" target="_blank" rel="noopener" href="' + esc(findLinks(G.name + ', ' + G.address)[isIOS ? 1 : 0][1]) + '">' + esc(t.agMap) + '</a></div></div>'; }
+const tourBox = () => '<div class="tour"><p>' + esc(UI[lang].tourRec) + '</p><a class="btn primary" href="#/p/agencies">' + esc(tx(byId('agencies').name)) + '</a></div>';
 /* the agencies the office shares, in alphabetical order; a phone number becomes a button that calls it */
 function agencyList(){ const t = UI[lang], tel = s => String(s).replace(/[^+\d]/g, '');
   return AGENCIES.slice().sort((a, b) => a.name.localeCompare(b.name, 'tr')).map(a => '<div class="agency"><b>' + esc(a.name) + '</b>' + (a.address ? '<small>' + esc(a.address) + '</small>' : '') + (a.phone ? '<small>' + esc(a.phone) + '</small>' : '') + '<div class="apps">' +
@@ -2592,7 +2574,7 @@ function agencyList(){ const t = UI[lang], tel = s => String(s).replace(/[^+\d]/
 function renderSheet(p){
   const t = UI[lang], c = p.cat, n = tx(p.name), v = viaOf(p);
   const desc = p.desc ? tx(p.desc) : p.noDist ? fillT(t.cDesc, {n}) : p.x ? (v ? fillT(CAR === true ? t.xDescCar : t.xDesc, {d:short(v)}) : t.xDescC) : fillT(t.dDesc, {n});
-  let h = '<div class="cat" style="--c:var(--' + c + ')"><i></i>' + esc(t.cats[c]) + '</div><h2>' + esc(n) + '</h2><p>' + esc(desc) + '</p>' + photoOf(p, n) + (tourFirst(p) ? tourBox() : '') + (p.id === 'agencies' && AGENCIES.length ? agencyList() : '') + (p.id === 'guides' ? guidesBox(false) : p.id === 'agencies' ? guidesBox(true) : '');
+  let h = '<div class="cat" style="--c:var(--' + c + ')"><i></i>' + esc(t.cats[c]) + '</div><h2>' + esc(n) + '</h2><p>' + esc(desc) + '</p>' + photoOf(p, n) + (tourFirst(p) ? tourBox() : '') + (p.id === 'agencies' && AGENCIES.length ? agencyList() : '');
   const fs = facts(p); if (fs.length) h += '<ul class="facts">' + fs.map(f => '<li>' + esc(f) + '</li>').join('') + '</ul>';
   { const vl = visitText(p, true); if (vl) h += '<p class="visnow' + (visitState(p).open ? ' on' : '') + '">' + esc(vl) + '</p>'; }
   h += wxSlot(p);
@@ -2821,7 +2803,7 @@ let COUNTED = '';
 function countView(){ const k = '/' + lang + here().slice(1); if (k === COUNTED) return; COUNTED = k; stat(k, document.title); }
 const here = () => (location.hash || '#/').replace(/^#$/, '#/');
 let trail = [here()], homeY = 0;      /* trail: the screens opened inside the guide, so Back never leaves it */
-const ALIAS = {'c-cimenlik':'naval-museum'};      /* old addresses of places that were merged */
+const ALIAS = {'c-cimenlik':'naval-museum', 'guides':'agencies'};      /* old addresses of places that were merged */
 function route(){
   const mp = location.hash.match(/^#\/p\/([\w-]+)/), mc = location.hash.match(/^#\/g\/(\w+)/), mn = location.hash.match(/^#\/n\/(\w+)/);
   const p = mp && byId(ALIAS[mp[1]] || mp[1]), c = !p && mc && GROUPS[mc[1]] && members(mc[1]).length ? mc[1] : null, nk = mn && NEAR.kinds[mn[1]] ? mn[1] : null;
@@ -2896,6 +2878,58 @@ addEventListener('online', () => { toast(UI[lang].onNow); WXSTATE = 'idle'; wxLo
 document.addEventListener('visibilitychange', () => { if (!document.hidden && navigator.onLine !== false && Date.now() - CHECKED > 30 * 6e4){ WXSTATE = 'idle'; wxLoad(); checkBuild(); } });      /* an app left open: looked at again after half an hour */
 wxLoad();
 setLang(lang);
+/* ---- map viewer: a tap on a downloadable map opens it full screen. Two fingers, a double tap, the mouse wheel or the +/− buttons zoom it;
+   the download button saves the file as before. The back button of the phone closes it. ---- */
+const UI_MV = {
+  en:{mvDl:'Download', mvClose:'Close', mvHint:'Pinch or double-tap to zoom', mapDl:'Enlarge or download'},
+  tr:{mvDl:'İndir', mvClose:'Kapat', mvHint:'İki parmakla ya da çift dokunarak yakınlaştırın', mapDl:'Büyütün ya da indirin'},
+  de:{mvDl:'Herunterladen', mvClose:'Schließen', mvHint:'Mit zwei Fingern oder Doppeltippen zoomen', mapDl:'Vergrößern oder herunterladen'},
+  fr:{mvDl:'Télécharger', mvClose:'Fermer', mvHint:'Zoomez à deux doigts ou d’un double appui', mapDl:'Agrandir ou télécharger'},
+  es:{mvDl:'Descargar', mvClose:'Cerrar', mvHint:'Amplíe con dos dedos o con doble toque', mapDl:'Ampliar o descargar'},
+  bg:{mvDl:'Изтегляне', mvClose:'Затваряне', mvHint:'Увеличете с два пръста или двойно докосване', mapDl:'Увеличете или изтеглете'},
+  ru:{mvDl:'Скачать', mvClose:'Закрыть', mvHint:'Увеличивайте двумя пальцами или двойным касанием', mapDl:'Увеличить или скачать'},
+  el:{mvDl:'Λήψη', mvClose:'Κλείσιμο', mvHint:'Μεγεθύνετε με δύο δάχτυλα ή διπλό πάτημα', mapDl:'Μεγέθυνση ή λήψη'},
+  ar:{mvDl:'تنزيل', mvClose:'إغلاق', mvHint:'كبّر بإصبعين أو بنقرتين', mapDl:'كبّر الخريطة أو نزّلها'}
+};
+Object.keys(UI_MV).forEach(l => { if (UI[l]) Object.assign(UI[l], UI_MV[l]); });
+document.querySelectorAll('[data-i18n="mapDl"]').forEach(e => { e.textContent = UI[lang].mapDl; });
+const MV = {s:1, x:0, y:0, bw:0, bh:0, max:4, pts:new Map(), prev:null, tap:0, moved:0, box:null};
+function mvApply(){ const {s, bw, bh} = MV, W = MV.st.clientWidth, H = MV.st.clientHeight;
+  MV.x = bw * s <= W ? (W - bw * s) / 2 : Math.min(0, Math.max(W - bw * s, MV.x));
+  MV.y = bh * s <= H ? (H - bh * s) / 2 : Math.min(0, Math.max(H - bh * s, MV.y));
+  MV.img.style.transform = 'translate(' + MV.x + 'px,' + MV.y + 'px) scale(' + s + ')'; }
+function mvZoom(px, py, ns){ ns = Math.min(MV.max, Math.max(1, ns)); MV.x = px - (px - MV.x) * ns / MV.s; MV.y = py - (py - MV.y) * ns / MV.s; MV.s = ns; mvApply();
+  MV.box.querySelector('.mvhint').classList.add('off'); }
+function mvFit(){ const W = MV.st.clientWidth, H = MV.st.clientHeight, f = Math.min(W / MV.iw, H / MV.ih);
+  MV.bw = MV.iw * f; MV.bh = MV.ih * f; MV.max = Math.max(4, 1.25 * (MV.nw || MV.iw) / MV.bw); MV.s = 1; MV.img.style.width = MV.bw + 'px'; MV.img.style.height = MV.bh + 'px'; mvApply(); }
+function mvOpen(a){ if (MV.box) return; const t = UI[lang], title = a.querySelector('b').textContent, big = a.getAttribute('href'), th = a.querySelector('img');
+  const box = MV.box = document.createElement('div'); box.id = 'mv'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', title);
+  box.innerHTML = '<div class="mvbar"><b>' + esc(title) + '</b><button class="mvx" type="button" aria-label="' + esc(t.mvClose) + '">×</button></div>' +
+    '<div class="mvstage"><img alt="' + esc(title) + '" draggable="false"></div><p class="mvhint">' + esc(t.mvHint) + '</p>' +
+    '<div class="mvfoot"><button class="mvz" type="button" data-z="-1" aria-label="−">−</button><button class="mvz" type="button" data-z="1" aria-label="+">+</button>' +
+    '<a class="btn primary" href="' + esc(big) + '" download="' + esc(a.getAttribute('download') || '') + '">' + esc(t.mvDl) + '</a></div>';
+  document.body.appendChild(box); document.documentElement.style.overflow = 'hidden';
+  MV.st = box.querySelector('.mvstage'); MV.img = box.querySelector('img'); MV.iw = +th.getAttribute('width'); MV.ih = +th.getAttribute('height');
+  MV.img.src = th.currentSrc || th.src; MV.nw = 0; const hi = new Image(); hi.onload = () => { if (!MV.img) return; MV.img.src = big; MV.nw = hi.naturalWidth; MV.max = Math.max(4, MV.nw / MV.bw); }; hi.src = big;
+  mvFit(); setTimeout(() => box.querySelector('.mvhint').classList.add('off'), 3500);
+  box.querySelector('.mvx').addEventListener('click', () => history.back());
+  box.querySelectorAll('.mvz').forEach(b => b.addEventListener('click', () => mvZoom(MV.st.clientWidth / 2, MV.st.clientHeight / 2, MV.s * (b.dataset.z > 0 ? 1.8 : 1 / 1.8))));
+  const at = e => { const r = MV.st.getBoundingClientRect(); return {x:e.clientX - r.left, y:e.clientY - r.top}; };
+  const two = () => { const [a1, b1] = [...MV.pts.values()]; return {d:Math.hypot(a1.x - b1.x, a1.y - b1.y), x:(a1.x + b1.x) / 2, y:(a1.y + b1.y) / 2}; };
+  MV.st.addEventListener('pointerdown', e => { MV.st.setPointerCapture(e.pointerId); MV.pts.set(e.pointerId, at(e)); MV.prev = MV.pts.size === 2 ? two() : null; if (MV.pts.size === 1) MV.moved = 0; });
+  MV.st.addEventListener('pointermove', e => { if (!MV.pts.has(e.pointerId)) return; const p = at(e), o = MV.pts.get(e.pointerId); MV.pts.set(e.pointerId, p);
+    if (MV.pts.size === 1){ MV.moved += Math.abs(p.x - o.x) + Math.abs(p.y - o.y); MV.x += p.x - o.x; MV.y += p.y - o.y; mvApply(); }
+    else if (MV.pts.size === 2){ const n = two(); if (MV.prev && MV.prev.d > 0){ MV.x += n.x - MV.prev.x; MV.y += n.y - MV.prev.y; mvZoom(n.x, n.y, MV.s * n.d / MV.prev.d); } MV.prev = n; MV.moved = 99; } });
+  const up = e => { if (!MV.pts.has(e.pointerId)) return; const p = MV.pts.get(e.pointerId); MV.pts.delete(e.pointerId); MV.prev = MV.pts.size === 2 ? two() : null;
+    if (MV.pts.size === 0 && MV.moved < 10){ const now = Date.now(); if (now - MV.tap < 320){ mvZoom(p.x, p.y, MV.s > 1.5 ? 1 : 3); MV.tap = 0; } else MV.tap = now; } };
+  MV.st.addEventListener('pointerup', up); MV.st.addEventListener('pointercancel', up);
+  MV.st.addEventListener('wheel', e => { e.preventDefault(); const p = at(e); mvZoom(p.x, p.y, MV.s * Math.exp(-e.deltaY * 0.0015)); }, {passive:false});
+  history.pushState({mv:1}, ''); box.querySelector('.mvx').focus(); }
+function mvClose(){ if (!MV.box) return; MV.box.remove(); MV.box = MV.img = MV.st = null; MV.pts.clear(); document.documentElement.style.overflow = ''; }
+addEventListener('popstate', mvClose);
+addEventListener('resize', () => { if (MV.box) mvFit(); });
+addEventListener('keydown', e => { if (e.key === 'Escape' && MV.box) history.back(); });
+document.addEventListener('click', e => { const a = e.target.closest('a.mapcard'); if (!a) return; e.preventDefault(); mvOpen(a); });
 </script>
 </body>
 </html>
