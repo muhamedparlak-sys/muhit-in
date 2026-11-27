@@ -782,6 +782,11 @@ h1{margin:16px 0 12px;font-size:clamp(29px,7.2vw,40px);line-height:1.15;letter-s
 @media (min-width:700px){.icons{grid-template-columns:repeat(6,minmax(0,1fr))}}
 .icon{display:flex;flex-direction:column;align-items:center;text-align:center;gap:7px;min-width:0;min-height:122px;padding:12px 3px 10px;border:2px solid var(--line);border-radius:18px;background:var(--panel);text-decoration:none}
 .icon:hover{border-color:var(--c)}
+.shut .big{filter:grayscale(1);opacity:.42}
+.icon.shut b,.tile.shut b{opacity:.62}
+.vis{margin-top:-3px;font-size:13.5px;line-height:1.2;font-weight:700;color:var(--muted)}
+.visnow{margin:-6px 0 14px;padding:9px 14px;border-radius:14px;background:var(--chip);font-size:16.5px;font-weight:700;color:var(--muted)}
+.visnow.on{color:var(--text)}
 .icon{position:relative}
 .newtag{position:absolute;top:7px;right:7px;padding:2px 8px;border-radius:999px;background:#d7182a;color:#fff;font-size:12px;font-weight:800;line-height:1.45;letter-spacing:.2px}
 [dir=rtl] .newtag{right:auto;left:7px}
@@ -1027,7 +1032,7 @@ button.btn{width:100%;cursor:pointer}
    stop          : optional {lat, lng, name:[...]} bus stop to walk to first
    ===================================================================== */
 const DRAFT  = false;
-const BUILD  = '2026-11-27 a';      /* changed with every new version: an open guide that comes back online reloads itself when this differs */
+const BUILD  = '2026-11-27 b';      /* changed with every new version: an open guide that comes back online reloads itself when this differs */
 const LANGS  = ['en','tr','de','fr','es','bg','ru','el','ar'];
 const XLANGS = ['bg','ru','el','ar'];      /* the languages whose place texts live in XL_ROWS */
 const OFFICE = {lat:40.1498833, lng:26.4024356};
@@ -2479,13 +2484,13 @@ $('#q').addEventListener('input', e => { F.q = e.target.value; MODE = F.q.trim()
 $('#clear').addEventListener('click', () => { if (MODE === 'how'){ F.q = ''; $('#q').value = ''; MODE = 'where'; } else F.sort = F.walk = F.noferry = F.one = false; renderChips(); renderHome(); });
 
 const short = x => tx(x.label || x.name).replace(/\s*\(.*\)$/, '');
-const card = p => '<li><a class="card" style="--c:var(--' + p.cat + ')" href="#/p/' + p.id + '"><span class="big">' + sized(p.icon, 32) + '</span><span class="txt"><b>' + esc(tx(p.name)) + newTag(p, true) + '</b><small>' + esc(summary(p)) + '</small></span><span class="go">' + ICONS.chevron + '</span></a></li>';
+const card = p => { const vt = visitText(p); return '<li><a class="card' + (vt ? ' shut' : '') + '" style="--c:var(--' + p.cat + ')" href="#/p/' + p.id + '"><span class="big">' + sized(p.icon, 32) + '</span><span class="txt"><b>' + esc(tx(p.name)) + newTag(p, true) + '</b><small>' + esc((vt ? vt + ' · ' : '') + summary(p)) + '</small></span><span class="go">' + ICONS.chevron + '</span></a></li>'; };
 /* a picture on the first screen: a place, or a group ('g:<key>') */
 const pick = k => { if (k.startsWith('r:')){ const R = routeById(k.slice(2)); return R && routeLegs(R).legs.length ? {x:{icon:R.icon, name:R.name}, r:R, c:R.cat, href:'#/r/' + R.id} : null; }
   if (k.startsWith('n:')){ const id = k.slice(2), K = NEAR.kinds[id], t = UI[lang];
     return K ? {x:{icon:K.icon, name:t.nearTitle[id], label:t.nearName[id]}, n:true, c:'near', href:'#/n/' + id} : null; }
   const g = k.startsWith('g:') && GROUPS[k.slice(2)], x = g || byId(k); return x ? {x, g, c:g ? g.cat : x.cat, href:'#/' + (g ? 'g/' + k.slice(2) : 'p/' + x.id)} : null; };
-const tiles = (list, own) => '<div class="icons">' + list.map(pick).filter(Boolean).map(k => '<a class="icon"' + (own ? ' style="--c:var(--' + k.c + ')"' : '') + ' href="' + k.href + '">' + newTag(k.x) + '<span class="big">' + sized(k.x.icon, 38) + '</span><b>' + esc(short(k.x)) + '</b></a>').join('') + '</div>';
+const tiles = (list, own) => '<div class="icons">' + list.map(pick).filter(Boolean).map(k => { const vt = k.g || k.n || k.r ? '' : visitText(k.x); return '<a class="icon' + (vt ? ' shut' : '') + '"' + (own ? ' style="--c:var(--' + k.c + ')"' : '') + ' href="' + k.href + '">' + newTag(k.x) + '<span class="big">' + sized(k.x.icon, 38) + '</span><b>' + esc(short(k.x)) + '</b>' + (vt ? '<small class="vis">' + esc(vt) + '</small>' : '') + '</a>'; }).join('') + '</div>';
 const cards = list => '<ul class="list">' + list.map(pick).filter(Boolean).map(k => '<li><a class="card" style="--c:var(--' + k.c + ')" href="' + k.href + '"><span class="big">' + sized(k.x.icon, 32) + '</span><span class="txt"><b>' + esc(tx(k.x.name)) + newTag(k.x, true) + '</b>' + (k.r ? '<small>' + esc(routeSum(k.r)) + '</small>' : '') + '</span><span class="go">' + ICONS.chevron + '</span></a></li>').join('') + '</ul>';
 /* a 'new' label on places that opened recently: shown until the date in newUntil (Turkish time), then it disappears by itself */
 const isNew = x => !!(x && x.newUntil && Date.now() < Date.parse(x.newUntil + 'T00:00:00+03:00'));
@@ -2509,13 +2514,13 @@ function renderHome(){ const t = UI[lang];
   const listing = F.sort || F.walk || F.noferry || F.one; $('#count').hidden = !listing;
   if (listing){ const found = PLACES.filter(matches).sort((a, b) => far(a) - far(b));
     $('#countText').textContent = t.nRes.replace('{n}', found.length); $('#needs').innerHTML = listOf(found); return; }
-  $('#needs').innerHTML = tipsBlock() + HOME.map(s => '<section style="--c:var(--' + s.cat + ')"><h2><i></i>' + esc(s.title ? t[s.title] : t.cats[s.cat]) + '</h2>' + (s.cards ? cards(s.cards) : tiles(s.tiles)) + '</section>').join('');
+  $('#needs').innerHTML = HOME.map(s => '<section style="--c:var(--' + s.cat + ')"><h2><i></i>' + esc(s.title ? t[s.title] : t.cats[s.cat]) + '</h2>' + (s.cards ? cards(s.cards) : tiles(s.tiles)) + '</section>').join('');
 }
 /* second screen, only for groups: the places behind one picture (big pictures for a few, a compact list for many) */
 function renderGroup(g){ const G = GROUPS[g], list = members(g).slice(); if (!G.ids) list.sort((a, b) => far(a) - far(b));
   $('#catTitle').textContent = tx(G.name); const rows = list.length > 6; $('#grid').className = rows ? 'rows' : 'grid';
   $('#grid').innerHTML = (TOUR_FIRST.includes(g) ? tourBox() : '') + (rows ? '<ul class="list">' + list.map(card).join('') + '</ul>'
-    : list.map(p => '<a class="tile" style="--c:var(--' + p.cat + ')" href="#/p/' + p.id + '"><span class="big">' + sized(p.icon, 50) + '</span><b>' + esc(tx(p.name)) + '</b><small>' + esc(summary(p)) + '</small></a>').join(''));
+    : list.map(p => { const vt = visitText(p); return '<a class="tile' + (vt ? ' shut' : '') + '" style="--c:var(--' + p.cat + ')" href="#/p/' + p.id + '"><span class="big">' + sized(p.icon, 50) + '</span><b>' + esc(tx(p.name)) + '</b><small>' + esc((vt ? vt + ' · ' : '') + summary(p)) + '</small></a>'; }).join(''));
 }
 function linkRow(links, title){ const t = UI[lang];
   return '<div class="openin">' + esc(title) + '</div><div class="apps">' + links.map(l => '<a class="btn" target="_blank" rel="noopener" href="' + esc(l[1]) + '">' + esc(t[l[0]]) + '</a>').join('') + '</div>'; }
@@ -2527,6 +2532,33 @@ let CAR = null; try { const c = localStorage.getItem('guide-car'); CAR = c === '
 function carBox(){ const t = UI[lang], b = (v, icon, label) => '<button type="button" class="carbtn" data-car="' + v + '" aria-pressed="' + (CAR === (v === 1)) + '">' + sized(icon, 28) + '<span>' + esc(label) + '</span></button>';
   return '<div class="carq' + (CAR === null ? ' open' : '') + '"><div class="how">' + esc(t.carQ) + '</div><div class="carbtns">' + b(1, 'car', t.carYes) + b(0, 'walk', t.carNo) + '</div></div>'; }
 /* opening hours: the time in Çanakkale, whatever the clock of the phone says. '?now=6-21:30' in the address previews a day (0 = Sunday) and time. */
+/* visiting hours of museums and sites, from the Ministry of Culture and Tourism (turkishmuseums.kultur.gov.tr), checked 27 November 2026.
+   seasons: {from, to} as 'MM-DD' (a season may run over New Year), open = opening time, last = when the ticket office closes; shut: weekdays closed (0 = Sunday).
+   A place with an entry here shows 'Closed · opens ...' and a faded picture outside its hours. '?at=2026-07-05T21:30' in the address previews a moment (Turkish time). */
+const TROY_HRS = {seasons:[{from:'05-01', to:'09-30', open:'08:30', last:'19:30'}, {from:'10-01', to:'04-30', open:'08:30', last:'17:00'}], shut:[]};
+const VISIT = {
+  'troy-museum':TROY_HRS, 'troy-site':TROY_HRS,
+  'c-kilitbahir':{seasons:[{from:'05-11', to:'09-14', open:'09:00', last:'18:15'}, {from:'09-15', to:'05-10', open:'09:00', last:'16:15'}], shut:[1]}
+};
+const UI_VIS = {
+  en:{shut:'Closed', shutNow:'Closed now', opensAt:'opens {t}', tomorrow:'tomorrow', openNow:'Open now', lastIn:'last entry {t}', days:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']},
+  tr:{shut:'Kapalı', shutNow:'Şu an kapalı', opensAt:'açılış {t}', tomorrow:'yarın', openNow:'Şu an açık', lastIn:'son giriş {t}', days:['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi']}
+};
+function trClock(){ const o = new URLSearchParams(location.search).get('at'), ms = o ? Date.parse(o + '+03:00') : NaN, d = isNaN(ms) ? new Date() : new Date(ms);
+  const f = new Intl.DateTimeFormat('en-GB', {timeZone:'Europe/Istanbul', year:'numeric', month:'2-digit', day:'2-digit', weekday:'short', hour:'2-digit', minute:'2-digit', hourCycle:'h23'}).formatToParts(d), g = k => f.find(x => x.type === k).value;
+  return {y:+g('year'), md:g('month') + '-' + g('day'), day:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(g('weekday')), hm:g('hour') + ':' + g('minute')}; }
+const inSeason = (s, md) => s.from <= s.to ? md >= s.from && md <= s.to : md >= s.from || md <= s.to;
+function visitState(p){ const V = p && VISIT[p.id]; if (!V) return null; const c = trClock(), S0 = V.seasons.find(s => inSeason(s, c.md));
+  if (S0 && !V.shut.includes(c.day) && c.hm >= S0.open && c.hm < S0.last) return {open:true, last:S0.last};
+  for (let d = 0; d < 8; d++){ const dt = new Date(Date.UTC(c.y, +c.md.slice(0, 2) - 1, +c.md.slice(3) + d)), wd = dt.getUTCDay(),
+      md = String(dt.getUTCMonth() + 1).padStart(2, '0') + '-' + String(dt.getUTCDate()).padStart(2, '0'), S = V.seasons.find(s => inSeason(s, md));
+    if (!S || V.shut.includes(wd) || (d === 0 && c.hm >= S.open)) continue;
+    return {open:false, d, wd, at:S.open}; }
+  return null; }
+/* short: the line under a closed place's picture ('' while it is open); long: the line on the place's own page */
+function visitText(p, long){ const v = visitState(p); if (!v) return ''; const u = UI_VIS[lang] || UI_VIS.en;
+  if (v.open) return long ? u.openNow + ' · ' + u.lastIn.replace('{t}', v.last) : '';
+  return (long ? u.shutNow : u.shut) + ' · ' + u.opensAt.replace('{t}', (v.d === 0 ? '' : v.d === 1 ? u.tomorrow + ' ' : u.days[v.wd] + ' ') + v.at); }
 function trNow(){ const m = (new URLSearchParams(location.search).get('now') || '').match(/^(\d)-(\d\d:\d\d)$/); if (m) return {day:+m[1], hm:m[2]};
   const f = new Intl.DateTimeFormat('en-GB', {timeZone:'Europe/Istanbul', weekday:'short', hour:'2-digit', minute:'2-digit', hourCycle:'h23'}).formatToParts(new Date()), g = k => f.find(x => x.type === k).value;
   return {day:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(g('weekday')), hm:g('hour') + ':' + g('minute')}; }
@@ -2536,7 +2568,7 @@ const nameLinks = (q, mode) => { const e = encodeURIComponent(q); return [
   ['gName', 'https://www.google.com/maps/dir/?api=1&destination=' + e + '&travelmode=' + G_MODE[mode]],
   ['aName', 'https://maps.apple.com/?daddr=' + e + '&dirflg=' + A_MODE[mode]], findLinks(q)[2]]; };
 /* visiting hours are not kept here: the place is opened on Google, which shows whether it is open today */
-const asksHours = p => !p.hours && ((SUIT[p.id] && (SUIT[p.id].in || SUIT[p.id].hrs)) || HOURS_ASK.includes(p.id));
+const asksHours = p => !p.hours && !VISIT[p.id] && ((SUIT[p.id] && (SUIT[p.id].in || SUIT[p.id].hrs)) || HOURS_ASK.includes(p.id));
 const hoursLink = p => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.q || p.name[1].replace(/\u00ad/g, '').replace(/\s*\(.*\)$/, '') + ', Çanakkale');
 const WRONG = {};      /* places reported as wrong while the page is open: one report each */
 /* the photograph of a place with its photographer and licence; without a connection the picture is left out */
@@ -2562,6 +2594,7 @@ function renderSheet(p){
   const desc = p.desc ? tx(p.desc) : p.noDist ? fillT(t.cDesc, {n}) : p.x ? (v ? fillT(CAR === true ? t.xDescCar : t.xDesc, {d:short(v)}) : t.xDescC) : fillT(t.dDesc, {n});
   let h = '<div class="cat" style="--c:var(--' + c + ')"><i></i>' + esc(t.cats[c]) + '</div><h2>' + esc(n) + '</h2><p>' + esc(desc) + '</p>' + photoOf(p, n) + (tourFirst(p) ? tourBox() : '') + (p.id === 'agencies' && AGENCIES.length ? agencyList() : '') + (p.id === 'guides' ? guidesBox(false) : p.id === 'agencies' ? guidesBox(true) : '');
   const fs = facts(p); if (fs.length) h += '<ul class="facts">' + fs.map(f => '<li>' + esc(f) + '</li>').join('') + '</ul>';
+  { const vl = visitText(p, true); if (vl) h += '<p class="visnow' + (visitState(p).open ? ' on' : '') + '">' + esc(vl) + '</p>'; }
   h += wxSlot(p);
   if (p.all) h += '<div class="hours all"><p>' + esc(tx(p.all.note)) + '</p><a class="btn primary" target="_blank" rel="noopener" href="' + esc(nearLinks(p.all.q)[isIOS ? 1 : 0][1]) + '">' + esc(tx(p.all.btn)) + '</a></div>';
   h += carBox();
