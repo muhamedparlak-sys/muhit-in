@@ -747,6 +747,7 @@ h1{margin:16px 0 12px;font-size:clamp(29px,7.2vw,40px);line-height:1.15;letter-s
 .map{width:100%;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#e9e6df;z-index:0}
 #placeMap{height:38vh;min-height:230px;max-height:460px}
 
+#paneHow{margin:0 0 14px}
 .search{display:flex;align-items:center;gap:10px;height:58px;padding:0 18px;border:2px solid var(--line);border-radius:29px;background:var(--panel);color:var(--muted)}
 .search:focus-within{border-color:var(--accent)}
 .search input{flex:1;min-width:0;border:0;outline:0;background:none;color:var(--text);font:inherit;font-size:19px;-webkit-appearance:none;appearance:none}
@@ -949,11 +950,7 @@ button.btn{width:100%;cursor:pointer}
   </header>
   <section id="home" data-nosnippet>
     <h1 data-i18n="h1"></h1>
-    <div class="ask" id="ask" role="tablist">
-      <button type="button" class="askbtn" data-m="where" role="tab"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M15.8 8.2l-2.2 5.4-5.4 2.2 2.2-5.4z"></path></svg><span data-i18n="qWhere"></span></button>
-      <button type="button" class="askbtn" data-m="how" role="tab"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="18.5" r="2"></circle><circle cx="18.5" cy="5.5" r="2"></circle><path d="M7.5 18.5H14a3.25 3.25 0 0 0 0-6.5h-4a3.25 3.25 0 0 1 0-6.5h6.5"></path></svg><span data-i18n="qHow"></span></button>
-    </div>
-    <div id="paneHow" hidden>
+    <div id="paneHow">
       <label class="search"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5L21 21"></path></svg><input id="q" type="search" autocomplete="off" enterkeyhint="search"></label>
     </div>
     <div id="paneWhere">
@@ -1030,7 +1027,7 @@ button.btn{width:100%;cursor:pointer}
    stop          : optional {lat, lng, name:[...]} bus stop to walk to first
    ===================================================================== */
 const DRAFT  = false;
-const BUILD  = '2026-11-16 d';      /* changed with every new version: an open guide that comes back online reloads itself when this differs */
+const BUILD  = '2026-11-27 a';      /* changed with every new version: an open guide that comes back online reloads itself when this differs */
 const LANGS  = ['en','tr','de','fr','es','bg','ru','el','ar'];
 const XLANGS = ['bg','ru','el','ar'];      /* the languages whose place texts live in XL_ROWS */
 const OFFICE = {lat:40.1498833, lng:26.4024356};
@@ -2471,17 +2468,15 @@ function matches(p){
   if (F.noferry && hasFerry(p)) return false;
   if (F.one && vehicles(p) > 1) return false;
   return true; }
-/* the two questions of the first screen: 'where' = where can I go? (pictures and planning filters), 'how' = how do I get to ...? (search) */
+/* the first screen: 'where' = the pictures (and the planning filters, now off); 'how' = the search results, while the search box at the top holds text */
 let MODE = 'where';
 function renderChips(){
   $('#chips').innerHTML = FILTERS.map(f => '<button type="button" class="chip" data-f="' + f[0] + '" aria-pressed="' + F[f[0]] + '">' + esc(UI[lang][f[1]]) + '</button>').join('');
   $('#q').placeholder = UI[lang].phHow; $('#q').setAttribute('aria-label', UI[lang].phHow); $('#clear').textContent = UI[lang].clear;
-  document.querySelectorAll('.askbtn').forEach(b => b.setAttribute('aria-selected', String(b.dataset.m === MODE)));
-  $('#paneHow').hidden = MODE !== 'how'; $('#paneWhere').hidden = true; }      /* the planning filters are switched off; 'MODE !== \'where\'' in place of 'true' shows them again */
-$('#ask').addEventListener('click', e => { const b = e.target.closest('.askbtn'); if (!b) return; MODE = b.dataset.m; renderChips(); renderHome(); if (MODE === 'how') $('#q').focus(); });
+  $('#paneHow').hidden = false; $('#paneWhere').hidden = true; }      /* the planning filters are switched off; 'MODE !== \'where\'' in place of 'true' shows them again */
 $('#chips').addEventListener('click', e => { const b = e.target.closest('.chip'); if (!b) return; F[b.dataset.f] = !F[b.dataset.f]; renderChips(); renderHome(); });
-$('#q').addEventListener('input', e => { F.q = e.target.value; renderHome(); });
-$('#clear').addEventListener('click', () => { if (MODE === 'how'){ F.q = ''; $('#q').value = ''; } else F.sort = F.walk = F.noferry = F.one = false; renderChips(); renderHome(); });
+$('#q').addEventListener('input', e => { F.q = e.target.value; MODE = F.q.trim() ? 'how' : 'where'; renderHome(); });      /* typing turns the first screen into the search results; an empty box brings the pictures back */
+$('#clear').addEventListener('click', () => { if (MODE === 'how'){ F.q = ''; $('#q').value = ''; MODE = 'where'; } else F.sort = F.walk = F.noferry = F.one = false; renderChips(); renderHome(); });
 
 const short = x => tx(x.label || x.name).replace(/\s*\(.*\)$/, '');
 const card = p => '<li><a class="card" style="--c:var(--' + p.cat + ')" href="#/p/' + p.id + '"><span class="big">' + sized(p.icon, 32) + '</span><span class="txt"><b>' + esc(tx(p.name)) + newTag(p, true) + '</b><small>' + esc(summary(p)) + '</small></span><span class="go">' + ICONS.chevron + '</span></a></li>';
